@@ -262,6 +262,32 @@ table {
   overflow-x: auto;
   width: max-content;
 }
+.api-table-scroll {
+  margin-bottom: 1.2rem;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.api-table-scroll .api-table {
+  display: table;
+  margin-bottom: 0;
+  max-width: none;
+  overflow: visible;
+  width: 100%;
+}
+.api-table .api-name, .api-table .api-type {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.api-table .api-name code, .api-table th.api-name, .api-table .api-type {
+  white-space: nowrap;
+}
+.api-table .api-description {
+  overflow-wrap: break-word;
+  white-space: normal;
+  word-break: normal;
+}
 th, td {
   border: 1px solid var(--border);
   padding: 0.5rem 0.75rem;

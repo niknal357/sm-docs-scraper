@@ -21,6 +21,25 @@ from search_index import PAGEFIND_DIRECTORY, SYMBOL_INDEX_NAME
 
 
 TOC_EXCLUDED_SECTIONS = {"constants", "fields", "members", "operations"}
+API_TABLE_COLUMNS = {
+    ("Name", "Type", "Description"): (
+        "api-name",
+        "api-type",
+        "api-description",
+    ),
+    ("Type", "Name", "Description"): (
+        "api-type",
+        "api-name",
+        "api-description",
+    ),
+    ("Type", "Description"): ("api-type", "api-description"),
+    ("Signature", "Description"): ("api-signature-cell", "api-description"),
+    ("Operation", "Returns", "Description"): (
+        "api-operation",
+        "api-returns",
+        "api-description",
+    ),
+}
 SITE_ASSETS_PATH = Path(__file__).parent / "content" / "site"
 HTML_TEMPLATE = (SITE_ASSETS_PATH / "page.html").read_text(encoding="utf-8")
 THEME_SCRIPT = (SITE_ASSETS_PATH / "theme.js").read_text(encoding="utf-8")
@@ -218,6 +237,56 @@ class HtmlRenderer(RenderContext):
             flags=re.DOTALL,
         )
 
+    @staticmethod
+    def _render_api_tables(body: str) -> str:
+        def render_table(match: re.Match[str]) -> str:
+            table = match.group(0)
+            head = re.search(r"<thead>.*?</thead>", table, flags=re.DOTALL)
+            if head is None:
+                return table
+
+            headers = tuple(
+                unescape(re.sub(r"<[^>]+>", "", value)).strip()
+                for value in re.findall(
+                    r"<th(?=[\s>])[^>]*>(.*?)</th>",
+                    head.group(0),
+                    flags=re.DOTALL,
+                )
+            )
+            column_classes = API_TABLE_COLUMNS.get(headers)
+            if column_classes is None:
+                return table
+
+            table = table.replace("<table>", '<table class="api-table">', 1)
+
+            def render_row(row_match: re.Match[str]) -> str:
+                column = 0
+
+                def render_cell(cell_match: re.Match[str]) -> str:
+                    nonlocal column
+                    if column >= len(column_classes):
+                        return cell_match.group(0)
+                    tag, attributes = cell_match.groups()
+                    css_class = column_classes[column]
+                    column += 1
+                    return f'<{tag}{attributes} class="{css_class}">'
+
+                return re.sub(
+                    r"<(th|td)(?=[\s>])([^>]*)>",
+                    render_cell,
+                    row_match.group(0),
+                )
+
+            table = re.sub(
+                r"<tr(?=[\s>])[^>]*>.*?</tr>",
+                render_row,
+                table,
+                flags=re.DOTALL,
+            )
+            return f'<div class="api-table-scroll">{table}</div>'
+
+        return re.sub(r"<table>.*?</table>", render_table, body, flags=re.DOTALL)
+
     def _search_page_data(self, markdown_path: Path) -> tuple[str, str, str]:
         root_index = self.markdown_root / "index.md"
         if markdown_path == root_index:
@@ -295,6 +364,7 @@ class HtmlRenderer(RenderContext):
                 },
             )
             body = self._render_optional_signature_markers(body)
+            body = self._render_api_tables(body)
             body = re.sub(r'href="([^"]+)\.md(#[^"]*)?"', r'href="\1.html\2"', body)
             home = self._asset_href(self.html_root / "index.html", html_path)
             current_environment, pagefind_attributes, pagefind_meta = (
