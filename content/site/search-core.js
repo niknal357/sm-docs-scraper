@@ -49,31 +49,97 @@
 
   const aliases = (record) => record.aliases ? record.aliases.split('\n') : [];
 
-  const matchTier = (record, query) => {
+  const identifierKey = (value) => normalizeIdentifier(value).replace(/[^a-z0-9]+/g, '');
+
+  const editDistance = (left, right) => {
+    const rows = Array.from(
+      { length: left.length + 1 },
+      (_, row) => Array.from({ length: right.length + 1 }, (_, column) => (
+        row === 0 ? column : column === 0 ? row : 0
+      )),
+    );
+    for (let row = 1; row <= left.length; row += 1) {
+      for (let column = 1; column <= right.length; column += 1) {
+        const cost = left[row - 1] === right[column - 1] ? 0 : 1;
+        rows[row][column] = Math.min(
+          rows[row - 1][column] + 1,
+          rows[row][column - 1] + 1,
+          rows[row - 1][column - 1] + cost,
+        );
+        if (row > 1 && column > 1
+            && left[row - 1] === right[column - 2]
+            && left[row - 2] === right[column - 1]) {
+          rows[row][column] = Math.min(rows[row][column], rows[row - 2][column - 2] + 1);
+        }
+      }
+    }
+    return rows[left.length][right.length];
+  };
+
+  const directFuzzyDistance = (queryKey, nameKey) => {
+    if (queryKey.length < 4 || !nameKey) return null;
+    const maximum = Math.max(1, Math.floor(queryKey.length * 0.25));
+    if (Math.abs(queryKey.length - nameKey.length) > maximum) return null;
+    const distance = editDistance(queryKey, nameKey);
+    return distance <= maximum ? distance : null;
+  };
+
+  const matchRank = (record, query) => {
     const normalized = normalizeIdentifier(query);
     const qualified = normalizeIdentifier(record.qualifiedName);
     const name = normalizeIdentifier(record.name);
     const aliasValues = aliases(record);
+    const normalizedAliases = aliasValues.map(normalizeIdentifier);
+    const queryKey = identifierKey(query);
+    const nameKey = identifierKey(record.name);
+    const qualifiedKey = identifierKey(record.qualifiedName);
+    const defaultRank = { completion: Number.MAX_SAFE_INTEGER, distance: Number.MAX_SAFE_INTEGER };
 
-    if (qualified === normalized) return 0;
-    if (name === normalized) return 1;
-    if (aliasValues.some((alias) => normalizeIdentifier(alias) === normalized)) return 2;
+    if (qualified === normalized) return { ...defaultRank, tier: 0 };
+    if (name === normalized) return { ...defaultRank, tier: 1 };
+    if (normalizedAliases.includes(normalized)) return { ...defaultRank, tier: 2 };
 
-    if (normalized.length >= 3) {
-      const identifiers = [record.qualifiedName, record.name, ...aliasValues];
-      if (identifiers.some((value) => normalizeIdentifier(value).startsWith(normalized))) {
-        return 3;
-      }
+    if (queryKey.length >= 3 && nameKey.startsWith(queryKey)) {
+      return { ...defaultRank, tier: 3, completion: nameKey.length - queryKey.length };
+    }
+    const queryHasPath = /[._:]/.test(normalized);
+    if (queryHasPath && queryKey.length >= 3 && qualifiedKey.startsWith(queryKey)) {
+      return { ...defaultRank, tier: 3, completion: qualifiedKey.length - queryKey.length };
     }
 
+    const distance = directFuzzyDistance(queryKey, nameKey);
+    if (distance !== null) return { ...defaultRank, tier: 4, distance };
+
     const queryWords = identifierWords(query);
-    const identifierText = [record.qualifiedName, record.name, ...aliasValues].join(' ');
-    if (everyWordMatches(queryWords, identifierText)) return 3;
+    const nameWords = identifierWords(record.name);
+    if (queryWords.length === 1
+        && nameWords.some((word) => word.startsWith(queryWords[0]))) {
+      return {
+        ...defaultRank,
+        tier: 5,
+        completion: nameKey.length - queryWords[0].length,
+      };
+    }
+    if (everyWordMatches(queryWords, record.name)) return { ...defaultRank, tier: 5 };
+
+    const identifierText = [record.qualifiedName, ...aliasValues].join(' ');
+    if ((queryKey.length >= 3 && qualifiedKey.startsWith(queryKey))
+        || everyWordMatches(queryWords, identifierText)) {
+      return {
+        ...defaultRank,
+        tier: 6,
+        completion: qualifiedKey.startsWith(queryKey)
+          ? qualifiedKey.length - queryKey.length
+          : defaultRank.completion,
+      };
+    }
 
     const prose = `${record.signature} ${record.summary} ${record.types}`;
-    if (everyWordMatches(queryWords, prose)) return 4;
-    return 5;
+    if (everyWordMatches(queryWords, prose)) return { ...defaultRank, tier: 7 };
+    return { ...defaultRank, tier: 8 };
   };
+
+  const matchTier = (record, query) => matchRank(record, query).tier;
 
   const create = (records, MiniSearch) => {
     const engine = new MiniSearch({
@@ -111,20 +177,21 @@
     });
 
     state.records.forEach((record) => {
-      const tier = matchTier(record, query);
-      if (tier <= 4 && !candidates.has(record.id)) {
-        candidates.set(record.id, { ...record, score: 0 });
-      }
+      const rank = matchRank(record, query);
+      const candidate = candidates.get(record.id);
+      if (candidate) Object.assign(candidate, rank);
+      else if (rank.tier <= 7) candidates.set(record.id, { ...record, ...rank, score: 0 });
     });
 
     const ranked = [...candidates.values()].map((record) => ({
       ...record,
-      tier: matchTier(record, query),
       contextBoost: currentEnvironment !== 'All'
         && record.environment === currentEnvironment ? 0.1 : 0,
     })).filter((record) => environment === 'All' || record.environment === environment)
       .sort((left, right) => (
         left.tier - right.tier
+        || left.distance - right.distance
+        || left.completion - right.completion
         || (right.score + right.contextBoost) - (left.score + left.contextBoost)
         || left.qualifiedName.localeCompare(right.qualifiedName)
       ));

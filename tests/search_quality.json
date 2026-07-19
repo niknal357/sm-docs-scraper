@@ -2,7 +2,12 @@
   {
     "query": "raycast",
     "qualifiedName": "sm.physics.raycast",
-    "maxRank": 3
+    "maxRank": 1
+  },
+  {
+    "query": "raycas",
+    "qualifiedName": "sm.physics.raycast",
+    "maxRank": 1
   },
   {
     "query": "ray cast",
@@ -18,7 +23,7 @@
     "query": "raycats",
     "qualifiedName": "sm.physics.raycast",
     "expectedSuggestion": "raycast",
-    "maxRank": 3
+    "maxRank": 1
   },
   {
     "query": "collision filter",

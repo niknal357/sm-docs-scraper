@@ -58,10 +58,7 @@ Only index the main documentation content. Exclude navigation, breadcrumbs, and 
 
 ### Combined interface
 
-Search both indexes and group results into:
-
-- **API symbols**
-- **Documentation**
+Search both indexes and combine results into one relevance-ranked list.
 
 Show the following for symbol results:
 
@@ -108,7 +105,7 @@ Show the page hierarchy, matching heading, and excerpt for documentation results
 
 - [x] Replace the current sidebar filtering behavior with a search panel or modal.
 - [x] Search both indexes from the same input.
-- [x] Group symbol and documentation results clearly.
+- [x] Combine symbol and documentation results into one ranked list.
 - [x] Highlight matching terms.
 - [x] Limit the initial result count and provide a way to see more.
 - [x] Add `All`, `Game`, and `Terrain` filters.

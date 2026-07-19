@@ -19,7 +19,8 @@
   const siteHome = new URL(searchRoot.dataset.siteHome, window.location.href);
   const siteRoot = new URL('.', siteHome);
   const recentKey = 'sm-docs-recent-symbols';
-  const popupLimit = 3;
+  const recentLimit = 4;
+  const popupLimit = 6;
   const pageStep = 20;
 
   let selectedIndex = -1;
@@ -35,6 +36,12 @@
   const resolveAsset = (path) => new URL(path, window.location.href).href;
   const resolveSymbolUrl = (path) => new URL(path.replace(/^\/+/, ''), siteRoot).href;
   const resolvePagefindUrl = (path) => new URL(path, window.location.origin).href;
+  const canonicalResultUrl = (path) => {
+    const url = new URL(path);
+    url.hash = '';
+    url.search = '';
+    return url.href.replace(/\/index\.html$/, '/');
+  };
 
   const loadSymbolState = () => {
     if (!symbolStatePromise) {
@@ -178,6 +185,7 @@
       link.setAttribute('role', 'option');
       link.setAttribute('aria-selected', 'false');
       link.addEventListener('mouseenter', () => selectOption(link));
+      link.addEventListener('click', () => closePopover());
     }
     if (onSelect) link.addEventListener('click', onSelect);
     return link;
@@ -192,33 +200,46 @@
       () => rememberSymbol(record.id),
     );
 
-    const heading = document.createElement('div');
-    heading.className = 'search-result-heading';
-    const name = document.createElement('strong');
-    appendHighlighted(name, record.qualifiedName, query);
-    heading.append(name, badge(kindLabel(record.kind)));
-    if (record.overloadCount > 1) heading.append(badge(`${record.overloadCount} overloads`));
-    heading.append(badge(record.environment, 'environment'));
-    link.append(heading);
+    if (options.compact) {
+      const primary = document.createElement(record.signature ? 'code' : 'strong');
+      primary.className = record.signature
+        ? 'search-result-primary search-result-signature'
+        : 'search-result-primary';
+      appendHighlighted(
+        primary,
+        record.signature ? record.signature.split('\n')[0] : record.qualifiedName,
+        query,
+      );
+      link.append(primary);
 
-    if (record.signature) {
-      const signature = document.createElement('code');
-      signature.className = 'search-result-signature';
-      signature.textContent = record.signature.split('\n')[0];
-      link.append(signature);
-    } else if (options.compact && record.summary) {
-      const summary = document.createElement('p');
-      appendHighlighted(summary, record.summary, query);
-      link.append(summary);
-    }
+      const metadata = document.createElement('div');
+      metadata.className = 'search-result-metadata';
+      if (record.kind !== 'function') metadata.append(badge(kindLabel(record.kind)));
+      if (record.overloadCount > 1) metadata.append(badge(`${record.overloadCount} overloads`));
+      metadata.append(badge(record.environment, 'environment'));
+      link.append(metadata);
+    } else {
+      const heading = document.createElement('div');
+      heading.className = 'search-result-heading';
+      const name = document.createElement('strong');
+      appendHighlighted(name, record.qualifiedName, query);
+      heading.append(name, badge(kindLabel(record.kind)));
+      if (record.overloadCount > 1) heading.append(badge(`${record.overloadCount} overloads`));
+      heading.append(badge(record.environment, 'environment'));
+      link.append(heading);
 
-    if (!options.compact && record.summary) {
-      const summary = document.createElement('p');
-      appendHighlighted(summary, record.summary, query);
-      link.append(summary);
-    }
+      if (record.signature) {
+        const signature = document.createElement('code');
+        signature.className = 'search-result-signature';
+        signature.textContent = record.signature.split('\n')[0];
+        link.append(signature);
+      }
+      if (record.summary) {
+        const summary = document.createElement('p');
+        appendHighlighted(summary, record.summary, query);
+        link.append(summary);
+      }
 
-    if (!options.compact) {
       const details = document.createElement('div');
       details.className = 'search-result-details';
       if (record.availability) details.append(badge(availabilityLabel(record.availability)));
@@ -228,7 +249,7 @@
     }
     row.append(link);
 
-    if (!options.compact && record.signature && record.tier <= 1 && navigator.clipboard) {
+    if (!options.compact && record.signature && navigator.clipboard) {
       const copy = document.createElement('button');
       copy.className = 'search-copy';
       copy.type = 'button';
@@ -253,7 +274,7 @@
     heading.className = 'search-result-heading';
     const title = document.createElement('strong');
     title.textContent = record.title;
-    heading.append(title, badge('Documentation'));
+    heading.append(title);
     link.append(heading);
 
     if (!options.compact && record.hierarchy && record.hierarchy !== record.title) {
@@ -285,11 +306,18 @@
     const pagefind = await loadPagefind();
     const searchOptions = environment === 'All' ? {} : { filters: { environment } };
     const search = await pagefind.search(query, searchOptions);
-    const loaded = await Promise.all(
-      search.results.slice(0, Math.max(maximum * 2, 12)).map((result) => result.data())
-    );
-    const symbolUrls = new Set(symbolResults.map((record) => resolveSymbolUrl(record.url)));
-    const records = loaded.map((data) => {
+    const requested = Math.max(maximum * 2, 12);
+    const selected = search.results.slice(0, requested);
+    const loaded = await Promise.all(selected.map(async (result) => ({
+      data: await result.data(),
+      score: result.score,
+    })));
+    const strongestScore = selected.length ? selected[0].score : 0;
+    const symbolUrls = new Set(symbolResults.map((record) => (
+      canonicalResultUrl(resolveSymbolUrl(record.url))
+    )));
+    const queryKey = query.toLocaleLowerCase().replace(/[^a-z0-9]+/g, '');
+    const records = loaded.map(({ data, score }) => {
       const result = data.sub_results && data.sub_results.length
         ? data.sub_results[0]
         : data;
@@ -298,9 +326,26 @@
         url: result.url || data.url,
         excerpt: result.excerpt || data.excerpt,
         hierarchy: data.meta.hierarchy || data.meta.title || '',
+        score,
       };
-    }).filter((record) => !symbolUrls.has(resolvePagefindUrl(record.url)));
-    return { records, total: search.results.length };
+    }).filter((record) => {
+      const url = canonicalResultUrl(resolvePagefindUrl(record.url));
+      if (symbolUrls.has(url) || record.score < strongestScore * 0.1) return false;
+      const titleKey = record.title.toLocaleLowerCase().replace(/[^a-z0-9]+/g, '');
+      const titleMatches = queryKey.length >= 3
+        && (titleKey.startsWith(queryKey) || titleKey.includes(queryKey));
+      const markIndex = (record.excerpt || '').search(/<mark(?:\s|>)/i);
+      const wordsBeforeMatch = markIndex < 0
+        ? Number.MAX_SAFE_INTEGER
+        : record.excerpt.slice(0, markIndex).replace(/<[^>]*>/g, ' ').trim().split(/\s+/)
+          .filter(Boolean).length;
+      return titleMatches || wordsBeforeMatch <= 8;
+    }).map(({ score: _, ...record }) => record);
+    return {
+      records,
+      total: records.length,
+      hasMore: search.results.length > selected.length,
+    };
   };
 
   const combinedSearch = async (query, environment, documentationLimit) => {
@@ -319,7 +364,7 @@
       );
     } catch (error) {
       console.error('Documentation search failed', error);
-      documentation = { records: [], total: 0 };
+      documentation = { records: [], total: 0, hasMore: false };
     }
     return { symbols, documentation };
   };
@@ -356,7 +401,7 @@
       const state = await loadSymbolState();
       if (version !== popupVersion) return;
       const recent = readRecentIds().map((id) => state.recordsById.get(id)).filter(Boolean)
-        .slice(0, popupLimit);
+        .slice(0, recentLimit);
       popoverResults.replaceChildren();
       optionSequence = 0;
       resetSelection();
@@ -382,45 +427,47 @@
     }
   };
 
-  const compactResults = (symbols, documentation) => {
-    const selectedSymbols = symbols.slice(0, Math.min(2, popupLimit));
-    const selectedDocumentation = documentation.slice(
-      0,
-      Math.min(1, popupLimit - selectedSymbols.length),
-    );
-    while (selectedSymbols.length + selectedDocumentation.length < popupLimit) {
-      const nextSymbol = symbols[selectedSymbols.length];
-      const nextDocumentation = documentation[selectedDocumentation.length];
-      if (nextSymbol) selectedSymbols.push(nextSymbol);
-      else if (nextDocumentation) selectedDocumentation.push(nextDocumentation);
-      else break;
-    }
-    return { symbols: selectedSymbols, documentation: selectedDocumentation };
+  const mergeSearchResults = (output) => {
+    const symbols = output.symbols.results;
+    const documentation = output.documentation.records;
+    const documentationFirst = !symbols.length || symbols[0].tier >= 7;
+    const symbolWeight = documentationFirst ? 0.65 : 1;
+    const documentationWeight = documentationFirst ? 1 : 0.4;
+    return [
+      ...symbols.map((record, index) => ({
+        record,
+        source: 'symbol',
+        relevance: symbolWeight / (index + 1),
+      })),
+      ...documentation.map((record, index) => ({
+        record,
+        source: 'documentation',
+        relevance: documentationWeight / (index + 1),
+      })),
+    ].sort((left, right) => {
+      const relevanceDifference = right.relevance - left.relevance;
+      if (relevanceDifference) return relevanceDifference;
+      if (left.source === right.source) return 0;
+      return left.source === 'documentation' ? -1 : 1;
+    });
   };
 
   const renderPopupResults = (query, output) => {
     popoverResults.replaceChildren();
     optionSequence = 0;
     resetSelection();
-    const compact = compactResults(output.symbols.results, output.documentation.records);
+    const results = mergeSearchResults(output).slice(0, popupLimit);
 
-    if (compact.symbols.length) {
-      const section = createSection('API', compact.symbols.length, true);
-      compact.symbols.forEach((record) => section.append(createSymbolResult(record, query, {
-        compact: true,
-        popupOption: true,
-      })));
-      popoverResults.append(section);
-    }
-    if (compact.documentation.length) {
-      const section = createSection('Documentation', compact.documentation.length, true);
-      compact.documentation.forEach((record) => section.append(
-        createDocumentationResult(record, { compact: true, popupOption: true })
+    if (results.length) {
+      const section = document.createElement('section');
+      section.setAttribute('aria-label', 'Search results');
+      results.forEach(({ record, source }) => section.append(
+        source === 'symbol'
+          ? createSymbolResult(record, query, { compact: true, popupOption: true })
+          : createDocumentationResult(record, { compact: true, popupOption: true })
       ));
       popoverResults.append(section);
-    }
-
-    if (!compact.symbols.length && !compact.documentation.length) {
+    } else {
       const empty = document.createElement('p');
       empty.className = 'search-empty';
       empty.textContent = `No results for “${query}”.`;
@@ -428,9 +475,10 @@
     }
 
     const total = output.symbols.results.length + output.documentation.total;
-    popoverStatus.textContent = `${total} result${total === 1 ? '' : 's'}`;
+    const totalLabel = `${total}${output.documentation.hasMore ? '+' : ''}`;
+    popoverStatus.textContent = `${totalLabel} result${total === 1 ? '' : 's'}`;
     seeAll.href = searchPageUrl(query, searchPage ? pageEnvironment : 'All').href;
-    seeAll.textContent = `See all results${total ? ` (${total})` : ''}`;
+    seeAll.textContent = `See all results${total ? ` (${totalLabel})` : ''}`;
     seeAll.hidden = false;
     popover.setAttribute('aria-busy', 'false');
   };
@@ -475,24 +523,18 @@
   const renderPageResults = (query, output) => {
     searchPageResults.replaceChildren();
     const symbols = output.symbols.results;
-    const documentation = output.documentation.records;
+    const results = mergeSearchResults(output);
 
-    if (symbols.length) {
-      const section = createSection('API symbols', symbols.length, false);
-      symbols.slice(0, pageLimit).forEach((record) => {
-        section.append(createSymbolResult(record, query));
+    if (results.length) {
+      const section = document.createElement('section');
+      section.setAttribute('aria-label', 'Search results');
+      results.slice(0, pageLimit).forEach(({ record, source }) => {
+        section.append(source === 'symbol'
+          ? createSymbolResult(record, query)
+          : createDocumentationResult(record));
       });
       searchPageResults.append(section);
-    }
-    if (documentation.length) {
-      const section = createSection('Documentation', output.documentation.total, false);
-      documentation.slice(0, pageLimit).forEach((record) => {
-        section.append(createDocumentationResult(record));
-      });
-      searchPageResults.append(section);
-    }
-
-    if (!symbols.length && !documentation.length) {
+    } else {
       const empty = document.createElement('p');
       empty.className = 'search-empty';
       empty.textContent = `No results for “${query}”.`;
@@ -519,7 +561,7 @@
       searchPageResults.append(suggestionsElement);
     }
 
-    if (symbols.length > pageLimit || output.documentation.total > pageLimit) {
+    if (results.length > pageLimit || output.documentation.hasMore) {
       const more = document.createElement('button');
       more.className = 'search-more';
       more.type = 'button';
@@ -532,7 +574,8 @@
     }
 
     const total = symbols.length + output.documentation.total;
-    searchPageStatus.textContent = `${total} result${total === 1 ? '' : 's'} found.`;
+    const totalLabel = `${total}${output.documentation.hasMore ? '+' : ''}`;
+    searchPageStatus.textContent = `${totalLabel} result${total === 1 ? '' : 's'} found.`;
     searchPage.setAttribute('aria-busy', 'false');
   };
 
