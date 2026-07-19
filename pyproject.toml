@@ -7,4 +7,5 @@ requires-python = ">=3.13"
 dependencies = [
     "httpx>=0.28.1",
     "markdown>=3.10.2",
+    "pygments>=2.20.0",
 ]

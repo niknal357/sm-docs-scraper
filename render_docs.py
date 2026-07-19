@@ -9,6 +9,7 @@ import shutil
 from typing import Iterable
 
 import markdown
+from pygments.formatters import HtmlFormatter
 
 from make_ir import Doc, Documentation, Entry, Environment, Inline, Page
 
@@ -26,6 +27,15 @@ _CATEGORY_TITLES = {
     "namespace": "Static Functions",
     "userdata": "Userdata",
     "class": "Classes",
+}
+_TOC_EXCLUDED_SECTIONS = {"constants", "fields", "members", "operations"}
+_BINARY_OPERATORS = {
+    "__add": "+",
+    "__div": "/",
+    "__eq": "==",
+    "__lt": "<",
+    "__mul": "*",
+    "__sub": "-",
 }
 
 
@@ -105,6 +115,14 @@ class DocumentationRenderer:
             ("class", environment.classes),
         )
 
+    def _navigation_groups(
+        self, environment: Environment
+    ) -> list[tuple[str, list[Page]]]:
+        return sorted(
+            self._page_groups(environment),
+            key=lambda group: _CATEGORY_TITLES[group[0]].casefold(),
+        )
+
     def _environment_directory(self, environment: Environment) -> str:
         return _ENVIRONMENT_DIRECTORIES.get(
             environment.name, f"{environment.name}-Script-Environment"
@@ -122,6 +140,14 @@ class DocumentationRenderer:
     @staticmethod
     def _slug(name: str) -> str:
         return re.sub(r"[^a-z0-9_-]+", "-", name.lower()).strip("-")
+
+    @staticmethod
+    def _page_sort_key(page: Page) -> str:
+        return page.name.casefold()
+
+    @staticmethod
+    def _instance_name(type_name: str) -> str:
+        return type_name[:1].lower() + type_name[1:]
 
     def _link(
         self,
@@ -156,6 +182,36 @@ class DocumentationRenderer:
             label = part.get("label", target)
             rendered.append(self._link(environment, current_path, target, label))
         return "".join(rendered)
+
+    @staticmethod
+    def _inline_text(content: Inline) -> str:
+        return "".join(
+            part
+            if isinstance(part, str)
+            else part.get("label", part["reference"])
+            for part in content
+        )
+
+    @staticmethod
+    def _split_inline(content: Inline, delimiter: str = ",") -> list[Inline]:
+        parts: list[Inline] = [[]]
+        for item in content:
+            if not isinstance(item, str):
+                parts[-1].append(item)
+                continue
+
+            chunks = item.split(delimiter)
+            parts[-1].append(chunks[0])
+            for chunk in chunks[1:]:
+                parts.append([chunk])
+
+        for part in parts:
+            if part and isinstance(part[0], str):
+                part[0] = part[0].lstrip()
+            if part and isinstance(part[-1], str):
+                part[-1] = part[-1].rstrip()
+            part[:] = [item for item in part if item != ""]
+        return parts
 
     def _blocks(
         self,
@@ -322,6 +378,54 @@ class DocumentationRenderer:
         output.append("")
         return output
 
+    def _operation_signature(
+        self, name: str, signature: Inline
+    ) -> tuple[str, Inline]:
+        parts = self._split_inline(signature)
+        if name in _BINARY_OPERATORS and len(parts) == 3:
+            left = self._inline_text(parts[0])
+            right = self._inline_text(parts[1])
+            return f"{left} {_BINARY_OPERATORS[name]} {right}", parts[2]
+        if name == "__unm" and len(parts) == 2:
+            return f"-{self._inline_text(parts[0])}", parts[1]
+        if name == "__tostring" and len(parts) == 2:
+            return f"tostring({self._inline_text(parts[0])})", parts[1]
+        raise ValueError(f"Unsupported operation signature: {name}")
+
+    def _operations(
+        self,
+        environment: Environment,
+        current_path: Path,
+        entries: list[Entry],
+    ) -> list[str]:
+        if not entries:
+            return []
+
+        rows = []
+        for entry in entries:
+            if entry.doc is None or not entry.doc.operations:
+                raise ValueError(f"Missing operation metadata: {entry.name}")
+            for index, operation in enumerate(entry.doc.operations):
+                expression, result = self._operation_signature(
+                    entry.name, operation.signature
+                )
+                anchor = (
+                    f'<a id="{self._slug(entry.name)}"></a>' if index == 0 else ""
+                )
+                rows.append(
+                    [
+                        f"{anchor}`{expression}`",
+                        self._inline(environment, current_path, result),
+                        self._inline(environment, current_path, operation.description),
+                    ]
+                )
+
+        return [
+            "**Operations:**",
+            "",
+            *self._plain_table(["Operation", "Returns", "Description"], rows),
+        ]
+
     def _signature(self, kind: str, page: Page, entry: Entry) -> str:
         if entry.doc is None:
             return entry.name
@@ -342,6 +446,8 @@ class DocumentationRenderer:
 
         if kind == "namespace":
             prefix = "" if page.name == "GLOBAL" else f"{page.name}."
+        elif kind == "userdata":
+            prefix = f"{self._instance_name(page.name)}:"
         else:
             prefix = f"{page.name}:"
         return f"{prefix}{entry.name}( {arguments} )"
@@ -461,12 +567,14 @@ class DocumentationRenderer:
         kind: str,
         page: Page,
     ) -> list[str]:
-        categories = (
+        availability_categories = (
             ("server and client", "Server + Client"),
             ("server", "Server-only"),
             ("client", "Client-only"),
         )
-        known_availability = {availability for availability, _ in categories}
+        known_availability = {
+            availability for availability, _ in availability_categories
+        }
         unknown = [
             entry.name
             for entry in page.functions
@@ -476,6 +584,15 @@ class DocumentationRenderer:
             raise ValueError(
                 f"Unknown method availability on {page.name}: {', '.join(unknown)}"
             )
+
+        availability = {
+            entry.doc.availability for entry in page.functions if entry.doc
+        }
+        categories = (
+            (("server and client", "Functions"),)
+            if availability == {"server and client"}
+            else availability_categories
+        )
 
         output: list[str] = []
         for availability, title in categories:
@@ -595,11 +712,7 @@ class DocumentationRenderer:
                     output.extend(["#### Set", ""])
                     output.extend(self._doc(environment, path, member.set, 5))
 
-        output.extend(
-            self._entries(
-                environment, path, kind, page, "Operations", page.metamethods
-            )
-        )
+        output.extend(self._operations(environment, path, page.metamethods))
         output.extend(self._methods(environment, path, kind, page))
         if kind == "class":
             output.extend(self._callbacks(environment, path, page))
@@ -608,7 +721,9 @@ class DocumentationRenderer:
 
     def _write_markdown_index(self) -> None:
         output = ["# Scrap Mechanic API", ""]
-        for environment in self.docs.environments:
+        for environment in sorted(
+            self.docs.environments, key=lambda item: item.name.casefold()
+        ):
             directory = self._environment_directory(environment)
             output.append(f"- [{environment.name}]({directory}/index.md)")
         output.append("")
@@ -620,7 +735,7 @@ class DocumentationRenderer:
         directory = self.markdown_root / self._environment_directory(environment)
         directory.mkdir(parents=True, exist_ok=True)
         output = [f"# {environment.name} script environment", ""]
-        for kind, pages in self._page_groups(environment):
+        for kind, pages in self._navigation_groups(environment):
             if pages:
                 category = _CATEGORY_DIRECTORIES[kind]
                 output.append(f"- [{_CATEGORY_TITLES[kind]}]({category}/index.md)")
@@ -639,7 +754,7 @@ class DocumentationRenderer:
         )
         directory.mkdir(parents=True, exist_ok=True)
         output = [f"# {_CATEGORY_TITLES[kind]}", ""]
-        for page in pages:
+        for page in sorted(pages, key=self._page_sort_key):
             path = self.page_paths[id(page)]
             output.append(f"- [`{page.name}`]({path.name})")
         output.append("")
@@ -660,7 +775,9 @@ class DocumentationRenderer:
             f'href="{self._html_href(current_html, root_index)}">Overview</a>'
         )
 
-        for environment in self.docs.environments:
+        for environment in sorted(
+            self.docs.environments, key=lambda item: item.name.casefold()
+        ):
             environment_directory = (
                 self.markdown_root / self._environment_directory(environment)
             )
@@ -683,7 +800,7 @@ class DocumentationRenderer:
                 f'href="{self._html_href(current_html, environment_index)}">Overview</a>'
             )
 
-            for kind, pages in self._page_groups(environment):
+            for kind, pages in self._navigation_groups(environment):
                 if not pages:
                     continue
                 category_directory = environment_directory / _CATEGORY_DIRECTORIES[kind]
@@ -704,7 +821,7 @@ class DocumentationRenderer:
                     f'<li class="sidebar-page"><a class="{index_class.strip()}" '
                     f'href="{self._html_href(current_html, category_index)}">Overview</a></li>'
                 )
-                for page in pages:
+                for page in sorted(pages, key=self._page_sort_key):
                     page_path = self.page_paths[id(page)]
                     active_class = " active" if current_markdown == page_path else ""
                     output.append(
@@ -745,9 +862,15 @@ class DocumentationRenderer:
     @staticmethod
     def _table_of_contents(body: str) -> str:
         items = []
+        include_children = True
         for level, anchor, label in re.findall(
             r'<h([23]) id="([^"]+)">(.*?)</h\1>', body, flags=re.DOTALL
         ):
+            if level == "2":
+                include_children = anchor not in _TOC_EXCLUDED_SECTIONS
+            if not include_children:
+                continue
+
             text = unescape(re.sub(r"<[^>]+>", "", label))
             items.append(
                 f'<li class="toc-level-{level}"><a href="#{escape(anchor)}">'
@@ -761,7 +884,12 @@ class DocumentationRenderer:
         self.html_root.mkdir(parents=True)
         assets = self.html_root / "assets"
         assets.mkdir()
-        (assets / "style.css").write_text(_STYLE, encoding="utf-8")
+        highlight_style = HtmlFormatter(style="one-dark").get_style_defs(
+            ".codehilite"
+        )
+        (assets / "style.css").write_text(
+            f"{_STYLE}\n{highlight_style}\n", encoding="utf-8"
+        )
 
         for markdown_path in self.markdown_root.rglob("*.md"):
             relative = markdown_path.relative_to(self.markdown_root)
@@ -769,7 +897,20 @@ class DocumentationRenderer:
             html_path.parent.mkdir(parents=True, exist_ok=True)
             body = markdown.markdown(
                 markdown_path.read_text(encoding="utf-8"),
-                extensions=["fenced_code", "tables", "sane_lists", "toc"],
+                extensions=[
+                    "codehilite",
+                    "fenced_code",
+                    "sane_lists",
+                    "tables",
+                    "toc",
+                ],
+                extension_configs={
+                    "codehilite": {
+                        "guess_lang": False,
+                        "noclasses": False,
+                        "use_pygments": True,
+                    }
+                },
             )
             body = re.sub(r'href="([^"]+)\.md(#[^"]*)?"', r'href="\1.html\2"', body)
             stylesheet = os.path.relpath(assets / "style.css", html_path.parent)
