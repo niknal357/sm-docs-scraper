@@ -77,56 +77,56 @@ Show the page hierarchy, matching heading, and excerpt for documentation results
 
 ### 1. Prepare stable links
 
-- [ ] Ensure every searchable page and symbol has a stable anchor.
-- [ ] Remove duplicate HTML IDs.
-- [ ] Decide whether overloads share one result or have unique anchors.
-- [ ] Keep callback aliases such as `onCreate`, `server_onCreate`, and `client_onCreate` searchable.
-- [ ] Add tests that verify every indexed URL points to generated HTML.
+- [x] Ensure every searchable page and symbol has a stable anchor.
+- [x] Remove duplicate HTML IDs.
+- [x] Decide whether overloads share one result or have unique anchors.
+- [x] Keep callback aliases such as `onCreate`, `server_onCreate`, and `client_onCreate` searchable.
+- [x] Add tests that verify every indexed URL points to generated HTML.
 
 ### 2. Generate the symbol index
 
-- [ ] Add a search-record model to the renderer.
-- [ ] Generate records from the IR instead of parsing rendered HTML.
-- [ ] Create qualified names using the correct namespace or userdata syntax.
-- [ ] Add normalized aliases for dotted, colon-separated, snake-case, and camel-case identifiers.
-- [ ] Include common variants such as `raycast` and `ray cast`.
-- [ ] Group duplicate overloads when appropriate.
-- [ ] Serialize the records or MiniSearch index into `dist/html/assets/`.
-- [ ] Load the symbol index when search is first opened or focused.
+- [x] Add a search-record model to the renderer.
+- [x] Generate records from the IR instead of parsing rendered HTML.
+- [x] Create qualified names using the correct namespace or userdata syntax.
+- [x] Add normalized aliases for dotted, colon-separated, snake-case, and camel-case identifiers.
+- [x] Include common variants such as `raycast` and `ray cast`.
+- [x] Group duplicate overloads when appropriate.
+- [x] Serialize the records or MiniSearch index into `dist/html/assets/`.
+- [x] Load the symbol index when search is first opened or focused.
 
 ### 3. Add Pagefind
 
-- [ ] Add the Pagefind Python package to the build dependencies.
-- [ ] Mark the main documentation element with `data-pagefind-body`.
-- [ ] Run Pagefind after HTML generation.
-- [ ] Preserve useful identifier characters such as `.`, `_`, and `:`.
-- [ ] Enable heading-level sub-results.
-- [ ] Confirm nested pages and deployments under a URL subpath work.
-- [ ] Verify that sidebar content is absent from the search index.
+- [x] Add the Pagefind Python package to the build dependencies.
+- [x] Mark the main documentation element with `data-pagefind-body`.
+- [x] Run Pagefind after HTML generation.
+- [x] Preserve useful identifier characters such as `.`, `_`, and `:`.
+- [x] Enable heading-level sub-results.
+- [x] Confirm nested pages and deployments under a URL subpath work.
+- [x] Verify that sidebar content is absent from the search index.
 
 ### 4. Build the search interface
 
-- [ ] Replace the current sidebar filtering behavior with a search panel or modal.
-- [ ] Search both indexes from the same input.
-- [ ] Group symbol and documentation results clearly.
-- [ ] Highlight matching terms.
-- [ ] Limit the initial result count and provide a way to see more.
-- [ ] Add `All`, `Game`, and `Terrain` filters.
+- [x] Replace the current sidebar filtering behavior with a search panel or modal.
+- [x] Search both indexes from the same input.
+- [x] Group symbol and documentation results clearly.
+- [x] Highlight matching terms.
+- [x] Limit the initial result count and provide a way to see more.
+- [x] Add `All`, `Game`, and `Terrain` filters.
 - [ ] Consider filters for functions, types, callbacks, and constants.
-- [ ] Soft-boost results from the current environment without hiding other results.
-- [ ] Add a copy-signature action to exact symbol matches.
-- [ ] Use a full-width search dialog on small screens.
+- [x] Soft-boost results from the current environment without hiding other results.
+- [x] Add a copy-signature action to exact symbol matches.
+- [x] Use a compact search popover with a separate all-results page.
 
 ### 5. Keyboard and accessibility
 
-- [ ] Add `Ctrl/Cmd+K` and `/` shortcuts.
-- [ ] Support arrow-key result navigation.
-- [ ] Open the selected result with Enter.
-- [ ] Close or clear search with Escape.
-- [ ] Use the ARIA combobox and listbox patterns.
-- [ ] Give the input an accessible name.
-- [ ] Announce result counts and loading state.
-- [ ] Restore focus when the modal closes.
+- [x] Add `Ctrl/Cmd+K` and `/` shortcuts.
+- [x] Support arrow-key result navigation.
+- [x] Open the selected result with Enter.
+- [x] Close or clear search with Escape.
+- [x] Use the ARIA combobox and listbox patterns.
+- [x] Give the input an accessible name.
+- [x] Announce result counts and loading state.
+- [x] Keep focus behavior predictable when the popover closes.
 
 ### 6. Ranking
 
@@ -142,19 +142,19 @@ Rank matches in this general order:
 
 Additional rules:
 
-- [ ] Keep exact identifier matching separate from stemmed prose matching.
-- [ ] Require stronger matches for short terms such as `sm`, `id`, and `ui`.
-- [ ] Apply fuzzy matching mainly to terms of four or more characters.
-- [ ] Prevent popularity or context boosts from outranking a strong exact match.
+- [x] Keep exact identifier matching separate from stemmed prose matching.
+- [x] Require stronger matches for short terms such as `sm`, `id`, and `ui`.
+- [x] Apply fuzzy matching mainly to terms of four or more characters.
+- [x] Prevent popularity or context boosts from outranking a strong exact match.
 
 ### 7. Empty and initial states
 
-- [ ] Show recent symbols when search opens with no query.
+- [x] Show recent symbols when search opens with no query.
 - [ ] Optionally let users pin frequent symbols in local storage.
-- [ ] Show spelling suggestions when no exact results exist.
-- [ ] Show related, less strict results instead of an empty panel.
+- [x] Show spelling suggestions when no exact results exist.
+- [x] Show related, less strict results instead of an empty panel.
 - [ ] Add a link for reporting a missing result.
-- [ ] Restore sidebar expansion state after search; search must not modify it.
+- [x] Restore sidebar expansion state after search; search must not modify it.
 
 ### 8. Search quality tests
 
@@ -173,12 +173,12 @@ Initial cases:
 | `create joint` | `Shape:createJoint` |
 | `get raycast` | `sm.localPlayer.getRaycast` |
 
-- [ ] Assert that expected results remain within the top three.
-- [ ] Test Game and Terrain duplicates.
-- [ ] Test overload grouping.
-- [ ] Test direct anchors.
-- [ ] Test keyboard navigation and mobile behavior.
-- [ ] Record index size and first-search latency.
+- [x] Assert that expected results remain within the top three.
+- [x] Test Game and Terrain duplicates.
+- [x] Test overload grouping.
+- [x] Test direct anchors.
+- [x] Test keyboard navigation and mobile behavior.
+- [x] Record index size and first-search latency.
 
 ### 9. Feedback and analytics
 

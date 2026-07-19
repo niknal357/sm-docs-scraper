@@ -13,6 +13,7 @@ from symbol_catalog import CallbackGroup, SIGNATURE_LINE_LENGTH, SymbolCatalog
 
 SIGNATURE_FENCE = "``` { .lua .api-signature }"
 INTRODUCTION_PATH = Path(__file__).parent / "content" / "introduction.md"
+SEARCH_PATH = Path(__file__).parent / "content" / "search.md"
 LEGACY_EMPTY_LINK = re.compile(
     r'<a href="index\.html#(?:server|client|console)">(.*?)</a>',
     flags=re.IGNORECASE,
@@ -873,6 +874,12 @@ class MarkdownRenderer(RenderContext):
         introduction = INTRODUCTION_PATH.read_text(encoding="utf-8").rstrip()
         (self.markdown_root / "index.md").write_text(
             introduction + "\n", encoding="utf-8"
+        )
+
+    def _write_search_page(self) -> None:
+        (self.markdown_root / "search.md").write_text(
+            SEARCH_PATH.read_text(encoding="utf-8"),
+            encoding="utf-8",
         )
 
     def _write_environment_index(self, environment: Environment) -> None:

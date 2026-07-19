@@ -6,6 +6,7 @@ from html.parser import HTMLParser
 import os
 from pathlib import Path
 import re
+import shutil
 from urllib.parse import unquote, urlsplit
 
 import markdown
@@ -16,14 +17,23 @@ from render_context import (
     CATEGORY_TITLES,
     RenderContext,
 )
+from search_index import PAGEFIND_DIRECTORY, SYMBOL_INDEX_NAME
 
 
 TOC_EXCLUDED_SECTIONS = {"constants", "fields", "members", "operations"}
 SITE_ASSETS_PATH = Path(__file__).parent / "content" / "site"
 HTML_TEMPLATE = (SITE_ASSETS_PATH / "page.html").read_text(encoding="utf-8")
 THEME_SCRIPT = (SITE_ASSETS_PATH / "theme.js").read_text(encoding="utf-8")
-SCRIPT = (SITE_ASSETS_PATH / "script.js").read_text(encoding="utf-8")
 STYLE = (SITE_ASSETS_PATH / "style.css").read_text(encoding="utf-8")
+SITE_FILES = {
+    "site.js": SITE_ASSETS_PATH / "script.js",
+    "search-core.js": SITE_ASSETS_PATH / "search-core.js",
+    "search.js": SITE_ASSETS_PATH / "search.js",
+    "minisearch.js": SITE_ASSETS_PATH / "vendor" / "minisearch.js",
+    "minisearch.LICENSE.txt": (
+        SITE_ASSETS_PATH / "vendor" / "minisearch.LICENSE.txt"
+    ),
+}
 
 
 class _HtmlLinks(HTMLParser):
@@ -49,10 +59,20 @@ class _HtmlLinks(HTMLParser):
         ).split():
             self.toc_depth += 1
 
-        href = attributes.get("href") if tag == "a" else None
+        href = None
+        if tag in {"a", "link"}:
+            href = attributes.get("href")
+        elif tag == "script":
+            href = attributes.get("src")
+
+        for attribute in ("data-symbol-index", "data-pagefind-module"):
+            resource = attributes.get(attribute)
+            if resource:
+                self.hrefs.append(resource)
+
         if href is not None:
             self.hrefs.append(href)
-            if self.toc_depth:
+            if tag == "a" and self.toc_depth:
                 self.toc_hrefs.append(href)
                 self._toc_label = []
 
@@ -154,7 +174,8 @@ class HtmlRenderer(RenderContext):
 
         if relative.name != "index.md":
             output.append('<span class="breadcrumb-separator">›</span>')
-            output.append(f"<span>{escape(relative.stem)}</span>")
+            label = "Search" if relative == Path("search.md") else relative.stem
+            output.append(f"<span>{escape(label)}</span>")
         return "".join(output)
 
     @staticmethod
@@ -197,6 +218,43 @@ class HtmlRenderer(RenderContext):
             flags=re.DOTALL,
         )
 
+    def _search_page_data(self, markdown_path: Path) -> tuple[str, str, str]:
+        root_index = self.markdown_root / "index.md"
+        if markdown_path == root_index:
+            return "All", " data-pagefind-body", (
+                '<meta data-pagefind-meta="hierarchy[content]" '
+                'content="Introduction">'
+            )
+
+        details = self.page_details.get(markdown_path)
+        if details is not None:
+            environment, kind, page = details
+            display_name = self._page_display_name(page)
+            hierarchy = (
+                f"{environment.name} › {CATEGORY_TITLES[kind]} › {display_name}"
+            )
+            attributes = (
+                ' data-pagefind-body data-pagefind-filter="environment:'
+                f'{escape(environment.name)}"'
+            )
+            metadata = (
+                '<meta data-pagefind-meta="hierarchy[content]" '
+                f'content="{escape(hierarchy)}">\n  '
+                '<meta data-pagefind-meta="environment[content]" '
+                f'content="{escape(environment.name)}">'
+            )
+            return environment.name, attributes, metadata
+
+        for environment in self.docs.environments:
+            directory = self.markdown_root / self._environment_directory(environment)
+            if markdown_path.is_relative_to(directory):
+                return environment.name, "", ""
+        return "All", "", ""
+
+    @staticmethod
+    def _asset_href(asset: Path, html_path: Path) -> str:
+        return Path(os.path.relpath(asset, html_path.parent)).as_posix()
+
     def _write_html_tree(self) -> None:
         self.html_root.mkdir(parents=True)
         assets = self.html_root / "assets"
@@ -211,6 +269,8 @@ class HtmlRenderer(RenderContext):
             f"{STYLE}\n{light_highlight_style}\n{dark_highlight_style}\n",
             encoding="utf-8",
         )
+        for output_name, source in SITE_FILES.items():
+            shutil.copyfile(source, assets / output_name)
 
         for markdown_path in self.markdown_root.rglob("*.md"):
             relative = markdown_path.relative_to(self.markdown_root)
@@ -236,20 +296,41 @@ class HtmlRenderer(RenderContext):
             )
             body = self._render_optional_signature_markers(body)
             body = re.sub(r'href="([^"]+)\.md(#[^"]*)?"', r'href="\1.html\2"', body)
-            stylesheet = os.path.relpath(assets / "style.css", html_path.parent)
-            home = os.path.relpath(self.html_root / "index.html", html_path.parent)
-            title = relative.stem if relative.stem != "index" else relative.parent.name
+            home = self._asset_href(self.html_root / "index.html", html_path)
+            current_environment, pagefind_attributes, pagefind_meta = (
+                self._search_page_data(markdown_path)
+            )
+            if relative == Path("search.md"):
+                title = "Search"
+            else:
+                title = relative.stem if relative.stem != "index" else relative.parent.name
             html_path.write_text(
                 HTML_TEMPLATE.format(
                     title=escape(title or "Scrap Mechanic API"),
-                    stylesheet=Path(stylesheet).as_posix(),
-                    home=Path(home).as_posix(),
+                    stylesheet=self._asset_href(assets / "style.css", html_path),
+                    home=home,
                     sidebar=self._sidebar(markdown_path, html_path),
                     breadcrumbs=self._breadcrumbs(markdown_path, html_path),
                     body=body,
                     toc=self._table_of_contents(body),
                     theme_script=THEME_SCRIPT,
-                    script=SCRIPT,
+                    pagefind_meta=pagefind_meta,
+                    pagefind_attributes=pagefind_attributes,
+                    current_environment=escape(current_environment),
+                    symbol_index=self._asset_href(
+                        assets / SYMBOL_INDEX_NAME, html_path
+                    ),
+                    pagefind_module=self._asset_href(
+                        assets / PAGEFIND_DIRECTORY / "pagefind.js", html_path
+                    ),
+                    minisearch_script=self._asset_href(
+                        assets / "minisearch.js", html_path
+                    ),
+                    search_core_script=self._asset_href(
+                        assets / "search-core.js", html_path
+                    ),
+                    site_script=self._asset_href(assets / "site.js", html_path),
+                    search_script=self._asset_href(assets / "search.js", html_path),
                 ),
                 encoding="utf-8",
             )

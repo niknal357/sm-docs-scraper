@@ -1,0 +1,55 @@
+[
+  {
+    "query": "raycast",
+    "qualifiedName": "sm.physics.raycast",
+    "maxRank": 3
+  },
+  {
+    "query": "ray cast",
+    "qualifiedName": "sm.physics.raycast",
+    "maxRank": 3
+  },
+  {
+    "query": "sm.physics.raycast",
+    "qualifiedName": "sm.physics.raycast",
+    "maxRank": 1
+  },
+  {
+    "query": "raycats",
+    "qualifiedName": "sm.physics.raycast",
+    "expectedSuggestion": "raycast",
+    "maxRank": 3
+  },
+  {
+    "query": "collision filter",
+    "qualifiedName": "sm.physics.filter",
+    "maxRank": 3
+  },
+  {
+    "query": "server on create",
+    "name": "onCreate",
+    "kind": "callback",
+    "maxRank": 3
+  },
+  {
+    "query": "create joint",
+    "qualifiedName": "Shape:createJoint",
+    "maxRank": 3
+  },
+  {
+    "query": "get raycast",
+    "qualifiedName": "sm.localPlayer.getRaycast",
+    "maxRank": 3
+  },
+  {
+    "query": "server_onCreate",
+    "name": "onCreate",
+    "kind": "callback",
+    "maxRank": 3
+  },
+  {
+    "query": "shape:createJoint()",
+    "qualifiedName": "Shape:createJoint",
+    "maxRank": 1
+  }
+]

@@ -475,7 +475,13 @@ class SymbolCatalog:
 
         aliases: list[str] = []
         for value in values:
-            for alias in (value, self._identifier_words(value)):
+            word_alias = self._identifier_words(value)
+            variants = (
+                value,
+                word_alias,
+                re.sub(r"raycast", "ray cast", word_alias, flags=re.IGNORECASE),
+            )
+            for alias in variants:
                 if alias and alias not in aliases:
                     aliases.append(alias)
         return tuple(aliases)

@@ -53,6 +53,20 @@ groups.forEach((group) => {
     } catch (_) {}
   });
 });
+const scrollAnchorKey = statePrefix + 'scroll-anchor';
+sidebar.addEventListener('click', (event) => {
+  const link = event.target.closest('a');
+  if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const sidebarRect = sidebar.getBoundingClientRect();
+  const linkRect = link.getBoundingClientRect();
+  try {
+    sessionStorage.setItem(scrollAnchorKey, JSON.stringify({
+      href: link.href,
+      top: linkRect.top - sidebarRect.top,
+    }));
+  } catch (_) {}
+});
+
 const activeLink = sidebar.querySelector('a.active');
 if (activeLink) {
   let parent = activeLink.parentElement;
@@ -60,22 +74,21 @@ if (activeLink) {
     if (parent.tagName === 'DETAILS') parent.open = true;
     parent = parent.parentElement;
   }
-  const sidebarRect = sidebar.getBoundingClientRect();
-  const activeRect = activeLink.getBoundingClientRect();
-  sidebar.scrollTop += activeRect.top - sidebarRect.top - sidebarRect.height / 2;
-}
-const search = document.getElementById('doc-search');
-search.addEventListener('input', () => {
-  const query = search.value.trim().toLowerCase();
-  document.querySelectorAll('.sidebar-page').forEach((item) => {
-    const matches = !query || item.textContent.toLowerCase().includes(query);
-    item.hidden = !matches;
-    if (query && matches) {
-      let parent = item.parentElement;
-      while (parent) {
-        if (parent.tagName === 'DETAILS') parent.open = true;
-        parent = parent.parentElement;
-      }
+
+  let restoredPosition = false;
+  try {
+    const savedAnchor = JSON.parse(sessionStorage.getItem(scrollAnchorKey));
+    sessionStorage.removeItem(scrollAnchorKey);
+    if (savedAnchor?.href === window.location.href && Number.isFinite(savedAnchor.top)) {
+      const sidebarRect = sidebar.getBoundingClientRect();
+      const activeRect = activeLink.getBoundingClientRect();
+      sidebar.scrollTop += activeRect.top - sidebarRect.top - savedAnchor.top;
+      restoredPosition = true;
     }
-  });
-});
+  } catch (_) {
+    try {
+      sessionStorage.removeItem(scrollAnchorKey);
+    } catch (_) {}
+  }
+  if (!restoredPosition) activeLink.scrollIntoView({ block: 'nearest' });
+}

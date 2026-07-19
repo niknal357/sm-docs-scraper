@@ -22,6 +22,7 @@ class RenderContext:
         self.html_root = html_root
         self.symbol_catalog = SymbolCatalog(docs)
         self.page_paths: dict[int, Path] = {}
+        self.page_details: dict[Path, tuple[Environment, str, Page]] = {}
         self.references: dict[str, dict[str, tuple[Path, str | None]]] = {}
         self._index_references()
 
@@ -34,6 +35,7 @@ class RenderContext:
                 for page in pages:
                     path = self._page_path(environment, kind, page)
                     self.page_paths[id(page)] = path
+                    self.page_details[path] = (environment, kind, page)
                     references[page.name] = (path, None)
 
                     entries = (
