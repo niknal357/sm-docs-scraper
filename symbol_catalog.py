@@ -3,11 +3,12 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass, field
 from hashlib import sha1
+from itertools import combinations
 from pathlib import Path
 import re
 from typing import Iterable
 
-from make_ir import Doc, Documentation, Entry, Environment, Inline, Page
+from make_ir import Doc, Documentation, Entry, Environment, Inline, Page, Parameter
 
 
 SIGNATURE_LINE_LENGTH = 80
@@ -27,6 +28,18 @@ BINARY_OPERATORS = {
     "__lt": "<",
     "__mul": "*",
     "__sub": "-",
+}
+PRIMITIVE_TYPES = {
+    "any",
+    "boolean",
+    "function",
+    "integer",
+    "nil",
+    "number",
+    "string",
+    "table",
+    "thread",
+    "userdata",
 }
 
 
@@ -210,17 +223,174 @@ class SymbolCatalog:
     def method_anchor(self, page: Page, entry: Entry) -> MethodAnchor:
         return self._method_anchors[id(page)][id(entry)]
 
+    @staticmethod
+    def _minimum_unique_columns(rows: list[list[object]]) -> tuple[int, ...] | None:
+        if not rows or not rows[0]:
+            return None
+
+        varying = [
+            index
+            for index in range(len(rows[0]))
+            if len({row[index] for row in rows}) > 1
+        ]
+        for size in range(1, len(varying) + 1):
+            for columns in combinations(varying, size):
+                keys = {tuple(row[index] for index in columns) for row in rows}
+                if len(keys) == len(rows):
+                    return columns
+        return None
+
+    def _parameter_key(self, parameter: Parameter | None) -> object:
+        if parameter is None:
+            return None
+        return self.inline_text(parameter.type), parameter.optional
+
+    def _named_discriminators(
+        self, parameter_rows: list[list[Parameter]]
+    ) -> list[list[Parameter]] | None:
+        parameter_maps = []
+        for parameters in parameter_rows:
+            counts = Counter(parameter.name for parameter in parameters)
+            parameter_maps.append(
+                {
+                    parameter.name: parameter
+                    for parameter in parameters
+                    if counts[parameter.name] == 1
+                }
+            )
+
+        common_names = set.intersection(
+            *(set(parameters) for parameters in parameter_maps)
+        )
+        ordered_names = [
+            parameter.name
+            for parameter in parameter_rows[0]
+            if parameter.name in common_names
+        ]
+        key_rows = [
+            [self._parameter_key(parameters[name]) for name in ordered_names]
+            for parameters in parameter_maps
+        ]
+        columns = self._minimum_unique_columns(key_rows)
+        if columns is None:
+            return None
+        return [
+            [parameters[ordered_names[index]] for index in columns]
+            for parameters in parameter_maps
+        ]
+
+    def _positional_discriminators(
+        self, parameter_rows: list[list[Parameter]]
+    ) -> list[list[Parameter | None]] | None:
+        width = max((len(parameters) for parameters in parameter_rows), default=0)
+        padded_rows = [
+            [
+                parameters[index] if index < len(parameters) else None
+                for index in range(width)
+            ]
+            for parameters in parameter_rows
+        ]
+        key_rows = [
+            [self._parameter_key(parameter) for parameter in parameters]
+            for parameters in padded_rows
+        ]
+        columns = self._minimum_unique_columns(key_rows)
+        if columns is None:
+            return None
+        return [
+            [parameters[index] for index in columns]
+            for parameters in padded_rows
+        ]
+
+    def _discriminator_label(
+        self,
+        parameters: list[Parameter | None],
+        argument_count: int,
+        primitive_names: bool,
+        optional_markers: bool,
+    ) -> str:
+        parts = []
+        for parameter in parameters:
+            if parameter is None:
+                part = (
+                    "no arguments"
+                    if argument_count == 0
+                    else f"{argument_count} "
+                    f"{'argument' if argument_count == 1 else 'arguments'}"
+                )
+            else:
+                type_name = self.inline_text(parameter.type)
+                use_name = (
+                    primitive_names
+                    and type_name.casefold() in PRIMITIVE_TYPES
+                    and len(parameter.name) > 1
+                )
+                part = parameter.name if use_name else type_name
+                if optional_markers and parameter.optional:
+                    part += "?"
+            if part not in parts:
+                parts.append(part)
+        return " + ".join(parts)
+
+    def _overload_labels(
+        self, page: Page, entries: list[Entry]
+    ) -> dict[int, str]:
+        parameter_rows = [self.entry_parameters(page, entry) for entry in entries]
+        named = self._named_discriminators(parameter_rows)
+        positional = self._positional_discriminators(parameter_rows)
+
+        if named is not None and (
+            positional is None or len(named[0]) <= len(positional[0])
+        ):
+            discriminators = named
+        else:
+            discriminators = positional
+        if discriminators is None:
+            return {}
+
+        attempts = (
+            (True, False),
+            (False, False),
+            (True, True),
+            (False, True),
+        )
+        for primitive_names, optional_markers in attempts:
+            labels = [
+                self._discriminator_label(
+                    parameters,
+                    len(parameter_rows[index]),
+                    primitive_names,
+                    optional_markers,
+                )
+                for index, parameters in enumerate(discriminators)
+            ]
+            if len({label.casefold() for label in labels}) == len(labels):
+                return {
+                    id(entry): f"{entry.name} - {label}"
+                    for entry, label in zip(entries, labels, strict=True)
+                }
+        return {}
+
     def _build_method_anchors(
         self, page: Page, entries: list[Entry]
     ) -> dict[int, MethodAnchor]:
-        name_counts = Counter(self.slug(entry.name) for entry in entries)
+        groups: dict[str, list[Entry]] = {}
+        for entry in entries:
+            groups.setdefault(self.slug(entry.name), []).append(entry)
+        overload_labels = {
+            entry_id: label
+            for group in groups.values()
+            if len(group) > 1
+            for entry_id, label in self._overload_labels(page, group).items()
+        }
+
         used: set[str] = set()
         first_overload: set[str] = set()
         anchors: dict[int, MethodAnchor] = {}
 
         for entry in entries:
             base = self.slug(entry.name)
-            if name_counts[base] == 1:
+            if len(groups[base]) == 1:
                 anchors[id(entry)] = MethodAnchor(anchor=base, label=entry.name)
                 used.add(base)
                 continue
@@ -231,7 +401,9 @@ class SymbolCatalog:
                 + ("?" if parameter.optional else "")
                 for parameter in parameters
             ]
-            label = f"{entry.name}({', '.join(display_types)})"
+            label = overload_labels.get(
+                id(entry), f"{entry.name}({', '.join(display_types)})"
+            )
             suffix_parts = []
             for parameter in parameters:
                 type_slug = self.slug(self.inline_text(parameter.type)) or "any"
