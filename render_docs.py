@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from html import escape, unescape
+import json
 import os
 from pathlib import Path
 import re
@@ -30,6 +31,7 @@ _CATEGORY_TITLES = {
 }
 _TOC_EXCLUDED_SECTIONS = {"constants", "fields", "members", "operations"}
 _SIGNATURE_LINE_LENGTH = 80
+_SIGNATURE_FENCE = "``` { .lua .api-signature }"
 _INTRODUCTION_PATH = Path(__file__).parent / "content" / "introduction.md"
 _BINARY_OPERATORS = {
     "__add": "+",
@@ -105,6 +107,8 @@ class DocumentationRenderer:
                 self._write_category_index(environment, kind, pages)
                 for page in pages:
                     self._write_page(environment, kind, page)
+                    if kind == "class":
+                        self._write_class_template(page)
 
         self._write_html_tree()
         return self.markdown_root, self.html_root
@@ -138,6 +142,9 @@ class DocumentationRenderer:
             / _CATEGORY_DIRECTORIES[kind]
             / f"{filename}.md"
         )
+
+    def _class_template_path(self, page: Page) -> Path:
+        return self.page_paths[id(page)].with_name(f"{page.name}-Template.md")
 
     @staticmethod
     def _slug(name: str) -> str:
@@ -509,7 +516,7 @@ class DocumentationRenderer:
         if server and client and server.doc == client.doc:
             output.extend(
                 [
-                    "```lua",
+                    _SIGNATURE_FENCE,
                     self._signature("class", page, server),
                     self._signature("class", page, client),
                     "```",
@@ -529,7 +536,7 @@ class DocumentationRenderer:
                 output.extend([f"#### {side}", ""])
             output.extend(
                 [
-                    "```lua",
+                    _SIGNATURE_FENCE,
                     self._signature("class", page, entry),
                     "```",
                     "",
@@ -628,7 +635,7 @@ class DocumentationRenderer:
                         f'<a id="{self._slug(entry.name)}"></a>',
                         f"### {entry.name}",
                         "",
-                        "```lua",
+                        _SIGNATURE_FENCE,
                         self._signature(kind, page, entry),
                         "```",
                         "",
@@ -669,7 +676,7 @@ class DocumentationRenderer:
             if title != "Constants":
                 output.extend(
                     [
-                        "```lua",
+                        _SIGNATURE_FENCE,
                         self._signature(kind, page, entry),
                         "```",
                         "",
@@ -679,10 +686,184 @@ class DocumentationRenderer:
                 output.extend(self._doc(environment, current_path, entry.doc, 4))
         return output
 
+    @staticmethod
+    def _template_class_name(page: Page) -> str:
+        return page.name.removesuffix("Class") or page.name
+
+    def _template_constant_value(self, page: Page, entry: Entry) -> str:
+        special_values = {
+            ("ShapeClass", "colorHighlight"): 'sm.color.new("#ffffff")',
+            ("ShapeClass", "colorNormal"): 'sm.color.new("#808080")',
+            ("ShapeClass", "connectionInput"): (
+                "sm.interactable.connectionType.none"
+            ),
+            ("ShapeClass", "connectionOutput"): (
+                "sm.interactable.connectionType.none"
+            ),
+            ("ToolClass", "equipWhileSeated"): "false",
+        }
+        special = special_values.get((page.name, entry.name))
+        if special is not None:
+            return special
+
+        doc = entry.doc
+        type_name = ""
+        if doc and doc.returns:
+            type_name = self._inline_text(doc.returns[0].type).casefold()
+
+        text = ""
+        if doc:
+            text = " ".join(
+                self._inline_text(block["content"])
+                for block in doc.content
+                if block["type"] == "paragraph"
+            )
+        match = re.search(
+            r'\(\s*Defaults?(?:\s+to)?\s+(?:"([^"]*)"|([#$A-Za-z0-9_.-]+))',
+            text,
+            flags=re.IGNORECASE,
+        )
+        if match:
+            quoted, value = match.groups()
+            if quoted is not None:
+                return json.dumps(quoted)
+            value = value or ""
+            lowered = value.casefold()
+            if lowered in {"true", "false"}:
+                return lowered
+            if re.fullmatch(r"-?(?:\d+(?:\.\d*)?|\.\d+)", value):
+                return value
+            if lowered == "empty":
+                return '""'
+            if type_name == "string":
+                return json.dumps(value)
+
+        if "boolean" in type_name:
+            return "false"
+        if "integer" in type_name or "number" in type_name:
+            return "0"
+        if "string" in type_name:
+            return '""'
+        if "color" in type_name:
+            return 'sm.color.new("#ffffff")'
+        return "nil"
+
+    def _template_return_values(self, entry: Entry) -> list[str]:
+        if entry.doc is None:
+            return []
+
+        values = []
+        for return_value in entry.doc.returns:
+            description = self._inline_text(return_value.description).casefold()
+            type_names = self._inline_text(return_value.type).split(",")
+            for type_name in type_names:
+                type_name = type_name.strip().casefold()
+                if type_name == "boolean":
+                    value = "true" if "defaults to true" in description else "false"
+                elif type_name in {"integer", "number"}:
+                    value = "0"
+                elif type_name == "string":
+                    value = '""'
+                elif type_name == "table":
+                    value = "{}"
+                else:
+                    value = "nil"
+                values.append(value)
+        return values
+
+    def _template_function(self, page: Page, entry: Entry) -> list[str]:
+        parameters = [] if entry.doc is None else entry.doc.parameters
+        names = [parameter.name for parameter in parameters]
+        if not names or names[0] != "self":
+            names.insert(0, "self")
+
+        class_name = self._template_class_name(page)
+        prefix = f"function {class_name}.{entry.name}"
+        signature = f"{prefix}( {', '.join(names)} )"
+        if len(signature) <= _SIGNATURE_LINE_LENGTH:
+            output = [signature]
+        else:
+            output = [f"{prefix}("]
+            output.extend(
+                f"    {name}{',' if index < len(names) - 1 else ''}"
+                for index, name in enumerate(names)
+            )
+            output.append(")")
+
+        return_values = self._template_return_values(entry)
+        if return_values:
+            output.append(f"    return {', '.join(return_values)}")
+        output.append("end")
+        return output
+
+    def _write_class_template(self, page: Page) -> None:
+        path = self._class_template_path(page)
+        class_path = self.page_paths[id(page)]
+        class_link = os.path.relpath(class_path, path.parent)
+        class_name = self._template_class_name(page)
+        code = [f"{class_name} = class()"]
+
+        if page.constants:
+            code.extend(["", "-- Constants"])
+            for entry in page.constants:
+                code.extend(
+                    [
+                        f"-- Docs: {page.name}.html#{self._slug(entry.name)}",
+                        f"{class_name}.{entry.name} = "
+                        f"{self._template_constant_value(page, entry)}",
+                    ]
+                )
+
+        callbacks = page.common_callbacks + page.callbacks
+        sides = (
+            ("server_", "Server callbacks"),
+            ("client_", "Client callbacks"),
+        )
+        for side, title in sides:
+            entries = [entry for entry in callbacks if entry.name.startswith(side)]
+            if not entries:
+                continue
+            code.extend(["", f"-- {title}"])
+            for entry in entries:
+                code.extend(
+                    [
+                        f"-- Docs: {page.name}.html#{self._slug(entry.name)}",
+                        *self._template_function(page, entry),
+                        "",
+                    ]
+                )
+            if code[-1] == "":
+                code.pop()
+
+        output = [
+            f"# {page.name} script template",
+            "",
+            f"[Back to {page.name}]({Path(class_link).as_posix()})",
+            "",
+            "Copy this starter script and remove anything you do not need.",
+            "",
+            "```lua",
+            *code,
+            "```",
+            "",
+        ]
+        path.write_text("\n".join(output), encoding="utf-8")
+
     def _write_page(self, environment: Environment, kind: str, page: Page) -> None:
         path = self.page_paths[id(page)]
         path.parent.mkdir(parents=True, exist_ok=True)
         output = [f"# {self._page_display_name(page)}", ""]
+
+        if kind == "class":
+            template_path = self._class_template_path(page)
+            template_link = os.path.relpath(template_path, path.parent)
+            output.extend(
+                [
+                    "**Script template:** "
+                    f"[View starter script]({Path(template_link).as_posix()})",
+                    "",
+                ]
+            )
 
         if page.associated_type:
             link = self._link(
@@ -881,6 +1062,25 @@ class DocumentationRenderer:
             return ""
         return "<ul>" + "".join(items) + "</ul>"
 
+    @staticmethod
+    def _render_optional_signature_markers(body: str) -> str:
+        optional_marker = (
+            '<span class="p optional-marker" aria-hidden="true"></span>'
+        )
+
+        def replace_marker(match: re.Match[str]) -> str:
+            signature = match.group(0)
+            return signature.replace(
+                '<span class="err">?</span>', optional_marker
+            )
+
+        return re.sub(
+            r'<div class="[^"]*\bapi-signature\b[^"]*">.*?</div>',
+            replace_marker,
+            body,
+            flags=re.DOTALL,
+        )
+
     def _write_html_tree(self) -> None:
         self.html_root.mkdir(parents=True)
         assets = self.html_root / "assets"
@@ -917,6 +1117,7 @@ class DocumentationRenderer:
                     }
                 },
             )
+            body = self._render_optional_signature_markers(body)
             body = re.sub(r'href="([^"]+)\.md(#[^"]*)?"', r'href="\1.html\2"', body)
             stylesheet = os.path.relpath(assets / "style.css", html_path.parent)
             home = os.path.relpath(self.html_root / "index.html", html_path.parent)
@@ -1259,7 +1460,7 @@ a:hover { text-decoration: underline; }
   display: grid;
   flex: 1;
   gap: 3rem;
-  grid-template-columns: minmax(0, 850px) 220px;
+  grid-template-columns: minmax(0, 850px) fit-content(320px);
   justify-content: center;
   min-width: 0;
   padding: 0 2.5rem;
@@ -1278,6 +1479,8 @@ a:hover { text-decoration: underline; }
   font-size: 0.82rem;
   margin-top: 2.2rem;
   max-height: calc(100vh - 100px);
+  max-width: 320px;
+  min-width: 220px;
   overflow-y: auto;
   padding-left: 1rem;
   position: sticky;
@@ -1286,7 +1489,7 @@ a:hover { text-decoration: underline; }
 .table-of-contents ul { list-style: none; margin: 0; padding: 0; }
 .table-of-contents li { margin: 0.3rem 0; }
 .table-of-contents .toc-level-3 { padding-left: 0.8rem; }
-.table-of-contents a { color: var(--muted); }
+.table-of-contents a { color: var(--muted); overflow-wrap: anywhere; }
 code {
   background: var(--inline-code-background);
   font-size: 0.92em;
@@ -1299,6 +1502,11 @@ pre {
   padding: 1rem 1.2rem;
 }
 pre code { background: none; padding: 0; }
+.optional-marker::after {
+  content: "?";
+  -webkit-user-select: none;
+  user-select: none;
+}
 table {
   border-collapse: collapse;
   display: block;
