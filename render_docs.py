@@ -1,13 +1,17 @@
 from __future__ import annotations
 
+from collections import Counter
 from dataclasses import dataclass
+from hashlib import sha1
 from html import escape, unescape
+from html.parser import HTMLParser
 import json
 import os
 from pathlib import Path
 import re
 import shutil
 from typing import Iterable
+from urllib.parse import unquote, urlsplit
 
 import markdown
 from pygments.formatters import HtmlFormatter
@@ -41,6 +45,10 @@ _BINARY_OPERATORS = {
     "__mul": "*",
     "__sub": "-",
 }
+_LEGACY_EMPTY_LINK = re.compile(
+    r'<a href="index\.html#(?:server|client|console)">(.*?)</a>',
+    flags=re.IGNORECASE,
+)
 
 
 @dataclass
@@ -48,6 +56,55 @@ class CallbackGroup:
     name: str
     server: Entry | None = None
     client: Entry | None = None
+
+
+@dataclass(frozen=True)
+class MethodAnchor:
+    anchor: str
+    label: str
+    legacy_alias: str | None = None
+
+
+class _HtmlLinks(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.ids: list[str] = []
+        self.hrefs: list[str] = []
+        self.toc_depth = 0
+        self.toc_hrefs: list[str] = []
+        self.toc_labels: list[str] = []
+        self._toc_label: list[str] | None = None
+
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        attributes = dict(attrs)
+        element_id = attributes.get("id")
+        if element_id is not None:
+            self.ids.append(element_id)
+
+        if tag == "aside" and "table-of-contents" in (
+            attributes.get("class") or ""
+        ).split():
+            self.toc_depth += 1
+
+        href = attributes.get("href") if tag == "a" else None
+        if href is not None:
+            self.hrefs.append(href)
+            if self.toc_depth:
+                self.toc_hrefs.append(href)
+                self._toc_label = []
+
+    def handle_data(self, data: str) -> None:
+        if self._toc_label is not None:
+            self._toc_label.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "a" and self._toc_label is not None:
+            self.toc_labels.append("".join(self._toc_label).strip())
+            self._toc_label = None
+        if tag == "aside" and self.toc_depth:
+            self.toc_depth -= 1
 
 
 class DocumentationRenderer:
@@ -79,9 +136,9 @@ class DocumentationRenderer:
                         + page.callbacks
                     )
                     for entry in entries:
-                        references[f"{page.name}.{entry.name}"] = (
-                            path,
-                            self._slug(entry.name),
+                        references.setdefault(
+                            f"{page.name}.{entry.name}",
+                            (path, self._slug(entry.name)),
                         )
 
                     if kind == "class":
@@ -93,7 +150,9 @@ class DocumentationRenderer:
 
                     if page.name == "GLOBAL":
                         for entry in page.constants + page.functions:
-                            references[entry.name] = (path, self._slug(entry.name))
+                            references.setdefault(
+                                entry.name, (path, self._slug(entry.name))
+                            )
 
     def render(self) -> tuple[Path, Path]:
         shutil.rmtree(self.markdown_root, ignore_errors=True)
@@ -111,6 +170,7 @@ class DocumentationRenderer:
                         self._write_class_template(page)
 
         self._write_html_tree()
+        self._validate_html_tree()
         return self.markdown_root, self.html_root
 
     @staticmethod
@@ -189,7 +249,7 @@ class DocumentationRenderer:
         rendered = []
         for part in content:
             if isinstance(part, str):
-                rendered.append(part)
+                rendered.append(_LEGACY_EMPTY_LINK.sub(r"\1", part))
                 continue
             target = part["reference"]
             label = part.get("label", target)
@@ -439,18 +499,83 @@ class DocumentationRenderer:
             *self._plain_table(["Operation", "Returns", "Description"], rows),
         ]
 
+    def _entry_parameters(self, kind: str, page: Page, entry: Entry) -> list:
+        if entry.doc is None:
+            return []
+
+        parameters = entry.doc.parameters
+        if kind == "class" and parameters and parameters[0].name == "self":
+            return parameters[1:]
+        if kind == "userdata" and parameters:
+            first_type = parameters[0].type
+            if first_type == [{"reference": page.name}]:
+                return parameters[1:]
+        return parameters
+
+    def _method_anchors(
+        self, kind: str, page: Page, entries: list[Entry]
+    ) -> dict[int, MethodAnchor]:
+        name_counts = Counter(self._slug(entry.name) for entry in entries)
+        used: set[str] = set()
+        first_overload: set[str] = set()
+        anchors: dict[int, MethodAnchor] = {}
+
+        for entry in entries:
+            base = self._slug(entry.name)
+            if name_counts[base] == 1:
+                anchors[id(entry)] = MethodAnchor(anchor=base, label=entry.name)
+                used.add(base)
+                continue
+
+            parameters = self._entry_parameters(kind, page, entry)
+            display_types = [
+                self._inline_text(parameter.type)
+                + ("?" if parameter.optional else "")
+                for parameter in parameters
+            ]
+            label = f"{entry.name}({', '.join(display_types)})"
+            suffix_parts = []
+            for parameter in parameters:
+                type_slug = self._slug(self._inline_text(parameter.type)) or "any"
+                if parameter.optional:
+                    type_slug += "-optional"
+                suffix_parts.append(type_slug)
+            suffix = "-".join(suffix_parts) or "no-arguments"
+            candidate = f"{base}-{suffix}"
+
+            if candidate in used:
+                detailed_signature = ",".join(
+                    f"{parameter.name}:{self._inline_text(parameter.type)}:"
+                    f"{'optional' if parameter.optional else 'required'}"
+                    for parameter in parameters
+                )
+                digest = sha1(detailed_signature.encode("utf-8")).hexdigest()[:8]
+                candidate = f"{candidate}-{digest}"
+            ordinal = 2
+            unique_candidate = candidate
+            while unique_candidate in used:
+                unique_candidate = f"{candidate}-{ordinal}"
+                ordinal += 1
+
+            legacy_alias = None
+            if base not in first_overload:
+                legacy_alias = base
+                first_overload.add(base)
+                used.add(base)
+            used.add(unique_candidate)
+            anchors[id(entry)] = MethodAnchor(
+                anchor=unique_candidate,
+                label=label,
+                legacy_alias=legacy_alias,
+            )
+
+        return anchors
+
     def _signature(self, kind: str, page: Page, entry: Entry) -> str:
         if entry.doc is None:
             return entry.name
 
-        parameters = entry.doc.parameters
-        if kind == "class" and parameters and parameters[0].name == "self":
-            parameters = parameters[1:]
-        elif kind == "userdata" and parameters:
-            first_type = parameters[0].type
-            if first_type == [{"reference": page.name}]:
-                parameters = parameters[1:]
-
+        parameters = self._entry_parameters(kind, page, entry)
         names = [
             f"{parameter.name}?" if parameter.optional else parameter.name
             for parameter in parameters
@@ -496,11 +621,11 @@ class DocumentationRenderer:
         return list(groups.values())
 
     def _callback_aliases(self, callback: CallbackGroup) -> list[str]:
-        aliases = [f'<a id="{self._slug(callback.name)}"></a>']
-        for entry in (callback.server, callback.client):
-            if entry:
-                aliases.append(f'<a id="{self._slug(entry.name)}"></a>')
-        return aliases
+        return [
+            f'<a id="{self._slug(entry.name)}"></a>'
+            for entry in (callback.server, callback.client)
+            if entry
+        ]
 
     def _callback_entry(
         self,
@@ -509,7 +634,12 @@ class DocumentationRenderer:
         page: Page,
         callback: CallbackGroup,
     ) -> list[str]:
-        output = [*self._callback_aliases(callback), f"### {callback.name}", ""]
+        anchor = self._slug(callback.name)
+        output = [
+            *self._callback_aliases(callback),
+            f"### {callback.name} {{#{anchor}}}",
+            "",
+        ]
         server = callback.server
         client = callback.client
 
@@ -619,6 +749,7 @@ class DocumentationRenderer:
         )
 
         output: list[str] = []
+        method_anchors = self._method_anchors(kind, page, page.functions)
         for availability, title in categories:
             entries = [
                 entry
@@ -630,10 +761,12 @@ class DocumentationRenderer:
 
             output.extend([f"## {title}", ""])
             for entry in entries:
+                method_anchor = method_anchors[id(entry)]
+                if method_anchor.legacy_alias:
+                    output.append(f'<a id="{method_anchor.legacy_alias}"></a>')
                 output.extend(
                     [
-                        f'<a id="{self._slug(entry.name)}"></a>',
-                        f"### {entry.name}",
+                        f"### {method_anchor.label} {{#{method_anchor.anchor}}}",
                         "",
                         _SIGNATURE_FENCE,
                         self._signature(kind, page, entry),
@@ -666,13 +799,8 @@ class DocumentationRenderer:
 
         output = [f"## {title}", ""]
         for entry in entries:
-            output.extend(
-                [
-                    f'<a id="{self._slug(entry.name)}"></a>',
-                    f"### {entry.name}",
-                    "",
-                ]
-            )
+            anchor = self._slug(entry.name)
+            output.extend([f"### {entry.name} {{#{anchor}}}", ""])
             if title != "Constants":
                 output.extend(
                     [
@@ -849,6 +977,90 @@ class DocumentationRenderer:
         ]
         path.write_text("\n".join(output), encoding="utf-8")
 
+    @staticmethod
+    def _member_type(page: Page, member: Entry) -> Inline:
+        if member.get and member.get.returns:
+            return member.get.returns[0].type
+
+        if member.set and member.set.parameters:
+            parameters = member.set.parameters
+            if parameters[0].type == [{"reference": page.name}]:
+                parameters = parameters[1:]
+            if parameters:
+                return parameters[-1].type
+
+        return ["unknown"]
+
+    def _member_access(
+        self,
+        environment: Environment,
+        current_path: Path,
+        label: str,
+        doc: Doc,
+    ) -> list[str]:
+        availability = ""
+        if doc.availability != "server and client":
+            availability = f" ({doc.availability.title()}-Only)"
+        if doc.hidden:
+            availability += " (Hidden)"
+
+        content = self._blocks(environment, current_path, doc.content)
+        while content and content[-1] == "":
+            content.pop()
+
+        output = [f"    - `{label}`:{availability}"]
+        if content and not content[0].startswith(("```", "- ", "| ", ">")):
+            output[0] += f" {content.pop(0)}"
+            if content and content[0] == "":
+                content.pop(0)
+
+        if content:
+            output.append("")
+            output.extend(f"        {line}" if line else "" for line in content)
+
+        if doc.deprecated:
+            deprecated = self._blocks(environment, current_path, doc.deprecated)
+            while deprecated and deprecated[-1] == "":
+                deprecated.pop()
+            output.append("")
+            output.append("        **Deprecated:**")
+            output.extend(f"        {line}" if line else "" for line in deprecated)
+
+        return output
+
+    def _members(
+        self,
+        environment: Environment,
+        current_path: Path,
+        page: Page,
+    ) -> list[str]:
+        if not page.members:
+            return []
+
+        output = ["**Values:**", ""]
+        for member in page.members:
+            type_name = self._inline(
+                environment, current_path, self._member_type(page, member)
+            )
+            output.append(
+                f'- <a id="{self._slug(member.name)}"></a>`{member.name}` '
+                f"[ **{type_name}** ] <br>"
+            )
+            if member.get:
+                output.extend(
+                    self._member_access(
+                        environment, current_path, "Get", member.get
+                    )
+                )
+            if member.set:
+                output.extend(
+                    self._member_access(
+                        environment, current_path, "Set", member.set
+                    )
+                )
+            output.append("")
+        return output
+
     def _write_page(self, environment: Environment, kind: str, page: Page) -> None:
         path = self.page_paths[id(page)]
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -893,22 +1105,7 @@ class DocumentationRenderer:
             )
         )
 
-        if page.members:
-            output.extend(["## Members", ""])
-            for member in page.members:
-                output.extend(
-                    [
-                        f'<a id="{self._slug(member.name)}"></a>',
-                        f"### {member.name}",
-                        "",
-                    ]
-                )
-                if member.get:
-                    output.extend(["#### Get", ""])
-                    output.extend(self._doc(environment, path, member.get, 5))
-                if member.set:
-                    output.extend(["#### Set", ""])
-                    output.extend(self._doc(environment, path, member.set, 5))
+        output.extend(self._members(environment, path, page))
 
         output.extend(self._operations(environment, path, page.metamethods))
         output.extend(self._methods(environment, path, kind, page))
@@ -1108,6 +1305,7 @@ class DocumentationRenderer:
                     "sane_lists",
                     "tables",
                     "toc",
+                    "attr_list",
                 ],
                 extension_configs={
                     "codehilite": {
@@ -1135,6 +1333,86 @@ class DocumentationRenderer:
                     script=_SCRIPT,
                 ),
                 encoding="utf-8",
+            )
+
+    def _validate_html_tree(self) -> None:
+        html_root = self.html_root.resolve()
+        parsed: dict[Path, _HtmlLinks] = {}
+        errors: list[str] = []
+
+        for path in sorted(html_root.rglob("*.html")):
+            parser = _HtmlLinks()
+            parser.feed(path.read_text(encoding="utf-8"))
+            parsed[path] = parser
+
+            relative = path.relative_to(html_root)
+            duplicate_ids = sorted(
+                element_id
+                for element_id, count in Counter(parser.ids).items()
+                if count > 1
+            )
+            if duplicate_ids:
+                errors.append(
+                    f"{relative}: duplicate IDs: {', '.join(duplicate_ids)}"
+                )
+
+            duplicate_toc_targets = sorted(
+                href
+                for href, count in Counter(parser.toc_hrefs).items()
+                if count > 1
+            )
+            if duplicate_toc_targets:
+                errors.append(
+                    f"{relative}: duplicate TOC targets: "
+                    f"{', '.join(duplicate_toc_targets)}"
+                )
+
+            duplicate_toc_labels = sorted(
+                label
+                for label, count in Counter(parser.toc_labels).items()
+                if count > 1
+            )
+            if duplicate_toc_labels:
+                errors.append(
+                    f"{relative}: duplicate TOC labels: "
+                    f"{', '.join(duplicate_toc_labels)}"
+                )
+
+        for source, parser in parsed.items():
+            for href in parser.hrefs:
+                destination = urlsplit(href)
+                if destination.scheme or destination.netloc:
+                    continue
+
+                if not destination.path:
+                    target = source
+                elif destination.path.startswith("/"):
+                    target = html_root / unquote(destination.path).lstrip("/")
+                else:
+                    target = source.parent / unquote(destination.path)
+                target = target.resolve()
+                source_relative = source.relative_to(html_root)
+
+                if not target.is_relative_to(html_root):
+                    errors.append(f"{source_relative}: link escapes site: {href}")
+                    continue
+                if not target.is_file():
+                    errors.append(f"{source_relative}: missing link target: {href}")
+                    continue
+                if destination.fragment:
+                    target_parser = parsed.get(target)
+                    fragment = unquote(destination.fragment)
+                    if target_parser is None or fragment not in target_parser.ids:
+                        errors.append(
+                            f"{source_relative}: missing fragment: {href}"
+                        )
+
+        if errors:
+            displayed = errors[:50]
+            if len(errors) > len(displayed):
+                displayed.append(f"... and {len(errors) - len(displayed)} more")
+            raise ValueError(
+                "Generated HTML validation failed:\n- " + "\n- ".join(displayed)
             )
 
 
