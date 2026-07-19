@@ -155,16 +155,45 @@ class SymbolCatalog:
 
     @staticmethod
     def split_inline(content: Inline, delimiter: str = ",") -> list[Inline]:
+        if len(delimiter) != 1:
+            raise ValueError("Inline delimiters must be one character")
+
+        pairs = {"{": "}", "[": "]", "(": ")", "<": ">"}
+        closing = set(pairs.values())
+        stack: list[str] = []
+        quote: str | None = None
+        escaped = False
         parts: list[Inline] = [[]]
+
         for item in content:
             if not isinstance(item, str):
                 parts[-1].append(item)
                 continue
 
-            chunks = item.split(delimiter)
-            parts[-1].append(chunks[0])
-            for chunk in chunks[1:]:
-                parts.append([chunk])
+            chunk_start = 0
+            for index, character in enumerate(item):
+                if quote is not None:
+                    if escaped:
+                        escaped = False
+                    elif character == "\\":
+                        escaped = True
+                    elif character == quote:
+                        quote = None
+                    continue
+
+                if character in {'"', "'"}:
+                    quote = character
+                elif character in pairs:
+                    stack.append(pairs[character])
+                elif character in closing:
+                    if stack and character == stack[-1]:
+                        stack.pop()
+                elif character == delimiter and not stack:
+                    parts[-1].append(item[chunk_start:index])
+                    parts.append([])
+                    chunk_start = index + 1
+
+            parts[-1].append(item[chunk_start:])
 
         for part in parts:
             if part and isinstance(part[0], str):
@@ -704,8 +733,9 @@ class SymbolCatalog:
         for entry in entries:
             for doc in (entry.doc, entry.get):
                 if doc:
-                    values.extend(
-                        self.inline_text(return_value.type)
-                        for return_value in doc.returns
-                    )
+                    for return_value in doc.returns:
+                        values.extend(
+                            self.inline_text(type_name)
+                            for type_name in self.split_inline(return_value.type)
+                        )
         return tuple(dict.fromkeys(values))

@@ -32,6 +32,7 @@ class Parameter:
 class ReturnValue:
     type: Inline
     description: Inline
+    name: str | None = None
 
 
 @dataclass
@@ -182,6 +183,56 @@ def _availability(raw: dict[str, Any]) -> str:
     return "server and client"
 
 
+def _text_columns(text: str) -> list[str]:
+    return [
+        column.strip()
+        for column in re.split(r"\t+", text)
+        if column.strip()
+    ]
+
+
+def _normalize_description(description: str) -> str:
+    columns = _text_columns(description)
+    if not columns:
+        return ""
+    return re.sub(r"\s+", " ", columns[-1]).strip()
+
+
+def _is_return_name(value: str) -> bool:
+    return bool(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", value))
+
+
+def _parse_return(type_name: str, description: str) -> ReturnValue:
+    name = None
+    if not description.strip() and "\t" in type_name:
+        columns = _text_columns(type_name)
+        if len(columns) > 1:
+            type_name = columns[0]
+            remainder = columns[1:]
+            if _is_return_name(remainder[0]):
+                name = remainder[0]
+                description = remainder[-1] if len(remainder) > 1 else ""
+            else:
+                description = remainder[-1]
+    elif "\t" in description:
+        columns = _text_columns(description)
+        if len(columns) > 1 and _is_return_name(columns[0]):
+            name = columns[0]
+            description = columns[-1]
+
+    type_name = re.sub(r"\s+", " ", type_name).strip()
+    description = _normalize_description(description)
+    if name is None and _is_return_name(description):
+        name = description
+        description = ""
+
+    return ReturnValue(
+        type=parse_inline(type_name),
+        description=parse_inline(description),
+        name=name,
+    )
+
+
 def parse_doc(raw: dict[str, Any]) -> Doc:
     parameters = []
     for type_name, name, description in raw.get("params", []):
@@ -190,27 +241,27 @@ def parse_doc(raw: dict[str, Any]) -> Doc:
             Parameter(
                 name=name.removesuffix("?"),
                 type=parse_inline(type_name),
-                description=parse_inline(description),
+                description=parse_inline(_normalize_description(description)),
                 optional=optional,
             )
         )
 
     returns = [
-        ReturnValue(type=parse_inline(type_name), description=parse_inline(description))
+        _parse_return(type_name, description)
         for type_name, description in raw.get("return", [])
     ]
     fields = [
         Field(
             name=name,
             type=parse_inline(type_name),
-            description=parse_inline(description),
+            description=parse_inline(_normalize_description(description)),
         )
         for type_name, name, description in raw.get("fields", [])
     ]
     operations = [
         MetaOperation(
             signature=parse_inline(signature),
-            description=parse_inline(description),
+            description=parse_inline(_normalize_description(description)),
         )
         for signature, description in raw.get("meta", [])
     ]

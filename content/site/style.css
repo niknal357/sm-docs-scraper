@@ -292,7 +292,7 @@ th, td {
   border: 1px solid var(--border);
   padding: 0.5rem 0.75rem;
   text-align: left;
-  vertical-align: top;
+  vertical-align: middle;
 }
 th { background: var(--surface-muted); }
 blockquote {

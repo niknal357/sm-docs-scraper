@@ -143,6 +143,13 @@ class MarkdownRenderer(RenderContext):
         output.append("")
         return output
 
+    @staticmethod
+    def _return_descriptions(description: str, type_count: int) -> list[str]:
+        parts = re.split(r";\s+", description)
+        if type_count > 1 and len(parts) == type_count:
+            return parts
+        return [description]
+
     def _doc(
         self,
         environment: Environment,
@@ -214,14 +221,41 @@ class MarkdownRenderer(RenderContext):
 
         if show_returns and doc.returns:
             output.extend(["**Returns:**", ""])
-            rows = [
-                [
-                    self._inline(environment, current_path, item.type),
-                    self._inline(environment, current_path, item.description),
+            show_names = any(item.name for item in doc.returns)
+            rows = []
+            for item in doc.returns:
+                type_names = [
+                    self._inline(environment, current_path, type_name)
+                    for type_name in self.symbol_catalog.split_inline(item.type)
                 ]
-                for item in doc.returns
-            ]
-            output.extend(self._plain_table(["Type", "Description"], rows))
+                description = self._inline(
+                    environment, current_path, item.description
+                )
+                descriptions = self._return_descriptions(
+                    description, len(type_names)
+                )
+                if len(descriptions) == len(type_names):
+                    item_rows = [
+                        [type_name, return_description]
+                        for type_name, return_description in zip(
+                            type_names, descriptions, strict=True
+                        )
+                    ]
+                else:
+                    item_rows = [["<br>".join(type_names), description]]
+
+                if show_names:
+                    for index, row in enumerate(item_rows):
+                        name = f"`{item.name}`" if index == 0 and item.name else ""
+                        row.insert(0, name)
+                rows.extend(item_rows)
+
+            headers = (
+                ["Name", "Type", "Description"]
+                if show_names
+                else ["Type", "Description"]
+            )
+            output.extend(self._plain_table(headers, rows))
 
         return output
 
@@ -243,7 +277,10 @@ class MarkdownRenderer(RenderContext):
             "| " + " | ".join("---" for _ in headers) + " |",
         ]
         for row in rows:
-            cells = [cell.replace("|", "\\|") for cell in row]
+            cells = [
+                (cell or "&mdash;").replace("|", "\\|")
+                for cell in row
+            ]
             output.append("| " + " | ".join(cells) + " |")
         output.append("")
         return output
@@ -490,8 +527,9 @@ class MarkdownRenderer(RenderContext):
         if entry.doc is None or not entry.doc.returns:
             return "&mdash;"
         return "<br>".join(
-            self._inline(environment, current_path, value.type)
+            self._inline(environment, current_path, type_name)
             for value in entry.doc.returns
+            for type_name in self.symbol_catalog.split_inline(value.type)
         )
 
     def _constant_summary(
@@ -518,7 +556,10 @@ class MarkdownRenderer(RenderContext):
         ]
         if paragraphs:
             return paragraphs[0]
-        return "<br>".join(return_descriptions) or "&mdash;"
+        return (
+            "<br>".join(return_descriptions)
+            or "Not documented in the source."
+        )
 
     def _constants(
         self,
@@ -653,9 +694,9 @@ class MarkdownRenderer(RenderContext):
             description = self.symbol_catalog.inline_text(
                 return_value.description
             ).casefold()
-            type_names = self.symbol_catalog.inline_text(return_value.type).split(",")
+            type_names = self.symbol_catalog.split_inline(return_value.type)
             for type_name in type_names:
-                type_name = type_name.strip().casefold()
+                type_name = self.symbol_catalog.inline_text(type_name).casefold()
                 if type_name == "boolean":
                     value = "true" if "defaults to true" in description else "false"
                 elif type_name in {"integer", "number"}:
