@@ -1645,7 +1645,9 @@ a:hover { text-decoration: underline; }
   background: var(--surface-muted);
   border: 1px solid transparent;
   display: flex;
+  flex: 0 1 220px;
   gap: 0.35rem;
+  min-width: 0;
   padding: 0.35rem 0.65rem;
 }
 .search:focus-within { border-color: var(--primary); }
@@ -1661,9 +1663,11 @@ a:hover { text-decoration: underline; }
   background: transparent;
   border: 0;
   color: var(--text);
+  flex: 1;
   font: inherit;
+  min-width: 0;
   outline: 0;
-  width: 180px;
+  width: 100%;
 }
 .search input::placeholder { color: var(--muted); }
 .theme-button {
@@ -1692,6 +1696,7 @@ a:hover { text-decoration: underline; }
 .theme-icon-sun { display: none; }
 :root[data-theme="dark"] .theme-icon-sun { display: inline; }
 :root[data-theme="dark"] .theme-icon-moon { display: none; }
+.menu-button, .brand, .theme-button, .search svg { flex-shrink: 0; }
 .menu-button {
   background: transparent;
   border: 0;
@@ -1700,7 +1705,11 @@ a:hover { text-decoration: underline; }
   display: none;
   font-size: 1.5rem;
 }
-.page-layout { display: flex; min-height: calc(100vh - var(--navbar-height)); }
+.page-layout {
+  display: flex;
+  min-height: calc(100vh - var(--navbar-height));
+  min-width: 0;
+}
 .sidebar {
   background: var(--surface);
   border-right: 1px solid var(--border);
@@ -1749,6 +1758,7 @@ a:hover { text-decoration: underline; }
 .doc h3 { font-size: 1.35rem; margin-top: 2.2rem; }
 .doc h4 { font-size: 1.05rem; margin-bottom: 0.5rem; }
 .breadcrumbs { color: var(--muted); font-size: 0.88rem; }
+.doc, .breadcrumbs, .sidebar a, .sidebar summary { overflow-wrap: anywhere; }
 .breadcrumb-separator { margin: 0 0.5rem; }
 .table-of-contents {
   align-self: start;
@@ -1827,8 +1837,8 @@ blockquote p { margin: 0.4rem 0; }
 }
 @media (max-width: 600px) {
   .navbar { gap: 0.6rem; padding: 0 0.75rem; }
-  .brand span:last-child { display: none; }
-  .search input { width: 105px; }
+  .brand span:last-child, .navbar-spacer { display: none; }
+  .search { flex: 1 1 auto; }
   .content-layout { padding: 0 1rem; }
   .doc h1 { font-size: 2rem; }
 }
