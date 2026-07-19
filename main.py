@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import download_docs
 import make_ir
 import render_docs
@@ -9,8 +11,8 @@ def main():
     ir_path = make_ir.write_ir(ir, json_docs.parent / "ir")
     markdown_path, html_path = render_docs.render_docs(
         ir,
-        json_docs.parent / "markdown",
-        json_docs.parent / "html",
+        Path("dist/markdown"),
+        Path("dist/html"),
     )
     print(f"Downloaded JSON docs to {json_docs}")
     print(f"Downloaded Lua docs to {lua_docs}")

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from html import escape
+from dataclasses import dataclass
+from html import escape, unescape
 import os
 from pathlib import Path
 import re
@@ -21,6 +22,18 @@ _CATEGORY_DIRECTORIES = {
     "userdata": "Userdata",
     "class": "Classes",
 }
+_CATEGORY_TITLES = {
+    "namespace": "Static Functions",
+    "userdata": "Userdata",
+    "class": "Classes",
+}
+
+
+@dataclass
+class CallbackGroup:
+    name: str
+    server: Entry | None = None
+    client: Entry | None = None
 
 
 class DocumentationRenderer:
@@ -56,6 +69,13 @@ class DocumentationRenderer:
                             path,
                             self._slug(entry.name),
                         )
+
+                    if kind == "class":
+                        for callback in self._callback_groups(page):
+                            references[f"{page.name}.{callback.name}"] = (
+                                path,
+                                self._slug(callback.name),
+                            )
 
                     if page.name == "GLOBAL":
                         for entry in page.constants + page.functions:
@@ -212,12 +232,13 @@ class DocumentationRenderer:
         current_path: Path,
         doc: Doc,
         detail_heading: int,
+        show_availability: bool = True,
     ) -> list[str]:
         output: list[str] = []
 
         if doc.hidden:
             output.extend(["**Visibility:** Hidden", ""])
-        if doc.availability != "server and client":
+        if show_availability and doc.availability != "server and client":
             output.extend([f"**Availability:** {doc.availability.title()} only", ""])
         if doc.deprecated:
             output.extend(["> **Deprecated:**", *self._quote_blocks(environment, current_path, doc.deprecated), ""])
@@ -325,6 +346,171 @@ class DocumentationRenderer:
             prefix = f"{page.name}:"
         return f"{prefix}{entry.name}( {arguments} )"
 
+    @staticmethod
+    def _callback_groups(page: Page) -> list[CallbackGroup]:
+        groups: dict[str, CallbackGroup] = {}
+        for entry in page.common_callbacks + page.callbacks:
+            if entry.name.startswith("server_"):
+                side = "server"
+                name = entry.name.removeprefix("server_")
+            elif entry.name.startswith("client_"):
+                side = "client"
+                name = entry.name.removeprefix("client_")
+            else:
+                raise ValueError(f"Unknown callback side: {entry.name}")
+
+            group = groups.setdefault(name, CallbackGroup(name=name))
+            if getattr(group, side) is not None:
+                raise ValueError(f"Duplicate {side} callback: {page.name}.{name}")
+            setattr(group, side, entry)
+        return list(groups.values())
+
+    def _callback_aliases(self, callback: CallbackGroup) -> list[str]:
+        aliases = [f'<a id="{self._slug(callback.name)}"></a>']
+        for entry in (callback.server, callback.client):
+            if entry:
+                aliases.append(f'<a id="{self._slug(entry.name)}"></a>')
+        return aliases
+
+    def _callback_entry(
+        self,
+        environment: Environment,
+        current_path: Path,
+        page: Page,
+        callback: CallbackGroup,
+    ) -> list[str]:
+        output = [*self._callback_aliases(callback), f"### {callback.name}", ""]
+        server = callback.server
+        client = callback.client
+
+        if server and client and server.doc == client.doc:
+            output.extend(
+                [
+                    "```lua",
+                    self._signature("class", page, server),
+                    self._signature("class", page, client),
+                    "```",
+                    "",
+                ]
+            )
+            if server.doc:
+                output.extend(self._doc(environment, current_path, server.doc, 4))
+            return output
+
+        entries = (("Server", server), ("Client", client))
+        paired = server is not None and client is not None
+        for side, entry in entries:
+            if entry is None:
+                continue
+            if paired:
+                output.extend([f"#### {side}", ""])
+            output.extend(
+                [
+                    "```lua",
+                    self._signature("class", page, entry),
+                    "```",
+                    "",
+                ]
+            )
+            if entry.doc:
+                detail_heading = 5 if paired else 4
+                output.extend(
+                    self._doc(environment, current_path, entry.doc, detail_heading)
+                )
+        return output
+
+    def _callbacks(
+        self,
+        environment: Environment,
+        current_path: Path,
+        page: Page,
+    ) -> list[str]:
+        groups = self._callback_groups(page)
+        categories = (
+            (
+                "Server + Client",
+                [callback for callback in groups if callback.server and callback.client],
+            ),
+            (
+                "Server-only",
+                [callback for callback in groups if callback.server and not callback.client],
+            ),
+            (
+                "Client-only",
+                [callback for callback in groups if callback.client and not callback.server],
+            ),
+        )
+
+        output: list[str] = []
+        for title, callbacks in categories:
+            if not callbacks:
+                continue
+            output.extend([f"## {title}", ""])
+            for callback in callbacks:
+                output.extend(
+                    self._callback_entry(
+                        environment, current_path, page, callback
+                    )
+                )
+        return output
+
+    def _methods(
+        self,
+        environment: Environment,
+        current_path: Path,
+        kind: str,
+        page: Page,
+    ) -> list[str]:
+        categories = (
+            ("server and client", "Server + Client"),
+            ("server", "Server-only"),
+            ("client", "Client-only"),
+        )
+        known_availability = {availability for availability, _ in categories}
+        unknown = [
+            entry.name
+            for entry in page.functions
+            if entry.doc is None or entry.doc.availability not in known_availability
+        ]
+        if unknown:
+            raise ValueError(
+                f"Unknown method availability on {page.name}: {', '.join(unknown)}"
+            )
+
+        output: list[str] = []
+        for availability, title in categories:
+            entries = [
+                entry
+                for entry in page.functions
+                if entry.doc and entry.doc.availability == availability
+            ]
+            if not entries:
+                continue
+
+            output.extend([f"## {title}", ""])
+            for entry in entries:
+                output.extend(
+                    [
+                        f'<a id="{self._slug(entry.name)}"></a>',
+                        f"### {entry.name}",
+                        "",
+                        "```lua",
+                        self._signature(kind, page, entry),
+                        "```",
+                        "",
+                    ]
+                )
+                output.extend(
+                    self._doc(
+                        environment,
+                        current_path,
+                        entry.doc,
+                        4,
+                        show_availability=False,
+                    )
+                )
+        return output
+
     def _entries(
         self,
         environment: Environment,
@@ -342,7 +528,7 @@ class DocumentationRenderer:
             output.extend(
                 [
                     f'<a id="{self._slug(entry.name)}"></a>',
-                    f"### `{entry.name}`",
+                    f"### {entry.name}",
                     "",
                 ]
             )
@@ -355,10 +541,6 @@ class DocumentationRenderer:
                         "",
                     ]
                 )
-            if entry.callback_type:
-                output.extend(
-                    [f"**Callback type:** `{entry.callback_type}`", ""]
-                )
             if entry.doc:
                 output.extend(self._doc(environment, current_path, entry.doc, 4))
         return output
@@ -366,7 +548,7 @@ class DocumentationRenderer:
     def _write_page(self, environment: Environment, kind: str, page: Page) -> None:
         path = self.page_paths[id(page)]
         path.parent.mkdir(parents=True, exist_ok=True)
-        output = [f"# `{page.name}`", ""]
+        output = [f"# {page.name}", ""]
 
         if page.associated_type:
             link = self._link(
@@ -402,7 +584,7 @@ class DocumentationRenderer:
                 output.extend(
                     [
                         f'<a id="{self._slug(member.name)}"></a>',
-                        f"### `{member.name}`",
+                        f"### {member.name}",
                         "",
                     ]
                 )
@@ -418,26 +600,9 @@ class DocumentationRenderer:
                 environment, path, kind, page, "Operations", page.metamethods
             )
         )
-        output.extend(
-            self._entries(
-                environment, path, kind, page, "Functions", page.functions
-            )
-        )
-        output.extend(
-            self._entries(
-                environment,
-                path,
-                kind,
-                page,
-                "Common callbacks",
-                page.common_callbacks,
-            )
-        )
-        output.extend(
-            self._entries(
-                environment, path, kind, page, "Callbacks", page.callbacks
-            )
-        )
+        output.extend(self._methods(environment, path, kind, page))
+        if kind == "class":
+            output.extend(self._callbacks(environment, path, page))
 
         path.write_text("\n".join(output).rstrip() + "\n", encoding="utf-8")
 
@@ -458,7 +623,7 @@ class DocumentationRenderer:
         for kind, pages in self._page_groups(environment):
             if pages:
                 category = _CATEGORY_DIRECTORIES[kind]
-                output.append(f"- [{category}]({category}/index.md)")
+                output.append(f"- [{_CATEGORY_TITLES[kind]}]({category}/index.md)")
         output.append("")
         (directory / "index.md").write_text("\n".join(output), encoding="utf-8")
 
@@ -473,12 +638,124 @@ class DocumentationRenderer:
             / _CATEGORY_DIRECTORIES[kind]
         )
         directory.mkdir(parents=True, exist_ok=True)
-        output = [f"# {_CATEGORY_DIRECTORIES[kind]}", ""]
+        output = [f"# {_CATEGORY_TITLES[kind]}", ""]
         for page in pages:
             path = self.page_paths[id(page)]
             output.append(f"- [`{page.name}`]({path.name})")
         output.append("")
         (directory / "index.md").write_text("\n".join(output), encoding="utf-8")
+
+    def _html_href(self, current_html: Path, target_markdown: Path) -> str:
+        target_html = self.html_root / target_markdown.relative_to(
+            self.markdown_root
+        ).with_suffix(".html")
+        return Path(os.path.relpath(target_html, current_html.parent)).as_posix()
+
+    def _sidebar(self, current_markdown: Path, current_html: Path) -> str:
+        output = []
+        root_index = self.markdown_root / "index.md"
+        root_class = " active" if current_markdown == root_index else ""
+        output.append(
+            f'<a class="sidebar-overview{root_class}" '
+            f'href="{self._html_href(current_html, root_index)}">Overview</a>'
+        )
+
+        for environment in self.docs.environments:
+            environment_directory = (
+                self.markdown_root / self._environment_directory(environment)
+            )
+            environment_index = environment_directory / "index.md"
+            environment_active = current_markdown.is_relative_to(
+                environment_directory
+            )
+            open_attribute = " open" if environment_active else ""
+            output.append(
+                f'<details class="sidebar-group" '
+                f'data-sidebar-key="environment:{escape(environment.name)}"{open_attribute}>'
+            )
+            output.append(
+                f"<summary>{escape(environment.name)} Script Environment</summary>"
+            )
+            output.append('<div class="sidebar-group-content">')
+            overview_class = " active" if current_markdown == environment_index else ""
+            output.append(
+                f'<a class="sidebar-overview{overview_class}" '
+                f'href="{self._html_href(current_html, environment_index)}">Overview</a>'
+            )
+
+            for kind, pages in self._page_groups(environment):
+                if not pages:
+                    continue
+                category_directory = environment_directory / _CATEGORY_DIRECTORIES[kind]
+                category_index = category_directory / "index.md"
+                category_active = current_markdown.is_relative_to(category_directory)
+                category_open = " open" if category_active else ""
+                output.append(
+                    f'<details class="sidebar-category" '
+                    f'data-sidebar-key="environment:{escape(environment.name)}:'
+                    f'category:{kind}"{category_open}>'
+                )
+                output.append(
+                    f"<summary>{escape(_CATEGORY_TITLES[kind])}</summary>"
+                )
+                output.append("<ul>")
+                index_class = " active" if current_markdown == category_index else ""
+                output.append(
+                    f'<li class="sidebar-page"><a class="{index_class.strip()}" '
+                    f'href="{self._html_href(current_html, category_index)}">Overview</a></li>'
+                )
+                for page in pages:
+                    page_path = self.page_paths[id(page)]
+                    active_class = " active" if current_markdown == page_path else ""
+                    output.append(
+                        f'<li class="sidebar-page"><a class="{active_class.strip()}" '
+                        f'href="{self._html_href(current_html, page_path)}">'
+                        f"{escape(page.name)}</a></li>"
+                    )
+                output.extend(["</ul>", "</details>"])
+
+            output.extend(["</div>", "</details>"])
+        return "\n".join(output)
+
+    def _breadcrumbs(self, current_markdown: Path, current_html: Path) -> str:
+        relative = current_markdown.relative_to(self.markdown_root)
+        output = [
+            f'<a href="{self._html_href(current_html, self.markdown_root / "index.md")}">Docs</a>'
+        ]
+        labels = {
+            "Game-Script-Environment": "Game",
+            "Terrain-Script-Environment": "Terrain",
+            "Static-Functions": "Static Functions",
+        }
+
+        directories = relative.parts[:-1]
+        for index, part in enumerate(directories):
+            target = self.markdown_root.joinpath(*directories[: index + 1], "index.md")
+            output.append('<span class="breadcrumb-separator">›</span>')
+            output.append(
+                f'<a href="{self._html_href(current_html, target)}">'
+                f"{escape(labels.get(part, part))}</a>"
+            )
+
+        if relative.name != "index.md":
+            output.append('<span class="breadcrumb-separator">›</span>')
+            output.append(f"<span>{escape(relative.stem)}</span>")
+        return "".join(output)
+
+    @staticmethod
+    def _table_of_contents(body: str) -> str:
+        items = []
+        for level, anchor, label in re.findall(
+            r'<h([23]) id="([^"]+)">(.*?)</h\1>', body, flags=re.DOTALL
+        ):
+            text = unescape(re.sub(r"<[^>]+>", "", label))
+            items.append(
+                f'<li class="toc-level-{level}"><a href="#{escape(anchor)}">'
+                f"{escape(text)}</a></li>"
+            )
+        if not items:
+            return ""
+        return "<ul>" + "".join(items) + "</ul>"
 
     def _write_html_tree(self) -> None:
         self.html_root.mkdir(parents=True)
@@ -492,7 +769,7 @@ class DocumentationRenderer:
             html_path.parent.mkdir(parents=True, exist_ok=True)
             body = markdown.markdown(
                 markdown_path.read_text(encoding="utf-8"),
-                extensions=["fenced_code", "tables", "sane_lists"],
+                extensions=["fenced_code", "tables", "sane_lists", "toc"],
             )
             body = re.sub(r'href="([^"]+)\.md(#[^"]*)?"', r'href="\1.html\2"', body)
             stylesheet = os.path.relpath(assets / "style.css", html_path.parent)
@@ -503,7 +780,11 @@ class DocumentationRenderer:
                     title=escape(title or "Scrap Mechanic API"),
                     stylesheet=Path(stylesheet).as_posix(),
                     home=Path(home).as_posix(),
+                    sidebar=self._sidebar(markdown_path, html_path),
+                    breadcrumbs=self._breadcrumbs(markdown_path, html_path),
                     body=body,
+                    toc=self._table_of_contents(body),
+                    script=_SCRIPT,
                 ),
                 encoding="utf-8",
             )
@@ -525,62 +806,290 @@ _HTML_TEMPLATE = """<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{title}</title>
+  <title>{title} | SM Docs</title>
   <link rel="stylesheet" href="{stylesheet}">
 </head>
 <body>
-  <nav><a href="{home}">API index</a></nav>
-  <main>{body}</main>
+  <header class="navbar">
+    <button class="menu-button" id="menu-button" aria-label="Toggle navigation">☰</button>
+    <a class="brand" href="{home}"><span class="brand-mark">SM</span><span>SM Docs</span></a>
+    <div class="navbar-spacer"></div>
+    <label class="search"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg><input id="doc-search" type="search" placeholder="Filter pages"></label>
+  </header>
+  <div class="page-layout">
+    <aside class="sidebar" id="sidebar"><nav>{sidebar}</nav></aside>
+    <div class="content-layout">
+      <main class="doc">
+        <div class="breadcrumbs">{breadcrumbs}</div>
+        {body}
+      </main>
+      <aside class="table-of-contents">{toc}</aside>
+    </div>
+  </div>
+  <script>{script}</script>
 </body>
 </html>
 """
 
-_STYLE = """body {
-  color: #20232a;
-  font: 16px/1.6 system-ui, sans-serif;
+_SCRIPT = """const menu = document.getElementById('menu-button');
+const sidebar = document.getElementById('sidebar');
+menu.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+const statePrefix = 'sm-docs-sidebar:';
+const groups = sidebar.querySelectorAll('details[data-sidebar-key]');
+groups.forEach((group) => {
+  const key = statePrefix + group.dataset.sidebarKey;
+  try {
+    const saved = sessionStorage.getItem(key);
+    if (saved !== null) {
+      group.open = saved === 'open';
+    } else {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    }
+  } catch (_) {}
+  group.addEventListener('toggle', () => {
+    try {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    } catch (_) {}
+  });
+});
+const activeLink = sidebar.querySelector('a.active');
+if (activeLink) {
+  let parent = activeLink.parentElement;
+  while (parent) {
+    if (parent.tagName === 'DETAILS') parent.open = true;
+    parent = parent.parentElement;
+  }
+  const sidebarRect = sidebar.getBoundingClientRect();
+  const activeRect = activeLink.getBoundingClientRect();
+  sidebar.scrollTop += activeRect.top - sidebarRect.top - sidebarRect.height / 2;
+}
+const search = document.getElementById('doc-search');
+search.addEventListener('input', () => {
+  const query = search.value.trim().toLowerCase();
+  document.querySelectorAll('.sidebar-page').forEach((item) => {
+    const matches = !query || item.textContent.toLowerCase().includes(query);
+    item.hidden = !matches;
+    if (query && matches) {
+      let parent = item.parentElement;
+      while (parent) {
+        if (parent.tagName === 'DETAILS') parent.open = true;
+        parent = parent.parentElement;
+      }
+    }
+  });
+});
+"""
+
+_STYLE = """:root {
+  --primary: #2e8555;
+  --primary-dark: #277148;
+  --border: #dadde1;
+  --muted: #606770;
+  --sidebar-width: 300px;
+  --navbar-height: 60px;
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: 76px; }
+body {
+  color: #1c1e21;
+  font: 16px/1.65 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   margin: 0;
 }
-nav {
-  background: #20232a;
-  padding: 0.75rem 2rem;
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.navbar {
+  align-items: center;
+  background: white;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
+  display: flex;
+  gap: 1.4rem;
+  height: var(--navbar-height);
+  padding: 0 1.4rem;
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
-nav a { color: white; }
-main {
-  margin: 0 auto;
-  max-width: 1100px;
-  padding: 1rem 2rem 4rem;
+.brand {
+  align-items: center;
+  color: #1c1e21;
+  display: flex;
+  font-size: 1.15rem;
+  font-weight: 700;
+  gap: 0.6rem;
 }
-a { color: #087ea4; }
+.brand:hover { text-decoration: none; }
+.brand-mark {
+  align-items: center;
+  background: var(--primary);
+  border-radius: 7px;
+  color: white;
+  display: inline-flex;
+  font-size: 0.72rem;
+  height: 32px;
+  justify-content: center;
+  width: 32px;
+}
+.navbar-spacer { flex: 1; }
+.search {
+  align-items: center;
+  background: #f5f6f7;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  display: flex;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+}
+.search:focus-within { border-color: var(--primary); }
+.search svg {
+  fill: none;
+  height: 16px;
+  stroke: var(--muted);
+  stroke-linecap: round;
+  stroke-width: 2;
+  width: 16px;
+}
+.search input {
+  background: transparent;
+  border: 0;
+  font: inherit;
+  outline: 0;
+  width: 180px;
+}
+.menu-button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  display: none;
+  font-size: 1.5rem;
+}
+.page-layout { display: flex; min-height: calc(100vh - var(--navbar-height)); }
+.sidebar {
+  background: white;
+  border-right: 1px solid var(--border);
+  flex: 0 0 var(--sidebar-width);
+  height: calc(100vh - var(--navbar-height));
+  overflow-y: auto;
+  padding: 1.2rem 0.8rem 2rem;
+  position: sticky;
+  top: var(--navbar-height);
+}
+.sidebar a, .sidebar summary {
+  border-radius: 6px;
+  color: #3b3b3b;
+  display: block;
+  line-height: 1.25;
+  padding: 0.42rem 0.7rem;
+}
+.sidebar a:hover { background: #f5f6f7; text-decoration: none; }
+.sidebar a.active {
+  background: #e7f4ec;
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+.sidebar summary {
+  cursor: pointer;
+  font-weight: 700;
+  list-style-position: outside;
+}
+.sidebar-group { margin-top: 0.4rem; }
+.sidebar-group-content { border-left: 1px solid var(--border); margin-left: 0.65rem; padding-left: 0.45rem; }
+.sidebar-category { margin: 0.2rem 0; }
+.sidebar-category summary { font-size: 0.92rem; }
+.sidebar ul { list-style: none; margin: 0; padding: 0 0 0 0.45rem; }
+.sidebar li { font-size: 0.9rem; }
+.content-layout {
+  display: grid;
+  flex: 1;
+  gap: 3rem;
+  grid-template-columns: minmax(0, 850px) 220px;
+  justify-content: center;
+  min-width: 0;
+  padding: 0 2.5rem;
+}
+.doc { min-width: 0; padding: 1.25rem 0 5rem; }
+.doc h1 { font-size: 2.5rem; line-height: 1.2; margin: 1.4rem 0 1.6rem; }
+.doc h2 { border-top: 1px solid var(--border); font-size: 1.8rem; margin-top: 3rem; padding-top: 1.5rem; }
+.doc h3 { font-size: 1.35rem; margin-top: 2.2rem; }
+.doc h4 { font-size: 1.05rem; margin-bottom: 0.5rem; }
+.breadcrumbs { color: var(--muted); font-size: 0.88rem; }
+.breadcrumb-separator { margin: 0 0.5rem; }
+.table-of-contents {
+  align-self: start;
+  border-left: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-top: 2.2rem;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding-left: 1rem;
+  position: sticky;
+  top: 85px;
+}
+.table-of-contents ul { list-style: none; margin: 0; padding: 0; }
+.table-of-contents li { margin: 0.3rem 0; }
+.table-of-contents .toc-level-3 { padding-left: 0.8rem; }
+.table-of-contents a { color: var(--muted); }
 code {
   background: #f1f3f5;
   border-radius: 4px;
-  padding: 0.1rem 0.3rem;
+  font-size: 0.92em;
+  padding: 0.12rem 0.32rem;
 }
 pre {
-  background: #20232a;
-  border-radius: 6px;
+  background: #282c34;
+  border-radius: 7px;
   color: #f8f9fa;
   overflow-x: auto;
-  padding: 1rem;
+  padding: 1rem 1.2rem;
 }
 pre code { background: none; padding: 0; }
 table {
   border-collapse: collapse;
   display: block;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
+  max-width: 100%;
   overflow-x: auto;
   width: max-content;
-  max-width: 100%;
 }
 th, td {
-  border: 1px solid #ced4da;
-  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
   text-align: left;
   vertical-align: top;
 }
+th { background: #f5f6f7; }
 blockquote {
-  border-left: 4px solid #087ea4;
+  background: #edf7f1;
+  border-left: 5px solid var(--primary);
+  border-radius: 4px;
   margin-left: 0;
-  padding: 0.1rem 1rem;
+  padding: 0.55rem 1rem;
+}
+blockquote p { margin: 0.4rem 0; }
+@media (max-width: 1200px) {
+  .content-layout { grid-template-columns: minmax(0, 850px); }
+  .table-of-contents { display: none; }
+}
+@media (max-width: 996px) {
+  .menu-button { display: block; }
+  .sidebar {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    top: var(--navbar-height);
+    transform: translateX(-105%);
+    transition: transform 160ms ease;
+    z-index: 15;
+  }
+  .sidebar-open .sidebar { transform: translateX(0); }
+  .content-layout { padding: 0 1.4rem; width: 100%; }
+}
+@media (max-width: 600px) {
+  .navbar { gap: 0.6rem; padding: 0 0.75rem; }
+  .brand span:last-child { display: none; }
+  .search input { width: 105px; }
+  .content-layout { padding: 0 1rem; }
+  .doc h1 { font-size: 2rem; }
 }
 """
