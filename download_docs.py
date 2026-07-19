@@ -1,7 +1,9 @@
-from download_file import download_file
-from zipfile import ZipFile
-from pathlib import Path
 import shutil
+from pathlib import Path
+from zipfile import ZipFile
+
+from download_file import download_file
+
 
 def download():
     temp = Path("temp/")
@@ -19,4 +21,4 @@ def download():
     with ZipFile(lua_zip, "r") as archive:
         archive.extractall(temp)
 
-    return temp / "json/", temp / "lua.sm"
+    return temp / "json/", temp / "sm.lua"
