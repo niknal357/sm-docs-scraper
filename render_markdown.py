@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from html import unescape
 import json
 import os
 from pathlib import Path
@@ -7,7 +8,7 @@ import re
 
 from make_ir import Doc, Entry, Environment, Inline, Page
 from render_context import CATEGORY_DIRECTORIES, CATEGORY_TITLES, RenderContext
-from symbol_catalog import CallbackGroup, SIGNATURE_LINE_LENGTH
+from symbol_catalog import CallbackGroup, SIGNATURE_LINE_LENGTH, SymbolCatalog
 
 
 SIGNATURE_FENCE = "``` { .lua .api-signature }"
@@ -15,6 +16,10 @@ INTRODUCTION_PATH = Path(__file__).parent / "content" / "introduction.md"
 LEGACY_EMPTY_LINK = re.compile(
     r'<a href="index\.html#(?:server|client|console)">(.*?)</a>',
     flags=re.IGNORECASE,
+)
+LUA_LITERAL = re.compile(
+    r"(?:-?(?:\d+(?:\.\d*)?|\.\d+)|true|false|nil|"
+    r'"(?:[^"\\]|\\.)*"|\'(?:[^\'\\]|\\.)*\')'
 )
 
 
@@ -37,6 +42,7 @@ class MarkdownRenderer(RenderContext):
         environment: Environment,
         current_path: Path,
         blocks: list[dict],
+        tables_as_lua: bool = False,
     ) -> list[str]:
         output: list[str] = []
         for block in blocks:
@@ -61,9 +67,12 @@ class MarkdownRenderer(RenderContext):
                 )
                 output.append("")
             elif block_type == "table":
-                output.extend(
-                    self._table_block(environment, current_path, block["rows"])
-                )
+                if tables_as_lua:
+                    output.extend(self._lua_table_block(block["rows"]))
+                else:
+                    output.extend(
+                        self._table_block(environment, current_path, block["rows"])
+                    )
             elif block_type in {"note", "warning"}:
                 label = block_type.title()
                 output.append(f"> **{label}:**")
@@ -73,6 +82,38 @@ class MarkdownRenderer(RenderContext):
                     )
                 output.append("")
         return output
+
+    def _lua_table_block(self, rows: list[list[Inline]]) -> list[str]:
+        values = [
+            [
+                unescape(
+                    re.sub(r"<[^>]+>", "", self.symbol_catalog.inline_text(cell))
+                ).strip()
+                for cell in row
+            ]
+            for row in rows
+        ]
+        mappings = bool(values) and all(
+            len(row) == 2 and LUA_LITERAL.fullmatch(row[1]) for row in values
+        )
+
+        lines = ["```lua", "{"]
+        if mappings:
+            width = max(len(row[0]) for row in values)
+            lines.extend(
+                f"    {key:<{width}} = {value}," for key, value in values
+            )
+        else:
+            width = max((len(row[0].rstrip(",")) for row in values), default=0)
+            for row in values:
+                value = row[0].rstrip(",")
+                line = f"    {value},"
+                if len(row) > 1:
+                    description = " | ".join(row[1:])
+                    line = f"    {value + ',':<{width + 1}} -- {description}"
+                lines.append(line)
+        lines.extend(["}", "```", ""])
+        return lines
 
     def _table_block(
         self,
@@ -108,6 +149,8 @@ class MarkdownRenderer(RenderContext):
         doc: Doc,
         detail_heading: int,
         show_availability: bool = True,
+        show_returns: bool = True,
+        tables_as_lua: bool = False,
     ) -> list[str]:
         output: list[str] = []
 
@@ -118,7 +161,14 @@ class MarkdownRenderer(RenderContext):
         if doc.deprecated:
             output.extend(["> **Deprecated:**", *self._quote_blocks(environment, current_path, doc.deprecated), ""])
 
-        output.extend(self._blocks(environment, current_path, doc.content))
+        output.extend(
+            self._blocks(
+                environment,
+                current_path,
+                doc.content,
+                tables_as_lua=tables_as_lua,
+            )
+        )
         heading = "#" * detail_heading
 
         if doc.fields:
@@ -161,7 +211,7 @@ class MarkdownRenderer(RenderContext):
                 )
             output.extend(self._plain_table(["Name", "Type", "Description"], rows))
 
-        if doc.returns:
+        if show_returns and doc.returns:
             output.extend(["**Returns:**", ""])
             rows = [
                 [
@@ -398,33 +448,135 @@ class MarkdownRenderer(RenderContext):
                 )
         return output
 
-    def _entries(
+    @staticmethod
+    def _constant_values_missing(entry: Entry) -> bool:
+        doc = entry.doc
+        if doc is None:
+            return False
+        is_table = any(
+            SymbolCatalog.inline_text(value.type).casefold() == "table"
+            for value in doc.returns
+        )
+        has_values = any(
+            block["type"] in {"code", "list", "table"} for block in doc.content
+        )
+        return is_table and not has_values
+
+    @classmethod
+    def _constant_has_details(cls, entry: Entry) -> bool:
+        doc = entry.doc
+        if doc is None:
+            return False
+        return bool(
+            cls._constant_values_missing(entry)
+            or len(doc.content) > 1
+            or any(block["type"] != "paragraph" for block in doc.content)
+            or doc.deprecated
+            or doc.hidden
+            or doc.availability != "server and client"
+            or doc.fields
+            or doc.operations
+            or doc.parameters
+            or len(doc.returns) > 1
+        )
+
+    def _constant_type(
         self,
         environment: Environment,
         current_path: Path,
-        kind: str,
+        entry: Entry,
+    ) -> str:
+        if entry.doc is None or not entry.doc.returns:
+            return "&mdash;"
+        return "<br>".join(
+            self._inline(environment, current_path, value.type)
+            for value in entry.doc.returns
+        )
+
+    def _constant_summary(
+        self,
+        environment: Environment,
+        current_path: Path,
+        entry: Entry,
+    ) -> str:
+        if entry.doc is None:
+            return "&mdash;"
+
+        return_descriptions = [
+            self._inline(environment, current_path, value.description)
+            for value in entry.doc.returns
+            if value.description
+        ]
+        if self._constant_has_details(entry) and return_descriptions:
+            return "<br>".join(return_descriptions)
+
+        paragraphs = [
+            self._inline(environment, current_path, block["content"])
+            for block in entry.doc.content
+            if block["type"] == "paragraph"
+        ]
+        if paragraphs:
+            return paragraphs[0]
+        return "<br>".join(return_descriptions) or "&mdash;"
+
+    def _constants(
+        self,
+        environment: Environment,
+        current_path: Path,
         page: Page,
-        title: str,
-        entries: list[Entry],
     ) -> list[str]:
-        if not entries:
+        if not page.constants:
             return []
 
-        output = [f"## {title}", ""]
-        for entry in entries:
+        detailed = [
+            entry for entry in page.constants if self._constant_has_details(entry)
+        ]
+        detailed_ids = {id(entry) for entry in detailed}
+        rows = []
+        for entry in page.constants:
+            anchor = self.symbol_catalog.slug(entry.name)
+            if id(entry) in detailed_ids:
+                name = f"[`{entry.name}`](#{anchor})"
+            else:
+                name = f'<a id="{anchor}"></a>`{entry.name}`'
+            rows.append(
+                [
+                    name,
+                    self._constant_type(environment, current_path, entry),
+                    self._constant_summary(environment, current_path, entry),
+                ]
+            )
+
+        output = [
+            "## Constants",
+            "",
+            *self._plain_table(["Name", "Type", "Description"], rows),
+        ]
+        for entry in detailed:
             anchor = self.symbol_catalog.slug(entry.name)
             output.extend([f"### {entry.name} {{#{anchor}}}", ""])
-            if title != "Constants":
+            value_type = self._constant_type(environment, current_path, entry)
+            if value_type != "&mdash;":
+                output.extend([f"**Value type:** {value_type}", ""])
+            if entry.doc:
+                output.extend(
+                    self._doc(
+                        environment,
+                        current_path,
+                        entry.doc,
+                        4,
+                        show_returns=False,
+                        tables_as_lua=True,
+                    )
+                )
+            if self._constant_values_missing(entry):
                 output.extend(
                     [
-                        SIGNATURE_FENCE,
-                        self.symbol_catalog.signature(page, entry),
-                        "```",
+                        "> **Note:**",
+                        "> Values are not included in the source documentation.",
                         "",
                     ]
                 )
-            if entry.doc:
-                output.extend(self._doc(environment, current_path, entry.doc, 4))
         return output
 
     @staticmethod
@@ -706,11 +858,7 @@ class MarkdownRenderer(RenderContext):
         if page.doc:
             output.extend(self._doc(environment, path, page.doc, 2))
 
-        output.extend(
-            self._entries(
-                environment, path, kind, page, "Constants", page.constants
-            )
-        )
+        output.extend(self._constants(environment, path, page))
 
         output.extend(self._members(environment, path, page))
 
