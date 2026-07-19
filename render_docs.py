@@ -29,6 +29,8 @@ _CATEGORY_TITLES = {
     "class": "Classes",
 }
 _TOC_EXCLUDED_SECTIONS = {"constants", "fields", "members", "operations"}
+_SIGNATURE_LINE_LENGTH = 80
+_INTRODUCTION_PATH = Path(__file__).parent / "content" / "introduction.md"
 _BINARY_OPERATORS = {
     "__add": "+",
     "__div": "/",
@@ -144,6 +146,10 @@ class DocumentationRenderer:
     @staticmethod
     def _page_sort_key(page: Page) -> str:
         return page.name.casefold()
+
+    @staticmethod
+    def _page_display_name(page: Page) -> str:
+        return "Global" if page.name == "GLOBAL" else page.name
 
     @staticmethod
     def _instance_name(type_name: str) -> str:
@@ -450,7 +456,18 @@ class DocumentationRenderer:
             prefix = f"{self._instance_name(page.name)}:"
         else:
             prefix = f"{page.name}:"
-        return f"{prefix}{entry.name}( {arguments} )"
+
+        signature = f"{prefix}{entry.name}( {arguments} )"
+        if len(signature) <= _SIGNATURE_LINE_LENGTH or not names:
+            return signature
+
+        lines = [f"{prefix}{entry.name}("]
+        lines.extend(
+            f"    {name}{',' if index < len(names) - 1 else ''}"
+            for index, name in enumerate(names)
+        )
+        lines.append(")")
+        return "\n".join(lines)
 
     @staticmethod
     def _callback_groups(page: Page) -> list[CallbackGroup]:
@@ -665,7 +682,7 @@ class DocumentationRenderer:
     def _write_page(self, environment: Environment, kind: str, page: Page) -> None:
         path = self.page_paths[id(page)]
         path.parent.mkdir(parents=True, exist_ok=True)
-        output = [f"# {page.name}", ""]
+        output = [f"# {self._page_display_name(page)}", ""]
 
         if page.associated_type:
             link = self._link(
@@ -720,15 +737,9 @@ class DocumentationRenderer:
         path.write_text("\n".join(output).rstrip() + "\n", encoding="utf-8")
 
     def _write_markdown_index(self) -> None:
-        output = ["# Scrap Mechanic API", ""]
-        for environment in sorted(
-            self.docs.environments, key=lambda item: item.name.casefold()
-        ):
-            directory = self._environment_directory(environment)
-            output.append(f"- [{environment.name}]({directory}/index.md)")
-        output.append("")
+        introduction = _INTRODUCTION_PATH.read_text(encoding="utf-8").rstrip()
         (self.markdown_root / "index.md").write_text(
-            "\n".join(output), encoding="utf-8"
+            introduction + "\n", encoding="utf-8"
         )
 
     def _write_environment_index(self, environment: Environment) -> None:
@@ -756,7 +767,8 @@ class DocumentationRenderer:
         output = [f"# {_CATEGORY_TITLES[kind]}", ""]
         for page in sorted(pages, key=self._page_sort_key):
             path = self.page_paths[id(page)]
-            output.append(f"- [`{page.name}`]({path.name})")
+            display_name = self._page_display_name(page)
+            output.append(f"- [`{display_name}`]({path.name})")
         output.append("")
         (directory / "index.md").write_text("\n".join(output), encoding="utf-8")
 
@@ -772,7 +784,7 @@ class DocumentationRenderer:
         root_class = " active" if current_markdown == root_index else ""
         output.append(
             f'<a class="sidebar-overview{root_class}" '
-            f'href="{self._html_href(current_html, root_index)}">Overview</a>'
+            f'href="{self._html_href(current_html, root_index)}">Introduction</a>'
         )
 
         for environment in sorted(
@@ -781,7 +793,6 @@ class DocumentationRenderer:
             environment_directory = (
                 self.markdown_root / self._environment_directory(environment)
             )
-            environment_index = environment_directory / "index.md"
             environment_active = current_markdown.is_relative_to(
                 environment_directory
             )
@@ -794,17 +805,11 @@ class DocumentationRenderer:
                 f"<summary>{escape(environment.name)} Script Environment</summary>"
             )
             output.append('<div class="sidebar-group-content">')
-            overview_class = " active" if current_markdown == environment_index else ""
-            output.append(
-                f'<a class="sidebar-overview{overview_class}" '
-                f'href="{self._html_href(current_html, environment_index)}">Overview</a>'
-            )
 
             for kind, pages in self._navigation_groups(environment):
                 if not pages:
                     continue
                 category_directory = environment_directory / _CATEGORY_DIRECTORIES[kind]
-                category_index = category_directory / "index.md"
                 category_active = current_markdown.is_relative_to(category_directory)
                 category_open = " open" if category_active else ""
                 output.append(
@@ -816,18 +821,14 @@ class DocumentationRenderer:
                     f"<summary>{escape(_CATEGORY_TITLES[kind])}</summary>"
                 )
                 output.append("<ul>")
-                index_class = " active" if current_markdown == category_index else ""
-                output.append(
-                    f'<li class="sidebar-page"><a class="{index_class.strip()}" '
-                    f'href="{self._html_href(current_html, category_index)}">Overview</a></li>'
-                )
                 for page in sorted(pages, key=self._page_sort_key):
                     page_path = self.page_paths[id(page)]
                     active_class = " active" if current_markdown == page_path else ""
+                    display_name = self._page_display_name(page)
                     output.append(
                         f'<li class="sidebar-page"><a class="{active_class.strip()}" '
                         f'href="{self._html_href(current_html, page_path)}">'
-                        f"{escape(page.name)}</a></li>"
+                        f"{escape(display_name)}</a></li>"
                     )
                 output.extend(["</ul>", "</details>"])
 
@@ -884,11 +885,15 @@ class DocumentationRenderer:
         self.html_root.mkdir(parents=True)
         assets = self.html_root / "assets"
         assets.mkdir()
-        highlight_style = HtmlFormatter(style="one-dark").get_style_defs(
+        light_highlight_style = HtmlFormatter(style="default").get_style_defs(
             ".codehilite"
         )
+        dark_highlight_style = HtmlFormatter(style="one-dark").get_style_defs(
+            ':root[data-theme="dark"] .codehilite'
+        )
         (assets / "style.css").write_text(
-            f"{_STYLE}\n{highlight_style}\n", encoding="utf-8"
+            f"{_STYLE}\n{light_highlight_style}\n{dark_highlight_style}\n",
+            encoding="utf-8",
         )
 
         for markdown_path in self.markdown_root.rglob("*.md"):
@@ -925,6 +930,7 @@ class DocumentationRenderer:
                     breadcrumbs=self._breadcrumbs(markdown_path, html_path),
                     body=body,
                     toc=self._table_of_contents(body),
+                    theme_script=_THEME_SCRIPT,
                     script=_SCRIPT,
                 ),
                 encoding="utf-8",
@@ -948,6 +954,7 @@ _HTML_TEMPLATE = """<!doctype html>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title} | SM Docs</title>
+  <script>{theme_script}</script>
   <link rel="stylesheet" href="{stylesheet}">
 </head>
 <body>
@@ -955,6 +962,7 @@ _HTML_TEMPLATE = """<!doctype html>
     <button class="menu-button" id="menu-button" aria-label="Toggle navigation">☰</button>
     <a class="brand" href="{home}"><span class="brand-mark">SM</span><span>SM Docs</span></a>
     <div class="navbar-spacer"></div>
+    <button class="theme-button" id="theme-button" type="button" aria-label="Toggle color theme"><svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg><svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path></svg></button>
     <label class="search"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg><input id="doc-search" type="search" placeholder="Filter pages"></label>
   </header>
   <div class="page-layout">
@@ -972,7 +980,52 @@ _HTML_TEMPLATE = """<!doctype html>
 </html>
 """
 
-_SCRIPT = """const menu = document.getElementById('menu-button');
+_THEME_SCRIPT = """(() => {
+  let theme;
+  try {
+    theme = localStorage.getItem('sm-docs-theme');
+  } catch (_) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.dataset.theme = theme;
+})();"""
+
+_SCRIPT = """const themeButton = document.getElementById('theme-button');
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+const updateThemeButton = () => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  const nextTheme = dark ? 'light' : 'dark';
+  themeButton.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
+  themeButton.title = `Switch to ${nextTheme} mode`;
+};
+const applyTheme = (theme) => {
+  document.documentElement.dataset.theme = theme;
+  updateThemeButton();
+};
+const savedTheme = () => {
+  try {
+    const theme = localStorage.getItem('sm-docs-theme');
+    return theme === 'light' || theme === 'dark' ? theme : null;
+  } catch (_) {
+    return null;
+  }
+};
+updateThemeButton();
+themeButton.addEventListener('click', () => {
+  const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(theme);
+  try {
+    localStorage.setItem('sm-docs-theme', theme);
+  } catch (_) {}
+});
+if ('addEventListener' in systemTheme) {
+  systemTheme.addEventListener('change', (event) => {
+    if (!savedTheme()) applyTheme(event.matches ? 'dark' : 'light');
+  });
+}
+
+const menu = document.getElementById('menu-button');
 const sidebar = document.getElementById('sidebar');
 menu.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
 const statePrefix = 'sm-docs-sidebar:';
@@ -1022,17 +1075,54 @@ search.addEventListener('input', () => {
 """
 
 _STYLE = """:root {
+  color-scheme: light;
   --primary: #2e8555;
   --primary-dark: #277148;
+  --brand-background: #2e8555;
+  --background: #ffffff;
+  --surface: #ffffff;
+  --surface-muted: #f5f6f7;
+  --active-background: #e7f4ec;
+  --blockquote-background: #edf7f1;
+  --code-background: #f8f8f8;
+  --code-text: #1c1e21;
+  --inline-code-background: #f1f3f5;
+  --text: #1c1e21;
+  --sidebar-text: #3b3b3b;
   --border: #dadde1;
   --muted: #606770;
+  --shadow: rgb(0 0 0 / 8%);
+  --radius: 0;
   --sidebar-width: 300px;
   --navbar-height: 60px;
 }
-* { box-sizing: border-box; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --primary: #55c98d;
+  --primary-dark: #72dda4;
+  --brand-background: #277148;
+  --background: #181a1f;
+  --surface: #202329;
+  --surface-muted: #2a2e35;
+  --active-background: #183b2a;
+  --blockquote-background: #1d3328;
+  --code-background: #282c34;
+  --code-text: #f8f9fa;
+  --inline-code-background: #2b3038;
+  --text: #e6e9ed;
+  --sidebar-text: #d5dae0;
+  --border: #3b414a;
+  --muted: #a7afb9;
+  --shadow: rgb(0 0 0 / 30%);
+}
+*, *::before, *::after {
+  border-radius: var(--radius);
+  box-sizing: border-box;
+}
 html { scroll-padding-top: 76px; }
 body {
-  color: #1c1e21;
+  background: var(--background);
+  color: var(--text);
   font: 16px/1.65 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   margin: 0;
 }
@@ -1040,9 +1130,9 @@ a { color: var(--primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
 .navbar {
   align-items: center;
-  background: white;
+  background: var(--surface);
   border-bottom: 1px solid var(--border);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
+  box-shadow: 0 1px 2px var(--shadow);
   display: flex;
   gap: 1.4rem;
   height: var(--navbar-height);
@@ -1053,7 +1143,7 @@ a:hover { text-decoration: underline; }
 }
 .brand {
   align-items: center;
-  color: #1c1e21;
+  color: var(--text);
   display: flex;
   font-size: 1.15rem;
   font-weight: 700;
@@ -1062,9 +1152,8 @@ a:hover { text-decoration: underline; }
 .brand:hover { text-decoration: none; }
 .brand-mark {
   align-items: center;
-  background: var(--primary);
-  border-radius: 7px;
-  color: white;
+  background: var(--brand-background);
+  color: #ffffff;
   display: inline-flex;
   font-size: 0.72rem;
   height: 32px;
@@ -1074,9 +1163,8 @@ a:hover { text-decoration: underline; }
 .navbar-spacer { flex: 1; }
 .search {
   align-items: center;
-  background: #f5f6f7;
+  background: var(--surface-muted);
   border: 1px solid transparent;
-  border-radius: 8px;
   display: flex;
   gap: 0.35rem;
   padding: 0.35rem 0.65rem;
@@ -1093,20 +1181,49 @@ a:hover { text-decoration: underline; }
 .search input {
   background: transparent;
   border: 0;
+  color: var(--text);
   font: inherit;
   outline: 0;
   width: 180px;
 }
+.search input::placeholder { color: var(--muted); }
+.theme-button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  padding: 0;
+  width: 36px;
+}
+.theme-button:hover { color: var(--primary); }
+.theme-button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.theme-icon {
+  fill: none;
+  height: 20px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  width: 20px;
+}
+.theme-icon-sun { display: none; }
+:root[data-theme="dark"] .theme-icon-sun { display: inline; }
+:root[data-theme="dark"] .theme-icon-moon { display: none; }
 .menu-button {
   background: transparent;
   border: 0;
+  color: var(--text);
   cursor: pointer;
   display: none;
   font-size: 1.5rem;
 }
 .page-layout { display: flex; min-height: calc(100vh - var(--navbar-height)); }
 .sidebar {
-  background: white;
+  background: var(--surface);
   border-right: 1px solid var(--border);
   flex: 0 0 var(--sidebar-width);
   height: calc(100vh - var(--navbar-height));
@@ -1116,15 +1233,14 @@ a:hover { text-decoration: underline; }
   top: var(--navbar-height);
 }
 .sidebar a, .sidebar summary {
-  border-radius: 6px;
-  color: #3b3b3b;
+  color: var(--sidebar-text);
   display: block;
   line-height: 1.25;
   padding: 0.42rem 0.7rem;
 }
-.sidebar a:hover { background: #f5f6f7; text-decoration: none; }
+.sidebar a:hover { background: var(--surface-muted); text-decoration: none; }
 .sidebar a.active {
-  background: #e7f4ec;
+  background: var(--active-background);
   color: var(--primary-dark);
   font-weight: 700;
 }
@@ -1172,15 +1288,13 @@ a:hover { text-decoration: underline; }
 .table-of-contents .toc-level-3 { padding-left: 0.8rem; }
 .table-of-contents a { color: var(--muted); }
 code {
-  background: #f1f3f5;
-  border-radius: 4px;
+  background: var(--inline-code-background);
   font-size: 0.92em;
   padding: 0.12rem 0.32rem;
 }
 pre {
-  background: #282c34;
-  border-radius: 7px;
-  color: #f8f9fa;
+  background: var(--code-background);
+  color: var(--code-text);
   overflow-x: auto;
   padding: 1rem 1.2rem;
 }
@@ -1199,11 +1313,10 @@ th, td {
   text-align: left;
   vertical-align: top;
 }
-th { background: #f5f6f7; }
+th { background: var(--surface-muted); }
 blockquote {
-  background: #edf7f1;
+  background: var(--blockquote-background);
   border-left: 5px solid var(--primary);
-  border-radius: 4px;
   margin-left: 0;
   padding: 0.55rem 1rem;
 }
