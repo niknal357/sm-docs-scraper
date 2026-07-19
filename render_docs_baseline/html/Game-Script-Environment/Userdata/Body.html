@@ -1,0 +1,2235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Body | SM Docs</title>
+  <script>(() => {
+  let theme;
+  try {
+    theme = localStorage.getItem('sm-docs-theme');
+  } catch (_) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.dataset.theme = theme;
+})();</script>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <header class="navbar">
+    <button class="menu-button" id="menu-button" aria-label="Toggle navigation">☰</button>
+    <a class="brand" href="../../index.html"><span class="brand-mark">SM</span><span>SM Docs</span></a>
+    <div class="navbar-spacer"></div>
+    <button class="theme-button" id="theme-button" type="button" aria-label="Toggle color theme"><svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg><svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path></svg></button>
+    <label class="search"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg><input id="doc-search" type="search" placeholder="Filter pages"></label>
+  </header>
+  <div class="page-layout">
+    <aside class="sidebar" id="sidebar"><nav><a class="sidebar-overview" href="../../index.html">Introduction</a>
+<details class="sidebar-group" data-sidebar-key="environment:Game" open>
+<summary>Game Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:class">
+<summary>Classes</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Classes/CharacterClass.html">CharacterClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ClientScriptableObjectClass.html">ClientScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/GameClass.html">GameClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/HarvestableClass.html">HarvestableClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/PlayerClass.html">PlayerClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ScriptableObjectClass.html">ScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ShapeClass.html">ShapeClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ToolClass.html">ToolClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/UnitClass.html">UnitClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/WorldClass.html">WorldClass</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:namespace">
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Static-Functions/Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.ai.html">sm.ai</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.areaTrigger.html">sm.areaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.audio.html">sm.audio</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.body.html">sm.body</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.builderGuide.html">sm.builderGuide</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.camera.html">sm.camera</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.cell.html">sm.cell</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.challenge.html">sm.challenge</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.character.html">sm.character</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.clientScriptableObject.html">sm.clientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.construction.html">sm.construction</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.creation.html">sm.creation</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.cullSphereGroup.html">sm.cullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debris.html">sm.debris</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.effect.html">sm.effect</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.event.html">sm.event</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.game.html">sm.game</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.garage.html">sm.garage</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.gui.html">sm.gui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.gui.widget.html">sm.gui.widget</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.harvestable.html">sm.harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.item.html">sm.item</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.joint.html">sm.joint</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.jsonGui.html">sm.jsonGui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.lift.html">sm.lift</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.localPlayer.html">sm.localPlayer</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.melee.html">sm.melee</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.menuCreation.html">sm.menuCreation</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.message.html">sm.message</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.particle.html">sm.particle</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pathfinder.html">sm.pathfinder</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pathNode.html">sm.pathNode</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.physics.html">sm.physics</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pipeGraph.html">sm.pipeGraph</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.player.html">sm.player</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.portal.html">sm.portal</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.projectile.html">sm.projectile</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.render.html">sm.render</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.shape.html">sm.shape</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.storage.html">sm.storage</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.tool.html">sm.tool</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.unit.html">sm.unit</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.visualization.html">sm.visualization</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.world.html">sm.world</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:userdata" open>
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="AiState.html">AiState</a></li>
+<li class="sidebar-page"><a class="" href="AreaTrigger.html">AreaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="BlueprintVisualization.html">BlueprintVisualization</a></li>
+<li class="sidebar-page"><a class="active" href="Body.html">Body</a></li>
+<li class="sidebar-page"><a class="" href="BuilderGuide.html">BuilderGuide</a></li>
+<li class="sidebar-page"><a class="" href="Character.html">Character</a></li>
+<li class="sidebar-page"><a class="" href="ClientScriptableObject.html">ClientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="CullSphereGroup.html">CullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="Effect.html">Effect</a></li>
+<li class="sidebar-page"><a class="" href="Garage.html">Garage</a></li>
+<li class="sidebar-page"><a class="" href="GuiInterface.html">GuiInterface</a></li>
+<li class="sidebar-page"><a class="" href="Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="Joint.html">Joint</a></li>
+<li class="sidebar-page"><a class="" href="JsonGui.html">JsonGui</a></li>
+<li class="sidebar-page"><a class="" href="JsonWidget.html">JsonWidget</a></li>
+<li class="sidebar-page"><a class="" href="Lift.html">Lift</a></li>
+<li class="sidebar-page"><a class="" href="LoadCellHandle.html">LoadCellHandle</a></li>
+<li class="sidebar-page"><a class="" href="Network.html">Network</a></li>
+<li class="sidebar-page"><a class="" href="PathNode.html">PathNode</a></li>
+<li class="sidebar-page"><a class="" href="Player.html">Player</a></li>
+<li class="sidebar-page"><a class="" href="Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="RaycastResult.html">RaycastResult</a></li>
+<li class="sidebar-page"><a class="" href="ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="Shape.html">Shape</a></li>
+<li class="sidebar-page"><a class="" href="Storage.html">Storage</a></li>
+<li class="sidebar-page"><a class="" href="Tool.html">Tool</a></li>
+<li class="sidebar-page"><a class="" href="Unit.html">Unit</a></li>
+<li class="sidebar-page"><a class="" href="Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="Widget.html">Widget</a></li>
+<li class="sidebar-page"><a class="" href="World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details>
+<details class="sidebar-group" data-sidebar-key="environment:Terrain">
+<summary>Terrain Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:namespace">
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainData.html">sm.terrainData</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainGeneration.html">sm.terrainGeneration</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainHarvestable.html">sm.terrainHarvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainTile.html">sm.terrainTile</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.tunnelGenerator.html">sm.tunnelGenerator</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.voxelTerrainCell.html">sm.voxelTerrainCell</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:userdata">
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details></nav></aside>
+    <div class="content-layout">
+      <main class="doc">
+        <div class="breadcrumbs"><a href="../../index.html">Docs</a><span class="breadcrumb-separator">›</span><a href="../index.html">Game</a><span class="breadcrumb-separator">›</span><a href="index.html">Userdata</a><span class="breadcrumb-separator">›</span><span>Body</span></div>
+        <h1 id="body">Body</h1>
+<p><strong>Associated namespace:</strong> <a href="../Static-Functions/sm.body.html">sm.body</a></p>
+<p><strong>Usage:</strong> Server And Client</p>
+<p><strong>Serializable:</strong> Yes</p>
+<p>A userdata object representing a <strong>body</strong> in the game.</p>
+<p><strong>Values:</strong></p>
+<ul>
+<li>
+<p><a id="angularvelocity"></a><code>angularVelocity</code> [ <strong><a href="Vec3.html">Vec3</a></strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the angular velocity of a body.</li>
+</ul>
+</li>
+<li>
+<p><a id="buildable"></a><code>buildable</code> [ <strong>boolean</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Check if a body is buildable</li>
+<li><code>Set</code>: (Server-Only) Controls whether a body is buildable</li>
+</ul>
+</li>
+<li>
+<p><a id="centerofmassposition"></a><code>centerOfMassPosition</code> [ <strong><a href="Vec3.html">Vec3</a></strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the center of mass world position of a body.</li>
+</ul>
+</li>
+<li>
+<p><a id="connectable"></a><code>connectable</code> [ <strong>boolean</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Check if a body is connectable</li>
+<li><code>Set</code>: (Server-Only) Controls whether a body is connectable</li>
+</ul>
+</li>
+<li>
+<p><a id="convertabletodynamic"></a><code>convertableToDynamic</code> [ <strong>boolean</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Check if a body is convertible to dynamic form</li>
+<li><code>Set</code>: (Server-Only) Controls whether a body is convertible to dynamic form</li>
+</ul>
+</li>
+<li>
+<p><a id="destructable"></a><code>destructable</code> [ <strong>boolean</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Check if a body is destructable.</li>
+<li><code>Set</code>: (Server-Only) Controls whether a body is destructable</li>
+</ul>
+</li>
+<li>
+<p><a id="erasable"></a><code>erasable</code> [ <strong>boolean</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Check if a body is erasable.</li>
+<li><code>Set</code>: (Server-Only) Controls whether a body is erasable</li>
+</ul>
+</li>
+<li>
+<p><a id="id"></a><code>id</code> [ <strong>integer</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the id of a body.</li>
+</ul>
+</li>
+<li>
+<p><a id="liftable"></a><code>liftable</code> [ <strong>boolean</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Check if a body is liftable</li>
+<li><code>Set</code>: (Server-Only) Controls whether a body is liftable</li>
+</ul>
+</li>
+<li>
+<p><a id="mass"></a><code>mass</code> [ <strong>number</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the mass of a body.</li>
+</ul>
+</li>
+<li>
+<p><a id="paintable"></a><code>paintable</code> [ <strong>boolean</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Check if a body is paintable</li>
+<li><code>Set</code>: (Server-Only) Controls whether a body is non paintable</li>
+</ul>
+</li>
+<li>
+<p><a id="usable"></a><code>usable</code> [ <strong>boolean</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Check if a body is interactable</li>
+<li><code>Set</code>: (Server-Only) Controls whether a body is interactable</li>
+</ul>
+</li>
+<li>
+<p><a id="velocity"></a><code>velocity</code> [ <strong><a href="Vec3.html">Vec3</a></strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the linear velocity of a body.</li>
+</ul>
+</li>
+<li>
+<p><a id="worldposition"></a><code>worldPosition</code> [ <strong><a href="Vec3.html">Vec3</a></strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the world position of a body.</li>
+</ul>
+</li>
+<li>
+<p><a id="worldrotation"></a><code>worldRotation</code> [ <strong><a href="Quat.html">Quat</a></strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the world rotation of a body.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Operations:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a id="__eq"></a><code>Body == Body</code></td>
+<td>boolean</td>
+<td>Checks if two instances of <a href="Body.html">Body</a> refer to the same Body.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="server-client">Server + Client</h2>
+<h3 id="getangularvelocity">getAngularVelocity</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getAngularVelocity</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the angular velocity of a body.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The body's angular velocity.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getcenterofmassposition">getCenterOfMassPosition</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getCenterOfMassPosition</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the center of mass world position of a body.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The body's center of mass world position.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getcreationbodies">getCreationBodies</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getCreationBodies</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns a table of all bodies in a creation.</p>
+<p>A creation includes all bodies connected by <a href="Joint.html">joints</a>, etc.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>An array table of all bodies in a creation. {<a href="Body.html">Body</a>, ...}</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getcreationid">getCreationId</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getCreationId</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the local id of the creation</p>
+<blockquote>
+<p><strong>Note:</strong>
+Server and client ids will not match</p>
+</blockquote>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>integer</td>
+<td>The creation's local id</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getcreationjoints">getCreationJoints</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getCreationJoints</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns a table of all <a href="Joint.html">joints</a> that are part of a creation.</p>
+<p>A creation includes all bodies connected by <a href="Joint.html">joints</a>, etc.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The table of joints in a creation. {<a href="Joint.html">Joint</a>, ...}</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getcreationshapes">getCreationShapes</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getCreationShapes</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns a table of all <a href="Shape.html">shapes</a> that are part of a creation.</p>
+<p>A creation includes all bodies connected by <a href="Joint.html">joints</a>, etc.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The table of shapes in a creation. {<a href="Shape.html">Shape</a>, ...}</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getid">getId</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getId</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the id of a body.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>integer</td>
+<td>The body's id.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getinteractables">getInteractables</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getInteractables</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns a table of all <a href="Interactable.html">interactables</a> that are part of a body.</p>
+<p>This will <strong>not</strong> return interactables in neighbouring bodies connected by <a href="Joint.html">joints</a>, etc.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The table of interactables in a body. {<a href="Interactable.html">Interactable</a>, ...}</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getjoints">getJoints</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getJoints</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns a table of all <a href="Joint.html">joints</a> that are part of a body.</p>
+<p>This will <strong>not</strong> return joints in neighbouring bodies.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The table of joints in a body. {<a href="Joint.html">Joint</a>, ...}</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getlocalaabb">getLocalAabb</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getLocalAabb</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Get the local aabb of the body.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a>,<a href="Vec3.html">Vec3</a></td>
+<td>Returns the aabb min and max.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getmass">getMass</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getMass</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the mass of a body.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number</td>
+<td>The body's mass.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getshape">getShape</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getShape</span><span class="p">(</span><span class="w"> </span><span class="nv">index</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns a shape that is part of a body by index.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>index</code></td>
+<td>integer</td>
+<td>The index of the shape.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Shape.html">Shape</a></td>
+<td>The shape at the specified index, or nil if the index is out of range.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getshapecount">getShapeCount</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getShapeCount</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the number of shapes in a body.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>integer</td>
+<td>The number of shapes in the body.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getshapes">getShapes</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getShapes</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns a table of all <a href="Shape.html">shapes</a> that are part of a body.</p>
+<p>This will <strong>not</strong> return shapes in neighbouring bodies connected by <a href="Joint.html">joints</a>, etc.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The table of shapes in a body. {<a href="Shape.html">Shape</a>, ...}</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getshapesbyuuid">getShapesByUuid</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getShapesByUuid</span><span class="p">(</span><span class="w"> </span><span class="nv">uuid</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns a table of all <a href="Shape.html">shapes</a> that are part of a body and have a specified uuid.</p>
+<p>This will <strong>not</strong> return shapes in neighbouring bodies connected by <a href="Joint.html">joints</a>, etc.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>uuid</code></td>
+<td><a href="Uuid.html">Uuid</a></td>
+<td>The uuid to look for.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The table of shapes in a body. {<a href="Shape.html">Shape</a>, ...}</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getvelocity">getVelocity</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getVelocity</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the linear velocity of a body.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The body's linear velocity.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getworld">getWorld</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getWorld</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the world a body exists in.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="World.html">World</a></td>
+<td>The world the body exists in.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getworldaabb">getWorldAabb</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getWorldAabb</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Get the world aabb of the body.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a>,<a href="Vec3.html">Vec3</a></td>
+<td>Returns the aabb min and max.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getworldposition">getWorldPosition</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getWorldPosition</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the world position of a body.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The body's world position.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="haschanged">hasChanged</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">hasChanged</span><span class="p">(</span><span class="w"> </span><span class="nv">tick</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns true if the given tick is lower than the tick the body was last changed.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>tick</code></td>
+<td>integer</td>
+<td>The tick.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Returns true if the body has been changed.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isbuildable">isBuildable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">isBuildable</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a body is buildable</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Return true if the body is buildable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isconnectable">isConnectable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">isConnectable</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a body is connectable</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Return true if the body is connectable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isconvertibletodynamic">isConvertibleToDynamic</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">isConvertibleToDynamic</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a body is convertible to dynamic form</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Return true if the body can be converted to dynamic.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isdestructable">isDestructable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">isDestructable</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a body is destructable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Return true if the body is destructable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isdynamic">isDynamic</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">isDynamic</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a body is dynamic</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Return true if the body is dynamic.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="iserasable">isErasable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">isErasable</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a body is erasable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Return true if the body is erasable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isghost">isGhost</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">isGhost</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if the body is a ghost body.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Returns true if the body is a ghost body.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isliftable">isLiftable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">isLiftable</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a body is liftable</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Return true if the body is liftable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isonlift">isOnLift</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">isOnLift</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a body is on a lift</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Return true if the body is on a lift</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isonvirtuallift">isOnVirtualLift</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">isOnVirtualLift</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a body is on a virtual lift</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Return true if the body is on a lift</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ispaintable">isPaintable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">isPaintable</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a body is paintable</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Return true if the body is paintable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isstatic">isStatic</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">isStatic</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a body is static</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Return true if the body is static.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isusable">isUsable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">isUsable</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a body is interactable</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Return true if the body is interactable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="transformlocalpoint">transformLocalPoint</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">transformLocalPoint</span><span class="p">(</span><span class="w"> </span><span class="nv">point</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Transforms a point from local space to world space.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>point</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The point in local space.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The point in world space.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="transformpoint">transformPoint</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">transformPoint</span><span class="p">(</span><span class="w"> </span><span class="nv">point</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Transforms a point from local space to world space.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>point</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The point in local space.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The point in world space.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="transformworldpoint">transformWorldPoint</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">transformWorldPoint</span><span class="p">(</span><span class="w"> </span><span class="nv">point</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Transforms a point from world space to local space.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>point</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The point in world space.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The point in local space.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="server-only">Server-only</h2>
+<h3 id="createblock">createBlock</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">createBlock</span><span class="p">(</span><span class="w"> </span><span class="nv">uuid</span><span class="p">,</span><span class="w"> </span><span class="nv">size</span><span class="p">,</span><span class="w"> </span><span class="nv">position</span><span class="p">,</span><span class="w"> </span><span class="nv">forceAccept</span><span class="p optional-marker" aria-hidden="true"></span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Create a block on body</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The parent body.</td>
+</tr>
+<tr>
+<td><code>uuid</code></td>
+<td><a href="Uuid.html">Uuid</a></td>
+<td>The uuid of the shape.</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The shape's size.</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The shape's local position.</td>
+</tr>
+<tr>
+<td><code>forceAccept</code> <em>(optional)</em></td>
+<td>boolean</td>
+<td>Set true to force the body to accept the shape. (Defaults to true)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Shape.html">Shape</a></td>
+<td>The created block</td>
+</tr>
+</tbody>
+</table>
+<h3 id="createpart">createPart</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">createPart</span><span class="p">(</span><span class="w"> </span><span class="nv">uuid</span><span class="p">,</span><span class="w"> </span><span class="nv">position</span><span class="p">,</span><span class="w"> </span><span class="nv">z</span><span class="o">-</span><span class="nv">axis</span><span class="p">,</span><span class="w"> </span><span class="nv">x</span><span class="o">-</span><span class="nv">axis</span><span class="p">,</span><span class="w"> </span><span class="nv">forceAccept</span><span class="p optional-marker" aria-hidden="true"></span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Create a part on body</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The parent body.</td>
+</tr>
+<tr>
+<td><code>uuid</code></td>
+<td><a href="Uuid.html">Uuid</a></td>
+<td>The uuid of the shape.</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The shape's local position.</td>
+</tr>
+<tr>
+<td><code>z-axis</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The shape's local z direction.</td>
+</tr>
+<tr>
+<td><code>x-axis</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The shape's local x direction.</td>
+</tr>
+<tr>
+<td><code>forceAccept</code> <em>(optional)</em></td>
+<td>boolean</td>
+<td>Set true to force the body to accept the shape. (Defaults to true)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Shape.html">Shape</a></td>
+<td>The created part</td>
+</tr>
+</tbody>
+</table>
+<h3 id="createwedge">createWedge</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">createWedge</span><span class="p">(</span><span class="w"> </span><span class="nv">uuid</span><span class="p">,</span><span class="w"> </span><span class="nv">size</span><span class="p">,</span><span class="w"> </span><span class="nv">position</span><span class="p">,</span><span class="w"> </span><span class="nv">z</span><span class="o">-</span><span class="nv">axis</span><span class="p">,</span><span class="w"> </span><span class="nv">x</span><span class="o">-</span><span class="nv">axis</span><span class="p">,</span><span class="w"> </span><span class="nv">forceAccept</span><span class="p optional-marker" aria-hidden="true"></span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Creates a wedge attached to a body. The wedge is oriented with one </p>
+<p>cathetus along the Y-axis and the other along the Z-axis, forming a right angle. The wedge's </p>
+<p>rotation is controlled by z-axis and x-axis parameters, similar to standard part rotation.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The parent body.</td>
+</tr>
+<tr>
+<td><code>uuid</code></td>
+<td><a href="Uuid.html">Uuid</a></td>
+<td>The uuid of the shape.</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The shape's size.</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The shape's local position.</td>
+</tr>
+<tr>
+<td><code>z-axis</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The shape's local z direction.</td>
+</tr>
+<tr>
+<td><code>x-axis</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The shape's local x direction.</td>
+</tr>
+<tr>
+<td><code>forceAccept</code> <em>(optional)</em></td>
+<td>boolean</td>
+<td>Set true to force the body to accept the shape. (Defaults to true)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="destroycreation">destroyCreation</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">destroyCreation</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Destroys the entire creation connected to this body</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getallseatedcharacter">getAllSeatedCharacter</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">getAllSeatedCharacter</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns a table with all characters seated in this body</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The table of all seated characters. {<a href="Character.html">Character</a>, ...}</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setbuildable">setBuildable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">setBuildable</span><span class="p">(</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Controls whether a body is buildable</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>boolean</td>
+<td>Whether the body is buildable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setconnectable">setConnectable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">setConnectable</span><span class="p">(</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Controls whether a body is connectable</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>boolean</td>
+<td>Whether the body is connectable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setconvertibletodynamic">setConvertibleToDynamic</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">setConvertibleToDynamic</span><span class="p">(</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Controls whether a body is convertible to dynamic form</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>boolean</td>
+<td>Whether the body is convertible to dynamic form.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setdestructable">setDestructable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">setDestructable</span><span class="p">(</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Controls whether a body is destructable</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>boolean</td>
+<td>Whether the body is destructable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="seterasable">setErasable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">setErasable</span><span class="p">(</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Controls whether a body is erasable</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>boolean</td>
+<td>Whether the body is erasable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setliftable">setLiftable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">setLiftable</span><span class="p">(</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Controls whether a body is liftable</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>boolean</td>
+<td>Whether the body is liftable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setpaintable">setPaintable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">setPaintable</span><span class="p">(</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Controls whether a body is non paintable</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>boolean</td>
+<td>Whether the body is paintable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setusable">setUsable</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">body</span><span class="p">:</span><span class="nf">setUsable</span><span class="p">(</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Controls whether a body is interactable</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>body</code></td>
+<td><a href="Body.html">Body</a></td>
+<td>The body.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>boolean</td>
+<td>Whether the body is interactable.</td>
+</tr>
+</tbody>
+</table>
+      </main>
+      <aside class="table-of-contents"><ul><li class="toc-level-2"><a href="#server-client">Server + Client</a></li><li class="toc-level-3"><a href="#getangularvelocity">getAngularVelocity</a></li><li class="toc-level-3"><a href="#getcenterofmassposition">getCenterOfMassPosition</a></li><li class="toc-level-3"><a href="#getcreationbodies">getCreationBodies</a></li><li class="toc-level-3"><a href="#getcreationid">getCreationId</a></li><li class="toc-level-3"><a href="#getcreationjoints">getCreationJoints</a></li><li class="toc-level-3"><a href="#getcreationshapes">getCreationShapes</a></li><li class="toc-level-3"><a href="#getid">getId</a></li><li class="toc-level-3"><a href="#getinteractables">getInteractables</a></li><li class="toc-level-3"><a href="#getjoints">getJoints</a></li><li class="toc-level-3"><a href="#getlocalaabb">getLocalAabb</a></li><li class="toc-level-3"><a href="#getmass">getMass</a></li><li class="toc-level-3"><a href="#getshape">getShape</a></li><li class="toc-level-3"><a href="#getshapecount">getShapeCount</a></li><li class="toc-level-3"><a href="#getshapes">getShapes</a></li><li class="toc-level-3"><a href="#getshapesbyuuid">getShapesByUuid</a></li><li class="toc-level-3"><a href="#getvelocity">getVelocity</a></li><li class="toc-level-3"><a href="#getworld">getWorld</a></li><li class="toc-level-3"><a href="#getworldaabb">getWorldAabb</a></li><li class="toc-level-3"><a href="#getworldposition">getWorldPosition</a></li><li class="toc-level-3"><a href="#haschanged">hasChanged</a></li><li class="toc-level-3"><a href="#isbuildable">isBuildable</a></li><li class="toc-level-3"><a href="#isconnectable">isConnectable</a></li><li class="toc-level-3"><a href="#isconvertibletodynamic">isConvertibleToDynamic</a></li><li class="toc-level-3"><a href="#isdestructable">isDestructable</a></li><li class="toc-level-3"><a href="#isdynamic">isDynamic</a></li><li class="toc-level-3"><a href="#iserasable">isErasable</a></li><li class="toc-level-3"><a href="#isghost">isGhost</a></li><li class="toc-level-3"><a href="#isliftable">isLiftable</a></li><li class="toc-level-3"><a href="#isonlift">isOnLift</a></li><li class="toc-level-3"><a href="#isonvirtuallift">isOnVirtualLift</a></li><li class="toc-level-3"><a href="#ispaintable">isPaintable</a></li><li class="toc-level-3"><a href="#isstatic">isStatic</a></li><li class="toc-level-3"><a href="#isusable">isUsable</a></li><li class="toc-level-3"><a href="#transformlocalpoint">transformLocalPoint</a></li><li class="toc-level-3"><a href="#transformpoint">transformPoint</a></li><li class="toc-level-3"><a href="#transformworldpoint">transformWorldPoint</a></li><li class="toc-level-2"><a href="#server-only">Server-only</a></li><li class="toc-level-3"><a href="#createblock">createBlock</a></li><li class="toc-level-3"><a href="#createpart">createPart</a></li><li class="toc-level-3"><a href="#createwedge">createWedge</a></li><li class="toc-level-3"><a href="#destroycreation">destroyCreation</a></li><li class="toc-level-3"><a href="#getallseatedcharacter">getAllSeatedCharacter</a></li><li class="toc-level-3"><a href="#setbuildable">setBuildable</a></li><li class="toc-level-3"><a href="#setconnectable">setConnectable</a></li><li class="toc-level-3"><a href="#setconvertibletodynamic">setConvertibleToDynamic</a></li><li class="toc-level-3"><a href="#setdestructable">setDestructable</a></li><li class="toc-level-3"><a href="#seterasable">setErasable</a></li><li class="toc-level-3"><a href="#setliftable">setLiftable</a></li><li class="toc-level-3"><a href="#setpaintable">setPaintable</a></li><li class="toc-level-3"><a href="#setusable">setUsable</a></li></ul></aside>
+    </div>
+  </div>
+  <script>const themeButton = document.getElementById('theme-button');
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+const updateThemeButton = () => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  const nextTheme = dark ? 'light' : 'dark';
+  themeButton.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
+  themeButton.title = `Switch to ${nextTheme} mode`;
+};
+const applyTheme = (theme) => {
+  document.documentElement.dataset.theme = theme;
+  updateThemeButton();
+};
+const savedTheme = () => {
+  try {
+    const theme = localStorage.getItem('sm-docs-theme');
+    return theme === 'light' || theme === 'dark' ? theme : null;
+  } catch (_) {
+    return null;
+  }
+};
+updateThemeButton();
+themeButton.addEventListener('click', () => {
+  const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(theme);
+  try {
+    localStorage.setItem('sm-docs-theme', theme);
+  } catch (_) {}
+});
+if ('addEventListener' in systemTheme) {
+  systemTheme.addEventListener('change', (event) => {
+    if (!savedTheme()) applyTheme(event.matches ? 'dark' : 'light');
+  });
+}
+
+const menu = document.getElementById('menu-button');
+const sidebar = document.getElementById('sidebar');
+menu.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+const statePrefix = 'sm-docs-sidebar:';
+const groups = sidebar.querySelectorAll('details[data-sidebar-key]');
+groups.forEach((group) => {
+  const key = statePrefix + group.dataset.sidebarKey;
+  try {
+    const saved = sessionStorage.getItem(key);
+    if (saved !== null) {
+      group.open = saved === 'open';
+    } else {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    }
+  } catch (_) {}
+  group.addEventListener('toggle', () => {
+    try {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    } catch (_) {}
+  });
+});
+const activeLink = sidebar.querySelector('a.active');
+if (activeLink) {
+  let parent = activeLink.parentElement;
+  while (parent) {
+    if (parent.tagName === 'DETAILS') parent.open = true;
+    parent = parent.parentElement;
+  }
+  const sidebarRect = sidebar.getBoundingClientRect();
+  const activeRect = activeLink.getBoundingClientRect();
+  sidebar.scrollTop += activeRect.top - sidebarRect.top - sidebarRect.height / 2;
+}
+const search = document.getElementById('doc-search');
+search.addEventListener('input', () => {
+  const query = search.value.trim().toLowerCase();
+  document.querySelectorAll('.sidebar-page').forEach((item) => {
+    const matches = !query || item.textContent.toLowerCase().includes(query);
+    item.hidden = !matches;
+    if (query && matches) {
+      let parent = item.parentElement;
+      while (parent) {
+        if (parent.tagName === 'DETAILS') parent.open = true;
+        parent = parent.parentElement;
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

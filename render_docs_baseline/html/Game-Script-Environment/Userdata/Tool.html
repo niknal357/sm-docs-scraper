@@ -1,0 +1,1813 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tool | SM Docs</title>
+  <script>(() => {
+  let theme;
+  try {
+    theme = localStorage.getItem('sm-docs-theme');
+  } catch (_) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.dataset.theme = theme;
+})();</script>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <header class="navbar">
+    <button class="menu-button" id="menu-button" aria-label="Toggle navigation">☰</button>
+    <a class="brand" href="../../index.html"><span class="brand-mark">SM</span><span>SM Docs</span></a>
+    <div class="navbar-spacer"></div>
+    <button class="theme-button" id="theme-button" type="button" aria-label="Toggle color theme"><svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg><svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path></svg></button>
+    <label class="search"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg><input id="doc-search" type="search" placeholder="Filter pages"></label>
+  </header>
+  <div class="page-layout">
+    <aside class="sidebar" id="sidebar"><nav><a class="sidebar-overview" href="../../index.html">Introduction</a>
+<details class="sidebar-group" data-sidebar-key="environment:Game" open>
+<summary>Game Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:class">
+<summary>Classes</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Classes/CharacterClass.html">CharacterClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ClientScriptableObjectClass.html">ClientScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/GameClass.html">GameClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/HarvestableClass.html">HarvestableClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/PlayerClass.html">PlayerClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ScriptableObjectClass.html">ScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ShapeClass.html">ShapeClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ToolClass.html">ToolClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/UnitClass.html">UnitClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/WorldClass.html">WorldClass</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:namespace">
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Static-Functions/Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.ai.html">sm.ai</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.areaTrigger.html">sm.areaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.audio.html">sm.audio</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.body.html">sm.body</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.builderGuide.html">sm.builderGuide</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.camera.html">sm.camera</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.cell.html">sm.cell</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.challenge.html">sm.challenge</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.character.html">sm.character</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.clientScriptableObject.html">sm.clientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.construction.html">sm.construction</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.creation.html">sm.creation</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.cullSphereGroup.html">sm.cullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debris.html">sm.debris</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.effect.html">sm.effect</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.event.html">sm.event</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.game.html">sm.game</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.garage.html">sm.garage</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.gui.html">sm.gui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.gui.widget.html">sm.gui.widget</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.harvestable.html">sm.harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.item.html">sm.item</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.joint.html">sm.joint</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.jsonGui.html">sm.jsonGui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.lift.html">sm.lift</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.localPlayer.html">sm.localPlayer</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.melee.html">sm.melee</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.menuCreation.html">sm.menuCreation</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.message.html">sm.message</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.particle.html">sm.particle</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pathfinder.html">sm.pathfinder</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pathNode.html">sm.pathNode</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.physics.html">sm.physics</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pipeGraph.html">sm.pipeGraph</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.player.html">sm.player</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.portal.html">sm.portal</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.projectile.html">sm.projectile</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.render.html">sm.render</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.shape.html">sm.shape</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.storage.html">sm.storage</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.tool.html">sm.tool</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.unit.html">sm.unit</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.visualization.html">sm.visualization</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.world.html">sm.world</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:userdata" open>
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="AiState.html">AiState</a></li>
+<li class="sidebar-page"><a class="" href="AreaTrigger.html">AreaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="BlueprintVisualization.html">BlueprintVisualization</a></li>
+<li class="sidebar-page"><a class="" href="Body.html">Body</a></li>
+<li class="sidebar-page"><a class="" href="BuilderGuide.html">BuilderGuide</a></li>
+<li class="sidebar-page"><a class="" href="Character.html">Character</a></li>
+<li class="sidebar-page"><a class="" href="ClientScriptableObject.html">ClientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="CullSphereGroup.html">CullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="Effect.html">Effect</a></li>
+<li class="sidebar-page"><a class="" href="Garage.html">Garage</a></li>
+<li class="sidebar-page"><a class="" href="GuiInterface.html">GuiInterface</a></li>
+<li class="sidebar-page"><a class="" href="Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="Joint.html">Joint</a></li>
+<li class="sidebar-page"><a class="" href="JsonGui.html">JsonGui</a></li>
+<li class="sidebar-page"><a class="" href="JsonWidget.html">JsonWidget</a></li>
+<li class="sidebar-page"><a class="" href="Lift.html">Lift</a></li>
+<li class="sidebar-page"><a class="" href="LoadCellHandle.html">LoadCellHandle</a></li>
+<li class="sidebar-page"><a class="" href="Network.html">Network</a></li>
+<li class="sidebar-page"><a class="" href="PathNode.html">PathNode</a></li>
+<li class="sidebar-page"><a class="" href="Player.html">Player</a></li>
+<li class="sidebar-page"><a class="" href="Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="RaycastResult.html">RaycastResult</a></li>
+<li class="sidebar-page"><a class="" href="ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="Shape.html">Shape</a></li>
+<li class="sidebar-page"><a class="" href="Storage.html">Storage</a></li>
+<li class="sidebar-page"><a class="active" href="Tool.html">Tool</a></li>
+<li class="sidebar-page"><a class="" href="Unit.html">Unit</a></li>
+<li class="sidebar-page"><a class="" href="Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="Widget.html">Widget</a></li>
+<li class="sidebar-page"><a class="" href="World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details>
+<details class="sidebar-group" data-sidebar-key="environment:Terrain">
+<summary>Terrain Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:namespace">
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainData.html">sm.terrainData</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainGeneration.html">sm.terrainGeneration</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainHarvestable.html">sm.terrainHarvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainTile.html">sm.terrainTile</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.tunnelGenerator.html">sm.tunnelGenerator</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.voxelTerrainCell.html">sm.voxelTerrainCell</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:userdata">
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details></nav></aside>
+    <div class="content-layout">
+      <main class="doc">
+        <div class="breadcrumbs"><a href="../../index.html">Docs</a><span class="breadcrumb-separator">›</span><a href="../index.html">Game</a><span class="breadcrumb-separator">›</span><a href="index.html">Userdata</a><span class="breadcrumb-separator">›</span><span>Tool</span></div>
+        <h1 id="tool">Tool</h1>
+<p><strong>Associated namespace:</strong> <a href="../Static-Functions/sm.tool.html">sm.tool</a></p>
+<p><strong>Usage:</strong> Server And Client</p>
+<p><strong>Serializable:</strong> Yes</p>
+<p>A userdata object representing a <strong>tool</strong> in the game.</p>
+<p><strong>Values:</strong></p>
+<ul>
+<li>
+<p><a id="id"></a><code>id</code> [ <strong>integer</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the id of a tool.</li>
+</ul>
+</li>
+<li>
+<p><a id="uuid"></a><code>uuid</code> [ <strong><a href="Uuid.html">Uuid</a></strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the tool type uuid.</li>
+</ul>
+</li>
+</ul>
+<h2 id="server-client">Server + Client</h2>
+<h3 id="getid">getId</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getId</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the id of a tool.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>integer</td>
+<td>The tool's id.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getowner">getOwner</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getOwner</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the player that owns the tool.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Player.html">Player</a></td>
+<td>The tool's owner.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getuuid">getUuid</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getUuid</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the tool type uuid.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Uuid.html">Uuid</a></td>
+<td>The tool's uuid.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setinteractiontextsuppressed">setInteractionTextSuppressed</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">setInteractionTextSuppressed</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<blockquote>
+<p><strong>Deprecated:</strong>
+Deprecated function. Kept for compability with old scripts.
+</p>
+</blockquote>
+<p>Does nothing.</p>
+<h2 id="client-only">Client-only</h2>
+<h3 id="getanimationinfo">getAnimationInfo</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getAnimationInfo</span><span class="p">(</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns general information for a third person view animation.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>The name.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>A table containing "name", "duration" and "looping".</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getcameraweights">getCameraWeights</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getCameraWeights</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Get the current weights for the tool's local camera settings.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>{number, number}</td>
+<td>The third-person weight and the first-person weight</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getdirection">getDirection</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getDirection</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the direction of where the player is viewing or aiming.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The player's view direction.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getfpanimationinfo">getFpAnimationInfo</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getFpAnimationInfo</span><span class="p">(</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns general information for a first person view animation.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>The name.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>A table containing "name", "duration" and "looping".</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getfpbonedir">getFpBoneDir</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getFpBoneDir</span><span class="p">(</span><span class="w"> </span><span class="nv">jointName</span><span class="p">,</span><span class="w"> </span><span class="nv">convertToWorldSpace</span><span class="p optional-marker" aria-hidden="true"></span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the local or world direction for a bone in the first person view animation skeleton.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>jointName</code></td>
+<td>string</td>
+<td>The joint name.</td>
+</tr>
+<tr>
+<td><code>convertToWorldSpace</code> <em>(optional)</em></td>
+<td>boolean</td>
+<td>Whether to convert the position to world space. (Defaults to true)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The joint direction.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getfpbonepos">getFpBonePos</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getFpBonePos</span><span class="p">(</span><span class="w"> </span><span class="nv">jointName</span><span class="p">,</span><span class="w"> </span><span class="nv">convertToWorldSpace</span><span class="p optional-marker" aria-hidden="true"></span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the local or world position for a bone in the first person view animation skeleton.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>jointName</code></td>
+<td>string</td>
+<td>The joint name.</td>
+</tr>
+<tr>
+<td><code>convertToWorldSpace</code> <em>(optional)</em></td>
+<td>boolean</td>
+<td>Whether to convert the position to world space. (Defaults to true)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The joint position.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getfpbonerot">getFpBoneRot</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getFpBoneRot</span><span class="p">(</span><span class="w"> </span><span class="nv">jointName</span><span class="p">,</span><span class="w"> </span><span class="nv">convertToWorldSpace</span><span class="p optional-marker" aria-hidden="true"></span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the local or world rotation for a bone in the first person view animation skeleton.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>jointName</code></td>
+<td>string</td>
+<td>The joint name.</td>
+</tr>
+<tr>
+<td><code>convertToWorldSpace</code> <em>(optional)</em></td>
+<td>boolean</td>
+<td>Whether to convert the position to world space. (Defaults to true)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Quat.html">Quat</a></td>
+<td>The joint rotation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getmovementspeedfraction">getMovementSpeedFraction</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getMovementSpeedFraction</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the fraction of the player's movement speed in proportion to its maximum. This is affected by sprinting, crouching, blocking, aiming, etc.</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sprinting</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>walking</td>
+<td>0.5</td>
+</tr>
+<tr>
+<td>crouching</td>
+<td>0.375</td>
+</tr>
+<tr>
+<td>aiming</td>
+<td>0.3125</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number</td>
+<td>The player's movement speed fraction.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getmovementvelocity">getMovementVelocity</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getMovementVelocity</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the movement velocity of the player.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The player's velocity.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getposition">getPosition</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getPosition</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the world position of the player.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The player's world position.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getrelativemovedirection">getRelativeMoveDirection</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getRelativeMoveDirection</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the relative movement direction of the player. This is the direction the player wants to move based on movement input.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The player's relative movement direction.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getsmoothdirection">getSmoothDirection</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getSmoothDirection</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the smooth direction of where the player is viewing or aiming.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The player's smooth view direction.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gettpbonedir">getTpBoneDir</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getTpBoneDir</span><span class="p">(</span><span class="w"> </span><span class="nv">jointName</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the world direction for a bone in the third person view animation skeleton.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>jointName</code></td>
+<td>string</td>
+<td>The joint name.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The joint direction.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gettpbonepos">getTpBonePos</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getTpBonePos</span><span class="p">(</span><span class="w"> </span><span class="nv">jointName</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the world position for a bone in the third person view animation skeleton.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>jointName</code></td>
+<td>string</td>
+<td>The joint name.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The joint position.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gettpbonerot">getTpBoneRot</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">getTpBoneRot</span><span class="p">(</span><span class="w"> </span><span class="nv">jointName</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the world rotations for a bone in the third person view animation skeleton.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>jointName</code></td>
+<td>string</td>
+<td>The joint name.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Quat.html">Quat</a></td>
+<td>The joint rotation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="iscrouching">isCrouching</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">isCrouching</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns whether the player is currently crouching.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Whether the player is crouching.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isequipped">isEquipped</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">isEquipped</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns whether the tool is equipped or not.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>whether the tool is equipped or not.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isinfirstpersonview">isInFirstPersonView</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">isInFirstPersonView</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns whether the player is in first person view where the viewpoint is rendered from the player's perspective. Otherwise, the player is in third person view where the camera is behind the player.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Whether the player is in first person view.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="islocal">isLocal</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">isLocal</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns whether the player holding the tool is the as <a href="../Static-Functions/sm.localPlayer.html">sm.localPlayer</a>.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Whether the player is the local player.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isonground">isOnGround</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">isOnGround</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns whether the player is currently standing on the ground.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Whether the player is on the ground.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="issprinting">isSprinting</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">isSprinting</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns whether the player is currently sprinting.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Whether the player is sprinting.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setblocksprint">setBlockSprint</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">setBlockSprint</span><span class="p">(</span><span class="w"> </span><span class="nv">block</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets whether the player is unable to sprint. Sprinting is normally blocked when the player is attacking, blocking, aiming, etc.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>block</code></td>
+<td>boolean</td>
+<td>Whether the player's sprinting is blocked.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setcrosshairalpha">setCrossHairAlpha</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">setCrossHairAlpha</span><span class="p">(</span><span class="w"> </span><span class="nv">alpha</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the opacity of the crosshair. An alpha value of 0 makes the crosshair transparent.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>alpha</code></td>
+<td>number</td>
+<td>The alpha value for the crosshair.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setcrosshaircolor">setCrossHairColor</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">setCrossHairColor</span><span class="p">(</span><span class="w"> </span><span class="nv">color</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the color of the crosshair. </p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td><a href="Color.html">Color</a></td>
+<td>The color.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setcrosshairtype">setCrossHairType</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">setCrossHairType</span><span class="p">(</span><span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the type of the crosshair. </p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>number</td>
+<td>The type value for the crosshair.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setdispersionfraction">setDispersionFraction</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">setDispersionFraction</span><span class="p">(</span><span class="w"> </span><span class="nv">dispersion</span><span class="p">,</span><span class="w"> </span><span class="nv">dispersionSecondary</span><span class="p optional-marker" aria-hidden="true"></span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the tool's dispersion fraction. This represents the accuracy of the tool, and affects the size of the player's crosshair.</p>
+<p>A dispersion value of 0 is perfect accuracy, whereas 1 is the worst.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>dispersion</code></td>
+<td>number</td>
+<td>The dispersion fraction.</td>
+</tr>
+<tr>
+<td><code>dispersionSecondary</code> <em>(optional)</em></td>
+<td>number</td>
+<td>The secondary dispersion fraction for circles. (Optional)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setfpcolor">setFpColor</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">setFpColor</span><span class="p">(</span><span class="w"> </span><span class="nv">color</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the color to be used for the tool in first person view.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td><a href="Color.html">Color</a></td>
+<td>The color.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setfprenderables">setFpRenderables</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">setFpRenderables</span><span class="p">(</span><span class="w"> </span><span class="nv">renderables</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the renderables (files containing model data) to be used for the character in first person view.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>renderables</code></td>
+<td>table</td>
+<td class="." string_="string,">The table of renderables names</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setmovementanimation">setMovementAnimation</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">setMovementAnimation</span><span class="p">(</span><span class="w"> </span><span class="nv">name</span><span class="p">,</span><span class="w"> </span><span class="nv">animation</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the current third person view movement animation to be used by the tool.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>The name.</td>
+</tr>
+<tr>
+<td><code>animation</code></td>
+<td>string</td>
+<td>The animation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setmovementslowdown">setMovementSlowDown</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">setMovementSlowDown</span><span class="p">(</span><span class="w"> </span><span class="nv">slowDown</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets whether the player is slowed down. This is similar to crouching and normally occurs when the player is aiming.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>slowDown</code></td>
+<td>boolean</td>
+<td>Whether the player movement is slowed down.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="settpcolor">setTpColor</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">setTpColor</span><span class="p">(</span><span class="w"> </span><span class="nv">color</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the color to be used for the tool in third person view.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td><a href="Color.html">Color</a></td>
+<td>The color.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="settprenderables">setTpRenderables</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">setTpRenderables</span><span class="p">(</span><span class="w"> </span><span class="nv">renderables</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the renderables (files containing model data) to be used for the character in third person view.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>renderables</code></td>
+<td>table</td>
+<td class="." string_="string,">The table of renderables names.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="updateanimation">updateAnimation</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">updateAnimation</span><span class="p">(</span><span class="w"> </span><span class="nv">name</span><span class="p">,</span><span class="w"> </span><span class="nv">time</span><span class="p">,</span><span class="w"> </span><span class="nv">weight</span><span class="p optional-marker" aria-hidden="true"></span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Updates a third person view animation.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>The animation name.</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>number</td>
+<td>The time.</td>
+</tr>
+<tr>
+<td><code>weight</code> <em>(optional)</em></td>
+<td>number</td>
+<td>The weight. (Defaults to -1.0)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="updatecamera">updateCamera</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">updateCamera</span><span class="p">(</span><span class="w"> </span><span class="nv">distance</span><span class="p">,</span><span class="w"> </span><span class="nv">fov</span><span class="p">,</span><span class="w"> </span><span class="nv">offset</span><span class="p">,</span><span class="w"> </span><span class="nv">weight</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Updates the third person view camera for the tool.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>distance</code></td>
+<td>number</td>
+<td>The distance.</td>
+</tr>
+<tr>
+<td><code>fov</code></td>
+<td>number</td>
+<td>The fov.</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The offset.</td>
+</tr>
+<tr>
+<td><code>weight</code></td>
+<td>number</td>
+<td>The weight.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="updatefpanimation">updateFpAnimation</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">updateFpAnimation</span><span class="p">(</span><span class="w"> </span><span class="nv">name</span><span class="p">,</span><span class="w"> </span><span class="nv">time</span><span class="p">,</span><span class="w"> </span><span class="nv">weight</span><span class="p optional-marker" aria-hidden="true"></span><span class="p">,</span><span class="w"> </span><span class="nv">looping</span><span class="p optional-marker" aria-hidden="true"></span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Updates a first person view animation.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>The name.</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>number</td>
+<td>The time.</td>
+</tr>
+<tr>
+<td><code>weight</code> <em>(optional)</em></td>
+<td>number</td>
+<td>The weight. (Defaults to -1.0)</td>
+</tr>
+<tr>
+<td><code>looping</code> <em>(optional)</em></td>
+<td>boolean</td>
+<td>The looping. (Defaults to false)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="updatefpcamera">updateFpCamera</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">updateFpCamera</span><span class="p">(</span><span class="w"> </span><span class="nv">fov</span><span class="p">,</span><span class="w"> </span><span class="nv">offset</span><span class="p">,</span><span class="w"> </span><span class="nv">weight</span><span class="p">,</span><span class="w"> </span><span class="nv">bobbing</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Updates the first person view camera for the tool.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>fov</code></td>
+<td>number</td>
+<td>The fov.</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The offset.</td>
+</tr>
+<tr>
+<td><code>weight</code></td>
+<td>number</td>
+<td>The weight.</td>
+</tr>
+<tr>
+<td><code>bobbing</code></td>
+<td>number</td>
+<td>The bobbing.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="updatejoint">updateJoint</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">updateJoint</span><span class="p">(</span><span class="w"> </span><span class="nv">name</span><span class="p">,</span><span class="w"> </span><span class="nv">rotation</span><span class="p">,</span><span class="w"> </span><span class="nv">weight</span><span class="p optional-marker" aria-hidden="true"></span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the rotation and weight for a bone in the animation skeleton.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>The name.</td>
+</tr>
+<tr>
+<td><code>rotation</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The rotation.</td>
+</tr>
+<tr>
+<td><code>weight</code> <em>(optional)</em></td>
+<td>number</td>
+<td>The weight. (Defaults to -1.0)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="updatemovementanimation">updateMovementAnimation</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">tool</span><span class="p">:</span><span class="nf">updateMovementAnimation</span><span class="p">(</span><span class="w"> </span><span class="nv">time</span><span class="p">,</span><span class="w"> </span><span class="nv">weight</span><span class="p optional-marker" aria-hidden="true"></span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Updates the currently set third person view movement animation for the tool.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool</code></td>
+<td><a href="Tool.html">Tool</a></td>
+<td>The tool.</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>number</td>
+<td>The time.</td>
+</tr>
+<tr>
+<td><code>weight</code> <em>(optional)</em></td>
+<td>number</td>
+<td>The weight. (Defaults to -1.0)</td>
+</tr>
+</tbody>
+</table>
+      </main>
+      <aside class="table-of-contents"><ul><li class="toc-level-2"><a href="#server-client">Server + Client</a></li><li class="toc-level-3"><a href="#getid">getId</a></li><li class="toc-level-3"><a href="#getowner">getOwner</a></li><li class="toc-level-3"><a href="#getuuid">getUuid</a></li><li class="toc-level-3"><a href="#setinteractiontextsuppressed">setInteractionTextSuppressed</a></li><li class="toc-level-2"><a href="#client-only">Client-only</a></li><li class="toc-level-3"><a href="#getanimationinfo">getAnimationInfo</a></li><li class="toc-level-3"><a href="#getcameraweights">getCameraWeights</a></li><li class="toc-level-3"><a href="#getdirection">getDirection</a></li><li class="toc-level-3"><a href="#getfpanimationinfo">getFpAnimationInfo</a></li><li class="toc-level-3"><a href="#getfpbonedir">getFpBoneDir</a></li><li class="toc-level-3"><a href="#getfpbonepos">getFpBonePos</a></li><li class="toc-level-3"><a href="#getfpbonerot">getFpBoneRot</a></li><li class="toc-level-3"><a href="#getmovementspeedfraction">getMovementSpeedFraction</a></li><li class="toc-level-3"><a href="#getmovementvelocity">getMovementVelocity</a></li><li class="toc-level-3"><a href="#getposition">getPosition</a></li><li class="toc-level-3"><a href="#getrelativemovedirection">getRelativeMoveDirection</a></li><li class="toc-level-3"><a href="#getsmoothdirection">getSmoothDirection</a></li><li class="toc-level-3"><a href="#gettpbonedir">getTpBoneDir</a></li><li class="toc-level-3"><a href="#gettpbonepos">getTpBonePos</a></li><li class="toc-level-3"><a href="#gettpbonerot">getTpBoneRot</a></li><li class="toc-level-3"><a href="#iscrouching">isCrouching</a></li><li class="toc-level-3"><a href="#isequipped">isEquipped</a></li><li class="toc-level-3"><a href="#isinfirstpersonview">isInFirstPersonView</a></li><li class="toc-level-3"><a href="#islocal">isLocal</a></li><li class="toc-level-3"><a href="#isonground">isOnGround</a></li><li class="toc-level-3"><a href="#issprinting">isSprinting</a></li><li class="toc-level-3"><a href="#setblocksprint">setBlockSprint</a></li><li class="toc-level-3"><a href="#setcrosshairalpha">setCrossHairAlpha</a></li><li class="toc-level-3"><a href="#setcrosshaircolor">setCrossHairColor</a></li><li class="toc-level-3"><a href="#setcrosshairtype">setCrossHairType</a></li><li class="toc-level-3"><a href="#setdispersionfraction">setDispersionFraction</a></li><li class="toc-level-3"><a href="#setfpcolor">setFpColor</a></li><li class="toc-level-3"><a href="#setfprenderables">setFpRenderables</a></li><li class="toc-level-3"><a href="#setmovementanimation">setMovementAnimation</a></li><li class="toc-level-3"><a href="#setmovementslowdown">setMovementSlowDown</a></li><li class="toc-level-3"><a href="#settpcolor">setTpColor</a></li><li class="toc-level-3"><a href="#settprenderables">setTpRenderables</a></li><li class="toc-level-3"><a href="#updateanimation">updateAnimation</a></li><li class="toc-level-3"><a href="#updatecamera">updateCamera</a></li><li class="toc-level-3"><a href="#updatefpanimation">updateFpAnimation</a></li><li class="toc-level-3"><a href="#updatefpcamera">updateFpCamera</a></li><li class="toc-level-3"><a href="#updatejoint">updateJoint</a></li><li class="toc-level-3"><a href="#updatemovementanimation">updateMovementAnimation</a></li></ul></aside>
+    </div>
+  </div>
+  <script>const themeButton = document.getElementById('theme-button');
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+const updateThemeButton = () => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  const nextTheme = dark ? 'light' : 'dark';
+  themeButton.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
+  themeButton.title = `Switch to ${nextTheme} mode`;
+};
+const applyTheme = (theme) => {
+  document.documentElement.dataset.theme = theme;
+  updateThemeButton();
+};
+const savedTheme = () => {
+  try {
+    const theme = localStorage.getItem('sm-docs-theme');
+    return theme === 'light' || theme === 'dark' ? theme : null;
+  } catch (_) {
+    return null;
+  }
+};
+updateThemeButton();
+themeButton.addEventListener('click', () => {
+  const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(theme);
+  try {
+    localStorage.setItem('sm-docs-theme', theme);
+  } catch (_) {}
+});
+if ('addEventListener' in systemTheme) {
+  systemTheme.addEventListener('change', (event) => {
+    if (!savedTheme()) applyTheme(event.matches ? 'dark' : 'light');
+  });
+}
+
+const menu = document.getElementById('menu-button');
+const sidebar = document.getElementById('sidebar');
+menu.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+const statePrefix = 'sm-docs-sidebar:';
+const groups = sidebar.querySelectorAll('details[data-sidebar-key]');
+groups.forEach((group) => {
+  const key = statePrefix + group.dataset.sidebarKey;
+  try {
+    const saved = sessionStorage.getItem(key);
+    if (saved !== null) {
+      group.open = saved === 'open';
+    } else {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    }
+  } catch (_) {}
+  group.addEventListener('toggle', () => {
+    try {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    } catch (_) {}
+  });
+});
+const activeLink = sidebar.querySelector('a.active');
+if (activeLink) {
+  let parent = activeLink.parentElement;
+  while (parent) {
+    if (parent.tagName === 'DETAILS') parent.open = true;
+    parent = parent.parentElement;
+  }
+  const sidebarRect = sidebar.getBoundingClientRect();
+  const activeRect = activeLink.getBoundingClientRect();
+  sidebar.scrollTop += activeRect.top - sidebarRect.top - sidebarRect.height / 2;
+}
+const search = document.getElementById('doc-search');
+search.addEventListener('input', () => {
+  const query = search.value.trim().toLowerCase();
+  document.querySelectorAll('.sidebar-page').forEach((item) => {
+    const matches = !query || item.textContent.toLowerCase().includes(query);
+    item.hidden = !matches;
+    if (query && matches) {
+      let parent = item.parentElement;
+      while (parent) {
+        if (parent.tagName === 'DETAILS') parent.open = true;
+        parent = parent.parentElement;
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

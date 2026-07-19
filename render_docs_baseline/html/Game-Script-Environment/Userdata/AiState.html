@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AiState | SM Docs</title>
+  <script>(() => {
+  let theme;
+  try {
+    theme = localStorage.getItem('sm-docs-theme');
+  } catch (_) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.dataset.theme = theme;
+})();</script>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <header class="navbar">
+    <button class="menu-button" id="menu-button" aria-label="Toggle navigation">☰</button>
+    <a class="brand" href="../../index.html"><span class="brand-mark">SM</span><span>SM Docs</span></a>
+    <div class="navbar-spacer"></div>
+    <button class="theme-button" id="theme-button" type="button" aria-label="Toggle color theme"><svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg><svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path></svg></button>
+    <label class="search"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg><input id="doc-search" type="search" placeholder="Filter pages"></label>
+  </header>
+  <div class="page-layout">
+    <aside class="sidebar" id="sidebar"><nav><a class="sidebar-overview" href="../../index.html">Introduction</a>
+<details class="sidebar-group" data-sidebar-key="environment:Game" open>
+<summary>Game Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:class">
+<summary>Classes</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Classes/CharacterClass.html">CharacterClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ClientScriptableObjectClass.html">ClientScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/GameClass.html">GameClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/HarvestableClass.html">HarvestableClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/PlayerClass.html">PlayerClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ScriptableObjectClass.html">ScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ShapeClass.html">ShapeClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ToolClass.html">ToolClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/UnitClass.html">UnitClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/WorldClass.html">WorldClass</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:namespace">
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Static-Functions/Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.ai.html">sm.ai</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.areaTrigger.html">sm.areaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.audio.html">sm.audio</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.body.html">sm.body</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.builderGuide.html">sm.builderGuide</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.camera.html">sm.camera</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.cell.html">sm.cell</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.challenge.html">sm.challenge</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.character.html">sm.character</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.clientScriptableObject.html">sm.clientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.construction.html">sm.construction</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.creation.html">sm.creation</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.cullSphereGroup.html">sm.cullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debris.html">sm.debris</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.effect.html">sm.effect</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.event.html">sm.event</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.game.html">sm.game</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.garage.html">sm.garage</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.gui.html">sm.gui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.gui.widget.html">sm.gui.widget</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.harvestable.html">sm.harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.item.html">sm.item</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.joint.html">sm.joint</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.jsonGui.html">sm.jsonGui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.lift.html">sm.lift</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.localPlayer.html">sm.localPlayer</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.melee.html">sm.melee</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.menuCreation.html">sm.menuCreation</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.message.html">sm.message</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.particle.html">sm.particle</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pathfinder.html">sm.pathfinder</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pathNode.html">sm.pathNode</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.physics.html">sm.physics</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pipeGraph.html">sm.pipeGraph</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.player.html">sm.player</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.portal.html">sm.portal</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.projectile.html">sm.projectile</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.render.html">sm.render</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.shape.html">sm.shape</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.storage.html">sm.storage</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.tool.html">sm.tool</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.unit.html">sm.unit</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.visualization.html">sm.visualization</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.world.html">sm.world</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:userdata" open>
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="active" href="AiState.html">AiState</a></li>
+<li class="sidebar-page"><a class="" href="AreaTrigger.html">AreaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="BlueprintVisualization.html">BlueprintVisualization</a></li>
+<li class="sidebar-page"><a class="" href="Body.html">Body</a></li>
+<li class="sidebar-page"><a class="" href="BuilderGuide.html">BuilderGuide</a></li>
+<li class="sidebar-page"><a class="" href="Character.html">Character</a></li>
+<li class="sidebar-page"><a class="" href="ClientScriptableObject.html">ClientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="CullSphereGroup.html">CullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="Effect.html">Effect</a></li>
+<li class="sidebar-page"><a class="" href="Garage.html">Garage</a></li>
+<li class="sidebar-page"><a class="" href="GuiInterface.html">GuiInterface</a></li>
+<li class="sidebar-page"><a class="" href="Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="Joint.html">Joint</a></li>
+<li class="sidebar-page"><a class="" href="JsonGui.html">JsonGui</a></li>
+<li class="sidebar-page"><a class="" href="JsonWidget.html">JsonWidget</a></li>
+<li class="sidebar-page"><a class="" href="Lift.html">Lift</a></li>
+<li class="sidebar-page"><a class="" href="LoadCellHandle.html">LoadCellHandle</a></li>
+<li class="sidebar-page"><a class="" href="Network.html">Network</a></li>
+<li class="sidebar-page"><a class="" href="PathNode.html">PathNode</a></li>
+<li class="sidebar-page"><a class="" href="Player.html">Player</a></li>
+<li class="sidebar-page"><a class="" href="Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="RaycastResult.html">RaycastResult</a></li>
+<li class="sidebar-page"><a class="" href="ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="Shape.html">Shape</a></li>
+<li class="sidebar-page"><a class="" href="Storage.html">Storage</a></li>
+<li class="sidebar-page"><a class="" href="Tool.html">Tool</a></li>
+<li class="sidebar-page"><a class="" href="Unit.html">Unit</a></li>
+<li class="sidebar-page"><a class="" href="Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="Widget.html">Widget</a></li>
+<li class="sidebar-page"><a class="" href="World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details>
+<details class="sidebar-group" data-sidebar-key="environment:Terrain">
+<summary>Terrain Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:namespace">
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainData.html">sm.terrainData</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainGeneration.html">sm.terrainGeneration</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainHarvestable.html">sm.terrainHarvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainTile.html">sm.terrainTile</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.tunnelGenerator.html">sm.tunnelGenerator</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.voxelTerrainCell.html">sm.voxelTerrainCell</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:userdata">
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details></nav></aside>
+    <div class="content-layout">
+      <main class="doc">
+        <div class="breadcrumbs"><a href="../../index.html">Docs</a><span class="breadcrumb-separator">›</span><a href="../index.html">Game</a><span class="breadcrumb-separator">›</span><a href="index.html">Userdata</a><span class="breadcrumb-separator">›</span><span>AiState</span></div>
+        <h1 id="aistate">AiState</h1>
+<p><strong>Usage:</strong> Server Only</p>
+<p><strong>Serializable:</strong> No</p>
+<p>A userdata object representing an <strong>AI state</strong> belonging to a <a href="Unit.html">Unit</a>.</p>
+<p><strong>Operations:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a id="__eq"></a><code>AiState == AiState</code></td>
+<td>boolean</td>
+<td>Checks if two instances of <a href="AiState.html">AiState</a> are refer to the same AiState.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="server-only">Server-only</h2>
+<h3 id="getfacingdirection">getFacingDirection</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">aiState</span><span class="p">:</span><span class="nf">getFacingDirection</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the state's facing direction.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><a href="AiState.html">AiState</a></td>
+<td>The state.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The direction.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getmovementdirection">getMovementDirection</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">aiState</span><span class="p">:</span><span class="nf">getMovementDirection</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the state's movement direction.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><a href="AiState.html">AiState</a></td>
+<td>The state.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The direction.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getmovementtype">getMovementType</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">aiState</span><span class="p">:</span><span class="nf">getMovementType</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns a string describing the state's movement type.</p>
+<p>Movement type can be "stand", "walk", "sprint" or "crouch".</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><a href="AiState.html">AiState</a></td>
+<td>The state.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>The movement type.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getwantscrouch">getWantsCrouch</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">aiState</span><span class="p">:</span><span class="nf">getWantsCrouch</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if the state wants to crouch.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><a href="AiState.html">AiState</a></td>
+<td>The state.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Returns true when the state wants to crouch.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getwantsjump">getWantsJump</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">aiState</span><span class="p">:</span><span class="nf">getWantsJump</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if the state wants to jump.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><a href="AiState.html">AiState</a></td>
+<td>The state.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Returns true when the state wants to jump.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isdone">isDone</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">aiState</span><span class="p">:</span><span class="nf">isDone</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Checks if the AI state is done.</p>
+<p>Returns true when the state is done, and a string describing the state's current situation.</p>
+<p>Can be used to determine if another state is allowed to be started.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><a href="AiState.html">AiState</a></td>
+<td>The state.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean, string</td>
+<td>Returns true when done, and a string description.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="onfixedupdate">onFixedUpdate</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">aiState</span><span class="p">:</span><span class="nf">onFixedUpdate</span><span class="p">(</span><span class="w"> </span><span class="nv">deltaTime</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Updates the state by adding delta time progression.</p>
+<p>Should be called once every game tick while the state is active.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><a href="AiState.html">AiState</a></td>
+<td>The state.</td>
+</tr>
+<tr>
+<td><code>deltaTime</code></td>
+<td>number</td>
+<td>The delta time.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="onunitupdate">onUnitUpdate</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">aiState</span><span class="p">:</span><span class="nf">onUnitUpdate</span><span class="p">(</span><span class="w"> </span><span class="nv">deltaTime</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Updates the state by adding delta time progression.</p>
+<p>Should be called once every unit update, by the unit that owns the state, while the state is active.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><a href="AiState.html">AiState</a></td>
+<td>The AI state.</td>
+</tr>
+<tr>
+<td><code>deltaTime</code></td>
+<td>number</td>
+<td>The delta time.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="start">start</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">aiState</span><span class="p">:</span><span class="nf">start</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Starts the state.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><a href="AiState.html">AiState</a></td>
+<td>The state.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="stop">stop</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">aiState</span><span class="p">:</span><span class="nf">stop</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Stops the state.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><a href="AiState.html">AiState</a></td>
+<td>The state.</td>
+</tr>
+</tbody>
+</table>
+      </main>
+      <aside class="table-of-contents"><ul><li class="toc-level-2"><a href="#server-only">Server-only</a></li><li class="toc-level-3"><a href="#getfacingdirection">getFacingDirection</a></li><li class="toc-level-3"><a href="#getmovementdirection">getMovementDirection</a></li><li class="toc-level-3"><a href="#getmovementtype">getMovementType</a></li><li class="toc-level-3"><a href="#getwantscrouch">getWantsCrouch</a></li><li class="toc-level-3"><a href="#getwantsjump">getWantsJump</a></li><li class="toc-level-3"><a href="#isdone">isDone</a></li><li class="toc-level-3"><a href="#onfixedupdate">onFixedUpdate</a></li><li class="toc-level-3"><a href="#onunitupdate">onUnitUpdate</a></li><li class="toc-level-3"><a href="#start">start</a></li><li class="toc-level-3"><a href="#stop">stop</a></li></ul></aside>
+    </div>
+  </div>
+  <script>const themeButton = document.getElementById('theme-button');
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+const updateThemeButton = () => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  const nextTheme = dark ? 'light' : 'dark';
+  themeButton.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
+  themeButton.title = `Switch to ${nextTheme} mode`;
+};
+const applyTheme = (theme) => {
+  document.documentElement.dataset.theme = theme;
+  updateThemeButton();
+};
+const savedTheme = () => {
+  try {
+    const theme = localStorage.getItem('sm-docs-theme');
+    return theme === 'light' || theme === 'dark' ? theme : null;
+  } catch (_) {
+    return null;
+  }
+};
+updateThemeButton();
+themeButton.addEventListener('click', () => {
+  const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(theme);
+  try {
+    localStorage.setItem('sm-docs-theme', theme);
+  } catch (_) {}
+});
+if ('addEventListener' in systemTheme) {
+  systemTheme.addEventListener('change', (event) => {
+    if (!savedTheme()) applyTheme(event.matches ? 'dark' : 'light');
+  });
+}
+
+const menu = document.getElementById('menu-button');
+const sidebar = document.getElementById('sidebar');
+menu.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+const statePrefix = 'sm-docs-sidebar:';
+const groups = sidebar.querySelectorAll('details[data-sidebar-key]');
+groups.forEach((group) => {
+  const key = statePrefix + group.dataset.sidebarKey;
+  try {
+    const saved = sessionStorage.getItem(key);
+    if (saved !== null) {
+      group.open = saved === 'open';
+    } else {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    }
+  } catch (_) {}
+  group.addEventListener('toggle', () => {
+    try {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    } catch (_) {}
+  });
+});
+const activeLink = sidebar.querySelector('a.active');
+if (activeLink) {
+  let parent = activeLink.parentElement;
+  while (parent) {
+    if (parent.tagName === 'DETAILS') parent.open = true;
+    parent = parent.parentElement;
+  }
+  const sidebarRect = sidebar.getBoundingClientRect();
+  const activeRect = activeLink.getBoundingClientRect();
+  sidebar.scrollTop += activeRect.top - sidebarRect.top - sidebarRect.height / 2;
+}
+const search = document.getElementById('doc-search');
+search.addEventListener('input', () => {
+  const query = search.value.trim().toLowerCase();
+  document.querySelectorAll('.sidebar-page').forEach((item) => {
+    const matches = !query || item.textContent.toLowerCase().includes(query);
+    item.hidden = !matches;
+    if (query && matches) {
+      let parent = item.parentElement;
+      while (parent) {
+        if (parent.tagName === 'DETAILS') parent.open = true;
+        parent = parent.parentElement;
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

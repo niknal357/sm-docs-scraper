@@ -1,0 +1,1056 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>sm.render | SM Docs</title>
+  <script>(() => {
+  let theme;
+  try {
+    theme = localStorage.getItem('sm-docs-theme');
+  } catch (_) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.dataset.theme = theme;
+})();</script>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <header class="navbar">
+    <button class="menu-button" id="menu-button" aria-label="Toggle navigation">☰</button>
+    <a class="brand" href="../../index.html"><span class="brand-mark">SM</span><span>SM Docs</span></a>
+    <div class="navbar-spacer"></div>
+    <button class="theme-button" id="theme-button" type="button" aria-label="Toggle color theme"><svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg><svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path></svg></button>
+    <label class="search"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg><input id="doc-search" type="search" placeholder="Filter pages"></label>
+  </header>
+  <div class="page-layout">
+    <aside class="sidebar" id="sidebar"><nav><a class="sidebar-overview" href="../../index.html">Introduction</a>
+<details class="sidebar-group" data-sidebar-key="environment:Game" open>
+<summary>Game Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:class">
+<summary>Classes</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Classes/CharacterClass.html">CharacterClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ClientScriptableObjectClass.html">ClientScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/GameClass.html">GameClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/HarvestableClass.html">HarvestableClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/PlayerClass.html">PlayerClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ScriptableObjectClass.html">ScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ShapeClass.html">ShapeClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ToolClass.html">ToolClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/UnitClass.html">UnitClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/WorldClass.html">WorldClass</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:namespace" open>
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="sm.ai.html">sm.ai</a></li>
+<li class="sidebar-page"><a class="" href="sm.areaTrigger.html">sm.areaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="sm.audio.html">sm.audio</a></li>
+<li class="sidebar-page"><a class="" href="sm.body.html">sm.body</a></li>
+<li class="sidebar-page"><a class="" href="sm.builderGuide.html">sm.builderGuide</a></li>
+<li class="sidebar-page"><a class="" href="sm.camera.html">sm.camera</a></li>
+<li class="sidebar-page"><a class="" href="sm.cell.html">sm.cell</a></li>
+<li class="sidebar-page"><a class="" href="sm.challenge.html">sm.challenge</a></li>
+<li class="sidebar-page"><a class="" href="sm.character.html">sm.character</a></li>
+<li class="sidebar-page"><a class="" href="sm.clientScriptableObject.html">sm.clientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="sm.construction.html">sm.construction</a></li>
+<li class="sidebar-page"><a class="" href="sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="sm.creation.html">sm.creation</a></li>
+<li class="sidebar-page"><a class="" href="sm.cullSphereGroup.html">sm.cullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="sm.debris.html">sm.debris</a></li>
+<li class="sidebar-page"><a class="" href="sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="sm.effect.html">sm.effect</a></li>
+<li class="sidebar-page"><a class="" href="sm.event.html">sm.event</a></li>
+<li class="sidebar-page"><a class="" href="sm.game.html">sm.game</a></li>
+<li class="sidebar-page"><a class="" href="sm.garage.html">sm.garage</a></li>
+<li class="sidebar-page"><a class="" href="sm.gui.html">sm.gui</a></li>
+<li class="sidebar-page"><a class="" href="sm.gui.widget.html">sm.gui.widget</a></li>
+<li class="sidebar-page"><a class="" href="sm.harvestable.html">sm.harvestable</a></li>
+<li class="sidebar-page"><a class="" href="sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="sm.item.html">sm.item</a></li>
+<li class="sidebar-page"><a class="" href="sm.joint.html">sm.joint</a></li>
+<li class="sidebar-page"><a class="" href="sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="sm.jsonGui.html">sm.jsonGui</a></li>
+<li class="sidebar-page"><a class="" href="sm.lift.html">sm.lift</a></li>
+<li class="sidebar-page"><a class="" href="sm.localPlayer.html">sm.localPlayer</a></li>
+<li class="sidebar-page"><a class="" href="sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="sm.melee.html">sm.melee</a></li>
+<li class="sidebar-page"><a class="" href="sm.menuCreation.html">sm.menuCreation</a></li>
+<li class="sidebar-page"><a class="" href="sm.message.html">sm.message</a></li>
+<li class="sidebar-page"><a class="" href="sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="sm.particle.html">sm.particle</a></li>
+<li class="sidebar-page"><a class="" href="sm.pathfinder.html">sm.pathfinder</a></li>
+<li class="sidebar-page"><a class="" href="sm.pathNode.html">sm.pathNode</a></li>
+<li class="sidebar-page"><a class="" href="sm.physics.html">sm.physics</a></li>
+<li class="sidebar-page"><a class="" href="sm.pipeGraph.html">sm.pipeGraph</a></li>
+<li class="sidebar-page"><a class="" href="sm.player.html">sm.player</a></li>
+<li class="sidebar-page"><a class="" href="sm.portal.html">sm.portal</a></li>
+<li class="sidebar-page"><a class="" href="sm.projectile.html">sm.projectile</a></li>
+<li class="sidebar-page"><a class="" href="sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="active" href="sm.render.html">sm.render</a></li>
+<li class="sidebar-page"><a class="" href="sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="sm.shape.html">sm.shape</a></li>
+<li class="sidebar-page"><a class="" href="sm.storage.html">sm.storage</a></li>
+<li class="sidebar-page"><a class="" href="sm.tool.html">sm.tool</a></li>
+<li class="sidebar-page"><a class="" href="sm.unit.html">sm.unit</a></li>
+<li class="sidebar-page"><a class="" href="sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="sm.visualization.html">sm.visualization</a></li>
+<li class="sidebar-page"><a class="" href="sm.world.html">sm.world</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:userdata">
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Userdata/AiState.html">AiState</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/AreaTrigger.html">AreaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/BlueprintVisualization.html">BlueprintVisualization</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Body.html">Body</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/BuilderGuide.html">BuilderGuide</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Character.html">Character</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/ClientScriptableObject.html">ClientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/CullSphereGroup.html">CullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Effect.html">Effect</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Garage.html">Garage</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/GuiInterface.html">GuiInterface</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Joint.html">Joint</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/JsonGui.html">JsonGui</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/JsonWidget.html">JsonWidget</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Lift.html">Lift</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/LoadCellHandle.html">LoadCellHandle</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Network.html">Network</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/PathNode.html">PathNode</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Player.html">Player</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/RaycastResult.html">RaycastResult</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Shape.html">Shape</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Storage.html">Storage</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Tool.html">Tool</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Unit.html">Unit</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Widget.html">Widget</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details>
+<details class="sidebar-group" data-sidebar-key="environment:Terrain">
+<summary>Terrain Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:namespace">
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainData.html">sm.terrainData</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainGeneration.html">sm.terrainGeneration</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainHarvestable.html">sm.terrainHarvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainTile.html">sm.terrainTile</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.tunnelGenerator.html">sm.tunnelGenerator</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.voxelTerrainCell.html">sm.voxelTerrainCell</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:userdata">
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details></nav></aside>
+    <div class="content-layout">
+      <main class="doc">
+        <div class="breadcrumbs"><a href="../../index.html">Docs</a><span class="breadcrumb-separator">›</span><a href="../index.html">Game</a><span class="breadcrumb-separator">›</span><a href="index.html">Static Functions</a><span class="breadcrumb-separator">›</span><span>sm.render</span></div>
+        <h1 id="smrender">sm.render</h1>
+<p>Render settings</p>
+<h2 id="server-client">Server + Client</h2>
+<h3 id="getdefaultcameralight">getDefaultCameraLight</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">getDefaultCameraLight</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Gets a table of the default camera light render settings.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The default camera light render settings.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getdefaultfog">getDefaultFog</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">getDefaultFog</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Gets a table of the default fog render settings.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The default fog render settings.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getdefaultgi">getDefaultGI</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">getDefaultGI</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Gets a table of the default GI render settings.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The default GI render settings.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getdefaulthorizonlight">getDefaultHorizonLight</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">getDefaultHorizonLight</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Gets a table of the default horizon light render settings.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The default horizon light render settings.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getdefaultreflectioncolor">getDefaultReflectionColor</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">getDefaultReflectionColor</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Gets a table of the default reflection color render settings.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The default reflection color render settings.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getdefaultvolumetricfog">getDefaultVolumetricFog</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">getDefaultVolumetricFog</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Gets a table of the default Volumetric fog render settings.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The default Volumetric fog render settings.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getdefaultvoxellodboost">getDefaultVoxelLODBoost</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">getDefaultVoxelLODBoost</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Gets the default voxel LOD boost render setting.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number</td>
+<td>The default voxel LOD boost render setting.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getscreencoordinatesfromworldposition">getScreenCoordinatesFromWorldPosition</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">getScreenCoordinatesFromWorldPosition</span><span class="p">(</span><span class="w"> </span><span class="nv">pos</span><span class="p">,</span><span class="w"> </span><span class="nv">width</span><span class="p">,</span><span class="w"> </span><span class="nv">height</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Return the screen coordinates that align with the given world position.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pos</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>World position to align</td>
+</tr>
+<tr>
+<td><code>width</code></td>
+<td>integer</td>
+<td>Screen width</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td>integer</td>
+<td>Screen height</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number, number</td>
+<td>The x and y screen coordinates.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="resetcameralight">resetCameraLight</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">resetCameraLight</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Resets the camera light override settings.</p>
+<h2 id="client-only">Client-only</h2>
+<h3 id="getdrawdistance">getDrawDistance</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">getDrawDistance</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Gets the draw distance.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number</td>
+<td>The draw distance.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getoutdoorlighting">getOutdoorLighting</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">getOutdoorLighting</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Gets the lighting cycle fraction.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number</td>
+<td>The fraction of the day cycle lighting.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isoutdoor">isOutdoor</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">isOutdoor</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Checks if client is outdoor</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>True if local client is outdoor.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="resetallreflectioncolor">resetAllReflectionColor</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">resetAllReflectionColor</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Resets all the reflection color settings.</p>
+<h3 id="resetfog">resetFog</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">resetFog</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Resets the fog override settings.</p>
+<h3 id="resetgi">resetGI</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">resetGI</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Resets the global illumination override settings.</p>
+<h3 id="resethorizonlight">resetHorizonLight</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">resetHorizonLight</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Resets the Horizon light settings.</p>
+<h3 id="resetlut">resetLUT</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">resetLUT</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Resets the LUT override settings.</p>
+<h3 id="resetvolumetricfog">resetVolumetricFog</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">resetVolumetricFog</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Resets the Volumetric fog override settings.</p>
+<h3 id="resetvoxellodboost">resetVoxelLODBoost</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">resetVoxelLODBoost</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Resets the voxel terrain LOD boost override setting.</p>
+<h3 id="setcameralight">setCameraLight</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">setCameraLight</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">intensity</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">range</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">color</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">farIntensity</span><span class="p optional-marker" aria-hidden="true"></span><span class="p">,</span>
+<span class="w">    </span><span class="nv">farRange</span><span class="p optional-marker" aria-hidden="true"></span><span class="p">,</span>
+<span class="w">    </span><span class="nv">farColor</span><span class="p optional-marker" aria-hidden="true"></span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the camera light override settings.</p>
+<p>Optionally sets far camera light settings (used for camera pullback lerp).</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>intensity</code></td>
+<td>number</td>
+<td>The light intensity.</td>
+</tr>
+<tr>
+<td><code>range</code></td>
+<td>number</td>
+<td>Light range.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td><a href="../Userdata/Color.html">Color</a></td>
+<td>Light color.</td>
+</tr>
+<tr>
+<td><code>farIntensity</code> <em>(optional)</em></td>
+<td>number</td>
+<td>Far light intensity. (Optional)</td>
+</tr>
+<tr>
+<td><code>farRange</code> <em>(optional)</em></td>
+<td>number</td>
+<td>Far light range. (Optional)</td>
+</tr>
+<tr>
+<td><code>farColor</code> <em>(optional)</em></td>
+<td><a href="../Userdata/Color.html">Color</a></td>
+<td>Far light color. (Optional)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setcinematic">setCinematic</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">setCinematic</span><span class="p">(</span><span class="w"> </span><span class="nv">cinematic</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets if a cinematic is playing</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cinematic</code></td>
+<td>boolean</td>
+<td>If true, sets to cinematic</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setcloudsettings">setCloudSettings</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">setCloudSettings</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">coverage</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">height</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">radius</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">tallnessScale</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">directionalLightMod</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">scroll</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">scrollRotation</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the cloud settings.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>coverage</code></td>
+<td>number</td>
+<td>The fraction of the cloud coverage.</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td>number</td>
+<td>The cloud height.</td>
+</tr>
+<tr>
+<td><code>radius</code></td>
+<td>number</td>
+<td>The atmosphere radius.</td>
+</tr>
+<tr>
+<td><code>tallnessScale</code></td>
+<td>number</td>
+<td>The tallness scale(0.1 - 4.0).</td>
+</tr>
+<tr>
+<td><code>directionalLightMod</code></td>
+<td>number</td>
+<td>Directional light mod (0.0 - 1.0).</td>
+</tr>
+<tr>
+<td><code>scroll</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>Cloud scroll.</td>
+</tr>
+<tr>
+<td><code>scrollRotation</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>Cloud scroll rotation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setfog">setFog</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">setFog</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">startDistance</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">endDistance</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">falloffFactor</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">startColor</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">endColor</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">verticalOpacity</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">verticalFadeDistance</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">verticalFalloff</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">verticalStart</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">verticalEnd</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">verticalStartColor</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">verticalEndColor</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">fadeDistance</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the fog override settings.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>startDistance</code></td>
+<td>number</td>
+<td>Fog start distance.</td>
+</tr>
+<tr>
+<td><code>endDistance</code></td>
+<td>number</td>
+<td>Fog end distance.</td>
+</tr>
+<tr>
+<td><code>falloffFactor</code></td>
+<td>number</td>
+<td>Fog falloff.</td>
+</tr>
+<tr>
+<td><code>startColor</code></td>
+<td><a href="../Userdata/Color.html">Color</a></td>
+<td>Fog start color.</td>
+</tr>
+<tr>
+<td><code>endColor</code></td>
+<td><a href="../Userdata/Color.html">Color</a></td>
+<td>Fog end color.</td>
+</tr>
+<tr>
+<td><code>verticalOpacity</code></td>
+<td>number</td>
+<td>Vertical fog opacity. (Optional)</td>
+</tr>
+<tr>
+<td><code>verticalFadeDistance</code></td>
+<td>number</td>
+<td>Vertical fog fade distance.  (Optional)</td>
+</tr>
+<tr>
+<td><code>verticalFalloff</code></td>
+<td>number</td>
+<td>Vertical fog falloff.  (Optional)</td>
+</tr>
+<tr>
+<td><code>verticalStart</code></td>
+<td>number</td>
+<td>Vertical fog start distance.  (Optional)</td>
+</tr>
+<tr>
+<td><code>verticalEnd</code></td>
+<td>number</td>
+<td>Vertical fog end distance.  (Optional)</td>
+</tr>
+<tr>
+<td><code>verticalStartColor</code></td>
+<td><a href="../Userdata/Color.html">Color</a></td>
+<td>Vertical fog start color.  (Optional)</td>
+</tr>
+<tr>
+<td><code>verticalEndColor</code></td>
+<td><a href="../Userdata/Color.html">Color</a></td>
+<td>Vertical fog end color.  (Optional)</td>
+</tr>
+<tr>
+<td><code>fadeDistance</code></td>
+<td>number</td>
+<td>Fog fade distance. (Optional)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setgi">setGI</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">setGI</span><span class="p">(</span><span class="w"> </span><span class="nv">weight</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the global illumination override settings.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>weight</code></td>
+<td>number</td>
+<td>GI weight.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sethorizonlight">setHorizonLight</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">setHorizonLight</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">topColor</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">horizonColor</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">bottomColor</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">direction</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">start</span><span class="p">,</span>
+<span class="w">    </span><span class="kr">end</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">falloff</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the Horizon light settings.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>topColor</code></td>
+<td><a href="../Userdata/Color.html">Color</a></td>
+<td>Color of the top of the horizon light.</td>
+</tr>
+<tr>
+<td><code>horizonColor</code></td>
+<td><a href="../Userdata/Color.html">Color</a></td>
+<td>Color of the horizon of the horizon light.</td>
+</tr>
+<tr>
+<td><code>bottomColor</code></td>
+<td><a href="../Userdata/Color.html">Color</a></td>
+<td>Color of the bottom of the horizon light.</td>
+</tr>
+<tr>
+<td><code>direction</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>Direction of the horizon light.</td>
+</tr>
+<tr>
+<td><code>start</code></td>
+<td>number</td>
+<td>Start distance for the horizon light. (Optional)</td>
+</tr>
+<tr>
+<td><code>end</code></td>
+<td>number</td>
+<td>End distance for the horizon light. (Optional)</td>
+</tr>
+<tr>
+<td><code>falloff</code></td>
+<td>number</td>
+<td>Falloff factor for the horizon light. (Optional)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setlut">setLUT</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">setLUT</span><span class="p">(</span><span class="w"> </span><span class="nv">LUT</span><span class="o">-</span><span class="nv">A</span><span class="p">,</span><span class="w"> </span><span class="nv">LUT</span><span class="o">-</span><span class="nv">B</span><span class="p optional-marker" aria-hidden="true"></span><span class="p">,</span><span class="w"> </span><span class="nv">blend</span><span class="p optional-marker" aria-hidden="true"></span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the LUT override settings.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LUT-A</code></td>
+<td>string</td>
+<td>Name of LUT A.</td>
+</tr>
+<tr>
+<td><code>LUT-B</code> <em>(optional)</em></td>
+<td>string</td>
+<td>Name of LUT B.</td>
+</tr>
+<tr>
+<td><code>blend</code> <em>(optional)</em></td>
+<td>number</td>
+<td>blend between 0.0 and 1.0 for LUT A and B. (Defaults to 0.0)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setoutdoorlighting">setOutdoorLighting</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">setOutdoorLighting</span><span class="p">(</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the lighting cycle fraction.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>value</code></td>
+<td>number</td>
+<td>The fraction of the day cycle lighting.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setreflectionlevelcolor">setReflectionLevelColor</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">setReflectionLevelColor</span><span class="p">(</span><span class="w"> </span><span class="nv">settingsLevel</span><span class="p">,</span><span class="w"> </span><span class="nv">min</span><span class="p">,</span><span class="w"> </span><span class="nv">max</span><span class="p">,</span><span class="w"> </span><span class="nv">mul</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the reflection color correction settings for one reflection level.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>settingsLevel</code></td>
+<td>string</td>
+<td>Off/Low/Medium/High.</td>
+</tr>
+<tr>
+<td><code>min</code></td>
+<td>number</td>
+<td>Color min.</td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td>number</td>
+<td>Color max.</td>
+</tr>
+<tr>
+<td><code>mul</code></td>
+<td>number</td>
+<td>Color mul.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setvolumetricfog">setVolumetricFog</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">setVolumetricFog</span><span class="p">(</span><span class="w"> </span><span class="nv">min</span><span class="p">,</span><span class="w"> </span><span class="nv">max</span><span class="p">,</span><span class="w"> </span><span class="nv">loopSpeed</span><span class="p">,</span><span class="w"> </span><span class="nv">scrollSpeed</span><span class="p">,</span><span class="w"> </span><span class="nv">scale</span><span class="p">,</span><span class="w"> </span><span class="nv">intensity</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the Volumetric fog override settings.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>min</code></td>
+<td>number</td>
+<td>Fog min.</td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td>number</td>
+<td>Fog max.</td>
+</tr>
+<tr>
+<td><code>loopSpeed</code></td>
+<td>number</td>
+<td>Fog loop speed.</td>
+</tr>
+<tr>
+<td><code>scrollSpeed</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>Fog scroll speed.</td>
+</tr>
+<tr>
+<td><code>scale</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>Fog scale.</td>
+</tr>
+<tr>
+<td><code>intensity</code></td>
+<td>number</td>
+<td>Fog intensity.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setvoxellodboost">setVoxelLODBoost</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">render</span><span class="p">.</span><span class="nf">setVoxelLODBoost</span><span class="p">(</span><span class="w"> </span><span class="nv">boost</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the voxel terrain LOD boost override setting.</p>
+<p>The value is capped by the current draw distance quality.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>boost</code></td>
+<td>number</td>
+<td>Voxel terrain LOD boost.</td>
+</tr>
+</tbody>
+</table>
+      </main>
+      <aside class="table-of-contents"><ul><li class="toc-level-2"><a href="#server-client">Server + Client</a></li><li class="toc-level-3"><a href="#getdefaultcameralight">getDefaultCameraLight</a></li><li class="toc-level-3"><a href="#getdefaultfog">getDefaultFog</a></li><li class="toc-level-3"><a href="#getdefaultgi">getDefaultGI</a></li><li class="toc-level-3"><a href="#getdefaulthorizonlight">getDefaultHorizonLight</a></li><li class="toc-level-3"><a href="#getdefaultreflectioncolor">getDefaultReflectionColor</a></li><li class="toc-level-3"><a href="#getdefaultvolumetricfog">getDefaultVolumetricFog</a></li><li class="toc-level-3"><a href="#getdefaultvoxellodboost">getDefaultVoxelLODBoost</a></li><li class="toc-level-3"><a href="#getscreencoordinatesfromworldposition">getScreenCoordinatesFromWorldPosition</a></li><li class="toc-level-3"><a href="#resetcameralight">resetCameraLight</a></li><li class="toc-level-2"><a href="#client-only">Client-only</a></li><li class="toc-level-3"><a href="#getdrawdistance">getDrawDistance</a></li><li class="toc-level-3"><a href="#getoutdoorlighting">getOutdoorLighting</a></li><li class="toc-level-3"><a href="#isoutdoor">isOutdoor</a></li><li class="toc-level-3"><a href="#resetallreflectioncolor">resetAllReflectionColor</a></li><li class="toc-level-3"><a href="#resetfog">resetFog</a></li><li class="toc-level-3"><a href="#resetgi">resetGI</a></li><li class="toc-level-3"><a href="#resethorizonlight">resetHorizonLight</a></li><li class="toc-level-3"><a href="#resetlut">resetLUT</a></li><li class="toc-level-3"><a href="#resetvolumetricfog">resetVolumetricFog</a></li><li class="toc-level-3"><a href="#resetvoxellodboost">resetVoxelLODBoost</a></li><li class="toc-level-3"><a href="#setcameralight">setCameraLight</a></li><li class="toc-level-3"><a href="#setcinematic">setCinematic</a></li><li class="toc-level-3"><a href="#setcloudsettings">setCloudSettings</a></li><li class="toc-level-3"><a href="#setfog">setFog</a></li><li class="toc-level-3"><a href="#setgi">setGI</a></li><li class="toc-level-3"><a href="#sethorizonlight">setHorizonLight</a></li><li class="toc-level-3"><a href="#setlut">setLUT</a></li><li class="toc-level-3"><a href="#setoutdoorlighting">setOutdoorLighting</a></li><li class="toc-level-3"><a href="#setreflectionlevelcolor">setReflectionLevelColor</a></li><li class="toc-level-3"><a href="#setvolumetricfog">setVolumetricFog</a></li><li class="toc-level-3"><a href="#setvoxellodboost">setVoxelLODBoost</a></li></ul></aside>
+    </div>
+  </div>
+  <script>const themeButton = document.getElementById('theme-button');
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+const updateThemeButton = () => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  const nextTheme = dark ? 'light' : 'dark';
+  themeButton.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
+  themeButton.title = `Switch to ${nextTheme} mode`;
+};
+const applyTheme = (theme) => {
+  document.documentElement.dataset.theme = theme;
+  updateThemeButton();
+};
+const savedTheme = () => {
+  try {
+    const theme = localStorage.getItem('sm-docs-theme');
+    return theme === 'light' || theme === 'dark' ? theme : null;
+  } catch (_) {
+    return null;
+  }
+};
+updateThemeButton();
+themeButton.addEventListener('click', () => {
+  const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(theme);
+  try {
+    localStorage.setItem('sm-docs-theme', theme);
+  } catch (_) {}
+});
+if ('addEventListener' in systemTheme) {
+  systemTheme.addEventListener('change', (event) => {
+    if (!savedTheme()) applyTheme(event.matches ? 'dark' : 'light');
+  });
+}
+
+const menu = document.getElementById('menu-button');
+const sidebar = document.getElementById('sidebar');
+menu.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+const statePrefix = 'sm-docs-sidebar:';
+const groups = sidebar.querySelectorAll('details[data-sidebar-key]');
+groups.forEach((group) => {
+  const key = statePrefix + group.dataset.sidebarKey;
+  try {
+    const saved = sessionStorage.getItem(key);
+    if (saved !== null) {
+      group.open = saved === 'open';
+    } else {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    }
+  } catch (_) {}
+  group.addEventListener('toggle', () => {
+    try {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    } catch (_) {}
+  });
+});
+const activeLink = sidebar.querySelector('a.active');
+if (activeLink) {
+  let parent = activeLink.parentElement;
+  while (parent) {
+    if (parent.tagName === 'DETAILS') parent.open = true;
+    parent = parent.parentElement;
+  }
+  const sidebarRect = sidebar.getBoundingClientRect();
+  const activeRect = activeLink.getBoundingClientRect();
+  sidebar.scrollTop += activeRect.top - sidebarRect.top - sidebarRect.height / 2;
+}
+const search = document.getElementById('doc-search');
+search.addEventListener('input', () => {
+  const query = search.value.trim().toLowerCase();
+  document.querySelectorAll('.sidebar-page').forEach((item) => {
+    const matches = !query || item.textContent.toLowerCase().includes(query);
+    item.hidden = !matches;
+    if (query && matches) {
+      let parent = item.parentElement;
+      while (parent) {
+        if (parent.tagName === 'DETAILS') parent.open = true;
+        parent = parent.parentElement;
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CharacterClass | SM Docs</title>
+  <script>(() => {
+  let theme;
+  try {
+    theme = localStorage.getItem('sm-docs-theme');
+  } catch (_) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.dataset.theme = theme;
+})();</script>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <header class="navbar">
+    <button class="menu-button" id="menu-button" aria-label="Toggle navigation">☰</button>
+    <a class="brand" href="../../index.html"><span class="brand-mark">SM</span><span>SM Docs</span></a>
+    <div class="navbar-spacer"></div>
+    <button class="theme-button" id="theme-button" type="button" aria-label="Toggle color theme"><svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg><svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path></svg></button>
+    <label class="search"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg><input id="doc-search" type="search" placeholder="Filter pages"></label>
+  </header>
+  <div class="page-layout">
+    <aside class="sidebar" id="sidebar"><nav><a class="sidebar-overview" href="../../index.html">Introduction</a>
+<details class="sidebar-group" data-sidebar-key="environment:Game" open>
+<summary>Game Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:class" open>
+<summary>Classes</summary>
+<ul>
+<li class="sidebar-page"><a class="active" href="CharacterClass.html">CharacterClass</a></li>
+<li class="sidebar-page"><a class="" href="ClientScriptableObjectClass.html">ClientScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="GameClass.html">GameClass</a></li>
+<li class="sidebar-page"><a class="" href="HarvestableClass.html">HarvestableClass</a></li>
+<li class="sidebar-page"><a class="" href="PlayerClass.html">PlayerClass</a></li>
+<li class="sidebar-page"><a class="" href="ScriptableObjectClass.html">ScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="ShapeClass.html">ShapeClass</a></li>
+<li class="sidebar-page"><a class="" href="ToolClass.html">ToolClass</a></li>
+<li class="sidebar-page"><a class="" href="UnitClass.html">UnitClass</a></li>
+<li class="sidebar-page"><a class="" href="WorldClass.html">WorldClass</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:namespace">
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Static-Functions/Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.ai.html">sm.ai</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.areaTrigger.html">sm.areaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.audio.html">sm.audio</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.body.html">sm.body</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.builderGuide.html">sm.builderGuide</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.camera.html">sm.camera</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.cell.html">sm.cell</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.challenge.html">sm.challenge</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.character.html">sm.character</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.clientScriptableObject.html">sm.clientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.construction.html">sm.construction</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.creation.html">sm.creation</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.cullSphereGroup.html">sm.cullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debris.html">sm.debris</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.effect.html">sm.effect</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.event.html">sm.event</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.game.html">sm.game</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.garage.html">sm.garage</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.gui.html">sm.gui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.gui.widget.html">sm.gui.widget</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.harvestable.html">sm.harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.item.html">sm.item</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.joint.html">sm.joint</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.jsonGui.html">sm.jsonGui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.lift.html">sm.lift</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.localPlayer.html">sm.localPlayer</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.melee.html">sm.melee</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.menuCreation.html">sm.menuCreation</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.message.html">sm.message</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.particle.html">sm.particle</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pathfinder.html">sm.pathfinder</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pathNode.html">sm.pathNode</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.physics.html">sm.physics</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pipeGraph.html">sm.pipeGraph</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.player.html">sm.player</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.portal.html">sm.portal</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.projectile.html">sm.projectile</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.render.html">sm.render</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.shape.html">sm.shape</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.storage.html">sm.storage</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.tool.html">sm.tool</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.unit.html">sm.unit</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.visualization.html">sm.visualization</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.world.html">sm.world</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:userdata">
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Userdata/AiState.html">AiState</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/AreaTrigger.html">AreaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/BlueprintVisualization.html">BlueprintVisualization</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Body.html">Body</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/BuilderGuide.html">BuilderGuide</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Character.html">Character</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/ClientScriptableObject.html">ClientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/CullSphereGroup.html">CullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Effect.html">Effect</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Garage.html">Garage</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/GuiInterface.html">GuiInterface</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Joint.html">Joint</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/JsonGui.html">JsonGui</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/JsonWidget.html">JsonWidget</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Lift.html">Lift</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/LoadCellHandle.html">LoadCellHandle</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Network.html">Network</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/PathNode.html">PathNode</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Player.html">Player</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/RaycastResult.html">RaycastResult</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Shape.html">Shape</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Storage.html">Storage</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Tool.html">Tool</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Unit.html">Unit</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Widget.html">Widget</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details>
+<details class="sidebar-group" data-sidebar-key="environment:Terrain">
+<summary>Terrain Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:namespace">
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainData.html">sm.terrainData</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainGeneration.html">sm.terrainGeneration</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainHarvestable.html">sm.terrainHarvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainTile.html">sm.terrainTile</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.tunnelGenerator.html">sm.tunnelGenerator</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.voxelTerrainCell.html">sm.voxelTerrainCell</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:userdata">
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details></nav></aside>
+    <div class="content-layout">
+      <main class="doc">
+        <div class="breadcrumbs"><a href="../../index.html">Docs</a><span class="breadcrumb-separator">›</span><a href="../index.html">Game</a><span class="breadcrumb-separator">›</span><a href="index.html">Classes</a><span class="breadcrumb-separator">›</span><span>CharacterClass</span></div>
+        <h1 id="characterclass">CharacterClass</h1>
+<p><strong>Script template:</strong> <a href="CharacterClass-Template.html">View starter script</a></p>
+<p>A script class that is instanced for every <a href="../Userdata/Character.html">Character</a> in the game.</p>
+<p>A <a href="../Userdata/Character.html">Character</a> is a temporary vessel controlled by a <a href="../Userdata/Player.html">Player</a> or <a href="../Userdata/Unit.html">Unit</a>.</p>
+<p>Can receive events sent with <a href="../Static-Functions/sm.event.html#sendtocharacter">sm.event.sendToCharacter</a>.</p>
+<h2 id="fields">Fields</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>character</code></td>
+<td><a href="../Userdata/Character.html">Character</a></td>
+<td>The <a href="../Userdata/Character.html">Character</a> game object belonging to this class instance.</td>
+</tr>
+<tr>
+<td><code>network</code></td>
+<td><a href="../Userdata/Network.html">Network</a></td>
+<td>A <a href="../Userdata/Network.html">Network</a> object that can be used to send messages between client and server.</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>any</td>
+<td>Data from the "data" json element.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="server-client">Server + Client</h2>
+<p><a id="server_oncreate"></a>
+<a id="client_oncreate"></a></p>
+<h3 id="oncreate">onCreate</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">server_onCreate</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+<span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onCreate</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Called when the scripted object is created. This occurs when a new object is built, spawned, or loaded from the save file.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="server_ondestroy"></a>
+<a id="client_ondestroy"></a></p>
+<h3 id="ondestroy">onDestroy</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">server_onDestroy</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+<span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onDestroy</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Called when the scripted object is destroyed.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="server_onrefresh"></a>
+<a id="client_onrefresh"></a></p>
+<h3 id="onrefresh">onRefresh</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">server_onRefresh</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+<span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onRefresh</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Called if the Lua script attached to the object is modified while the game is running.</p>
+<blockquote>
+<p><strong>Note:</strong>
+This event requires Scrap Mechanic to be running with the '-dev' flag. This will allow scripts to automatically refresh upon changes.</p>
+</blockquote>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="server_onfixedupdate"></a>
+<a id="client_onfixedupdate"></a></p>
+<h3 id="onfixedupdate">onFixedUpdate</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">server_onFixedUpdate</span><span class="p">(</span><span class="w"> </span><span class="nv">timeStep</span><span class="w"> </span><span class="p">)</span>
+<span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onFixedUpdate</span><span class="p">(</span><span class="w"> </span><span class="nv">timeStep</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Called every game tick &ndash; 40 ticks a second. If the frame rate is lower than 40 fps, this event may be called twice.</p>
+<p>During a fixed update, physics and logic between interactables are updated.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+<tr>
+<td><code>timeStep</code></td>
+<td>number</td>
+<td>The time period of a tick. (Is always 0.025, a 1/40th of a second.)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="server-only">Server-only</h2>
+<p><a id="server_onreceiveupdate"></a></p>
+<h3 id="onreceiveupdate">onReceiveUpdate</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">server_onReceiveUpdate</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Called occasionally to indicate that some time has passed.</p>
+<p>For performance reasons; it recommended to use this instead of <a href="#server_onfixedupdate">server_onFixedUpdate</a> for updates that do not need to happen frequently.</p>
+<p>Use <a href="../Static-Functions/sm.game.html#getcurrenttick">sm.game.getCurrentTick</a> to calculate the time.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="client-only">Client-only</h2>
+<p><a id="client_onupdate"></a></p>
+<h3 id="onupdate">onUpdate</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onUpdate</span><span class="p">(</span><span class="w"> </span><span class="nv">deltaTime</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Called every frame.</p>
+<p>During a frame update, graphics, animations and effects are updated.</p>
+<blockquote>
+<p><strong>Warning:</strong>
+Because of how frequent this event is called, the game's frame rate is greatly affected by the amount of code executed here.
+For any non-graphics related code, consider using <a href="#client_onfixedupdate">client_onFixedUpdate</a> instead.
+If the event is not in use, consider removing it from the script. (Event callbacks that are not implemented will not be called.)</p>
+</blockquote>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+<tr>
+<td><code>deltaTime</code></td>
+<td>number</td>
+<td>Delta time since the last frame.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="client_onclientdataupdate"></a></p>
+<h3 id="onclientdataupdate">onClientDataUpdate</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onClientDataUpdate</span><span class="p">(</span><span class="w"> </span><span class="nv">data</span><span class="p">,</span><span class="w"> </span><span class="nv">channel</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Called when the client receives new client data updates from the server set with <a href="../Userdata/Network.html#setclientdata">Network.setClientData</a>.</p>
+<p>Data set in this way is persistent and the latest data will automatically be sent to new clients.</p>
+<p>The data will arrive after <a href="#client_oncreate">client_onCreate</a> during the same tick.</p>
+<p>Channel 1 will be received before channel 2 if both are updated.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>any</td>
+<td>Any lua object set with <a href="../Userdata/Network.html#setclientdata">Network.setClientData</a></td>
+</tr>
+<tr>
+<td><code>channel</code></td>
+<td>integer</td>
+<td>Client data channel, 1 or 2. (default: 1)</td>
+</tr>
+</tbody>
+</table>
+<p><a id="client_onlocalplayerchangedworld"></a></p>
+<h3 id="onlocalplayerchangedworld">onLocalPlayerChangedWorld</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onLocalPlayerChangedWorld</span><span class="p">(</span><span class="w"> </span><span class="nv">world</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Called when the client player changes world.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+<tr>
+<td><code>world</code></td>
+<td><a href="../Userdata/World.html">World</a></td>
+<td>The entered world.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="client_onprojectile"></a></p>
+<h3 id="onprojectile">onProjectile</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onProjectile</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">position</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">airTime</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">velocity</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">projectileName</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">shooter</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">damage</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">customData</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">normal</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">uuid</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">mass</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>Called when the <a href="../Userdata/Character.html">Character</a> is hit by a projectile.</p>
+<blockquote>
+<p><strong>Note:</strong>
+If the shooter is destroyed before the hit lands, the shooter value will be nil.</p>
+</blockquote>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The position in world space where the projectile hit the <a href="../Userdata/Character.html">Character</a>.</td>
+</tr>
+<tr>
+<td><code>airTime</code></td>
+<td>number</td>
+<td>The time, in seconds, that the projectile spent flying before the hit.</td>
+</tr>
+<tr>
+<td><code>velocity</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The velocity of the projectile at impact.</td>
+</tr>
+<tr>
+<td><code>projectileName</code></td>
+<td>string</td>
+<td>The name of the projectile. (Legacy, use uuid instead)</td>
+</tr>
+<tr>
+<td><code>shooter</code></td>
+<td><a href="../Userdata/Player.html">Player</a>/<a href="../Userdata/Shape.html">Shape</a>/<a href="../Userdata/Harvestable.html">Harvestable</a>/nil</td>
+<td>The shooter, can be a <a href="../Userdata/Player.html">Player</a>, <a href="../Userdata/Shape.html">Shape</a>, <a href="../Userdata/Harvestable.html">Harvestable</a> or nil if unknown. Projectiles shot by a <a href="../Userdata/Unit.html">Unit</a> will be nil on the client.</td>
+</tr>
+<tr>
+<td><code>damage</code></td>
+<td>number</td>
+<td>The damage value of the projectile.</td>
+</tr>
+<tr>
+<td><code>customData</code></td>
+<td>any</td>
+<td>A Lua object that can be defined at shoot time using <a href="../Static-Functions/sm.projectile.html#customprojectileattack">sm.projectile.customProjectileAttack</a> or an other custom version.</td>
+</tr>
+<tr>
+<td><code>normal</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The normal at the point of impact.</td>
+</tr>
+<tr>
+<td><code>uuid</code></td>
+<td><a href="../Userdata/Uuid.html">Uuid</a></td>
+<td>The uuid of the projectile.</td>
+</tr>
+<tr>
+<td><code>mass</code></td>
+<td>number</td>
+<td>The mass of the projectile.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="client_onmelee"></a></p>
+<h3 id="onmelee">onMelee</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onMelee</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">position</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">attacker</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">damage</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">power</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">direction</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">normal</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>Called when the <a href="../Userdata/Character.html">Character</a> is hit by a melee hit.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The position in world space where the <a href="../Userdata/Character.html">Character</a> was hit.</td>
+</tr>
+<tr>
+<td><code>attacker</code></td>
+<td><a href="../Userdata/Player.html">Player</a>/nil</td>
+<td>The attacker. Can be a <a href="../Userdata/Player.html">Player</a> or nil if unknown. Attacks made by a <a href="../Userdata/Unit.html">Unit</a> will be nil on the client.</td>
+</tr>
+<tr>
+<td><code>damage</code></td>
+<td>integer</td>
+<td>The damage value of the melee hit.</td>
+</tr>
+<tr>
+<td><code>power</code></td>
+<td>number</td>
+<td>The physical impact impact of the hit.</td>
+</tr>
+<tr>
+<td><code>direction</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The direction that the melee attack was made.</td>
+</tr>
+<tr>
+<td><code>normal</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The normal at the point of impact.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="client_oncollision"></a></p>
+<h3 id="oncollision">onCollision</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onCollision</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">other</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">position</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">selfPointVelocity</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">otherPointVelocity</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">normal</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>Called when the <a href="../Userdata/Character.html">Character</a> collides with another object.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+<tr>
+<td><code>other</code></td>
+<td><a href="../Userdata/Shape.html">Shape</a>/<a href="../Userdata/Character.html">Character</a>/<a href="../Userdata/Harvestable.html">Harvestable</a>/<a href="../Userdata/Lift.html">Lift</a>/nil</td>
+<td>The other object. Nil if terrain.</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The position in world space where the collision occurred.</td>
+</tr>
+<tr>
+<td><code>selfPointVelocity</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The velocity that that the <a href="../Userdata/Character.html">Character</a> had at the point of collision.</td>
+</tr>
+<tr>
+<td><code>otherPointVelocity</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The velocity that that the other object had at the point of collision.</td>
+</tr>
+<tr>
+<td><code>normal</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The collision normal between the <a href="../Userdata/Character.html">Character</a> and the other other object.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="client_ongraphicsloaded"></a></p>
+<h3 id="ongraphicsloaded">onGraphicsLoaded</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onGraphicsLoaded</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Called when graphics are loaded for the <a href="../Userdata/Character.html">Character</a>.</p>
+<p>After this; graphics related functions can be called, like accessing animations.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="client_ongraphicsunloaded"></a></p>
+<h3 id="ongraphicsunloaded">onGraphicsUnloaded</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onGraphicsUnloaded</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Called when graphics are unloaded for the <a href="../Userdata/Character.html">Character</a>.</p>
+<p>After this; graphics related functions no longer has an effect or will fail.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="client_oninteract"></a></p>
+<h3 id="oninteract">onInteract</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onInteract</span><span class="p">(</span><span class="w"> </span><span class="nv">character</span><span class="p">,</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Called when a <a href="../Userdata/Player.html">Player</a> is interacting with the <a href="../Userdata/Character.html">Character</a> by pressing the 'Use' key (default 'E').</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+<tr>
+<td><code>character</code></td>
+<td><a href="../Userdata/Character.html">Character</a></td>
+<td>The <a href="../Userdata/Character.html">Character</a> of the <a href="../Userdata/Player.html">Player</a> that is interacting with this <a href="../Userdata/Character.html">Character</a>.</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td>boolean</td>
+<td>The interaction state. Always true. The <a href="CharacterClass.html">CharacterClass</a> only receives the key down event.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="client_caninteract"></a></p>
+<h3 id="caninteract">canInteract</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_canInteract</span><span class="p">(</span><span class="w"> </span><span class="nv">character</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Called to check whether the <a href="../Userdata/Character.html">Character</a> can be interacted with at this moment.</p>
+<blockquote>
+<p><strong>Note:</strong>
+This callback is also responsible for updating interaction text shown to the player using <a href="../Static-Functions/sm.gui.html#setinteractiontext">sm.gui.setInteractionText</a>.</p>
+</blockquote>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+<tr>
+<td><code>character</code></td>
+<td><a href="../Userdata/Character.html">Character</a></td>
+<td>The <a href="../Userdata/Character.html">Character</a> of the <a href="../Userdata/Player.html">Player</a> that is looking at this <a href="../Userdata/Character.html">Character</a>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>A boolean indicating whether the characer can be interacted with or not. (Defaults to true if <a href="#client_oninteract">client_onInteract</a> is implemented, otherwise false)</td>
+</tr>
+</tbody>
+</table>
+<p><a id="client_onevent"></a></p>
+<h3 id="onevent">onEvent</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">CharacterClass</span><span class="p">:</span><span class="nf">client_onEvent</span><span class="p">(</span><span class="w"> </span><span class="nv">event</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Called when the <a href="../Userdata/Character.html">Character</a> receives an event from <a href="../Userdata/Player.html#sendcharacterevent">Player.sendCharacterEvent</a> or <a href="../Userdata/Unit.html#sendcharacterevent">Unit.sendCharacterEvent</a>.</p>
+<p>This is usually for triggering animations on the character.</p>
+<p>For more extensive events, see <a href="../Static-Functions/sm.event.html#sendtocharacter">sm.event.sendToCharacter</a>.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self</code></td>
+<td>table</td>
+<td>The class instance.</td>
+</tr>
+<tr>
+<td><code>event</code></td>
+<td>string</td>
+<td>The event name.</td>
+</tr>
+</tbody>
+</table>
+      </main>
+      <aside class="table-of-contents"><ul><li class="toc-level-2"><a href="#server-client">Server + Client</a></li><li class="toc-level-3"><a href="#oncreate">onCreate</a></li><li class="toc-level-3"><a href="#ondestroy">onDestroy</a></li><li class="toc-level-3"><a href="#onrefresh">onRefresh</a></li><li class="toc-level-3"><a href="#onfixedupdate">onFixedUpdate</a></li><li class="toc-level-2"><a href="#server-only">Server-only</a></li><li class="toc-level-3"><a href="#onreceiveupdate">onReceiveUpdate</a></li><li class="toc-level-2"><a href="#client-only">Client-only</a></li><li class="toc-level-3"><a href="#onupdate">onUpdate</a></li><li class="toc-level-3"><a href="#onclientdataupdate">onClientDataUpdate</a></li><li class="toc-level-3"><a href="#onlocalplayerchangedworld">onLocalPlayerChangedWorld</a></li><li class="toc-level-3"><a href="#onprojectile">onProjectile</a></li><li class="toc-level-3"><a href="#onmelee">onMelee</a></li><li class="toc-level-3"><a href="#oncollision">onCollision</a></li><li class="toc-level-3"><a href="#ongraphicsloaded">onGraphicsLoaded</a></li><li class="toc-level-3"><a href="#ongraphicsunloaded">onGraphicsUnloaded</a></li><li class="toc-level-3"><a href="#oninteract">onInteract</a></li><li class="toc-level-3"><a href="#caninteract">canInteract</a></li><li class="toc-level-3"><a href="#onevent">onEvent</a></li></ul></aside>
+    </div>
+  </div>
+  <script>const themeButton = document.getElementById('theme-button');
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+const updateThemeButton = () => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  const nextTheme = dark ? 'light' : 'dark';
+  themeButton.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
+  themeButton.title = `Switch to ${nextTheme} mode`;
+};
+const applyTheme = (theme) => {
+  document.documentElement.dataset.theme = theme;
+  updateThemeButton();
+};
+const savedTheme = () => {
+  try {
+    const theme = localStorage.getItem('sm-docs-theme');
+    return theme === 'light' || theme === 'dark' ? theme : null;
+  } catch (_) {
+    return null;
+  }
+};
+updateThemeButton();
+themeButton.addEventListener('click', () => {
+  const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(theme);
+  try {
+    localStorage.setItem('sm-docs-theme', theme);
+  } catch (_) {}
+});
+if ('addEventListener' in systemTheme) {
+  systemTheme.addEventListener('change', (event) => {
+    if (!savedTheme()) applyTheme(event.matches ? 'dark' : 'light');
+  });
+}
+
+const menu = document.getElementById('menu-button');
+const sidebar = document.getElementById('sidebar');
+menu.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+const statePrefix = 'sm-docs-sidebar:';
+const groups = sidebar.querySelectorAll('details[data-sidebar-key]');
+groups.forEach((group) => {
+  const key = statePrefix + group.dataset.sidebarKey;
+  try {
+    const saved = sessionStorage.getItem(key);
+    if (saved !== null) {
+      group.open = saved === 'open';
+    } else {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    }
+  } catch (_) {}
+  group.addEventListener('toggle', () => {
+    try {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    } catch (_) {}
+  });
+});
+const activeLink = sidebar.querySelector('a.active');
+if (activeLink) {
+  let parent = activeLink.parentElement;
+  while (parent) {
+    if (parent.tagName === 'DETAILS') parent.open = true;
+    parent = parent.parentElement;
+  }
+  const sidebarRect = sidebar.getBoundingClientRect();
+  const activeRect = activeLink.getBoundingClientRect();
+  sidebar.scrollTop += activeRect.top - sidebarRect.top - sidebarRect.height / 2;
+}
+const search = document.getElementById('doc-search');
+search.addEventListener('input', () => {
+  const query = search.value.trim().toLowerCase();
+  document.querySelectorAll('.sidebar-page').forEach((item) => {
+    const matches = !query || item.textContent.toLowerCase().includes(query);
+    item.hidden = !matches;
+    if (query && matches) {
+      let parent = item.parentElement;
+      while (parent) {
+        if (parent.tagName === 'DETAILS') parent.open = true;
+        parent = parent.parentElement;
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

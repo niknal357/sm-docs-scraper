@@ -1,0 +1,1874 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Harvestable | SM Docs</title>
+  <script>(() => {
+  let theme;
+  try {
+    theme = localStorage.getItem('sm-docs-theme');
+  } catch (_) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.dataset.theme = theme;
+})();</script>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <header class="navbar">
+    <button class="menu-button" id="menu-button" aria-label="Toggle navigation">☰</button>
+    <a class="brand" href="../../index.html"><span class="brand-mark">SM</span><span>SM Docs</span></a>
+    <div class="navbar-spacer"></div>
+    <button class="theme-button" id="theme-button" type="button" aria-label="Toggle color theme"><svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg><svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path></svg></button>
+    <label class="search"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg><input id="doc-search" type="search" placeholder="Filter pages"></label>
+  </header>
+  <div class="page-layout">
+    <aside class="sidebar" id="sidebar"><nav><a class="sidebar-overview" href="../../index.html">Introduction</a>
+<details class="sidebar-group" data-sidebar-key="environment:Game" open>
+<summary>Game Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:class">
+<summary>Classes</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Classes/CharacterClass.html">CharacterClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ClientScriptableObjectClass.html">ClientScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/GameClass.html">GameClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/HarvestableClass.html">HarvestableClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/PlayerClass.html">PlayerClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ScriptableObjectClass.html">ScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ShapeClass.html">ShapeClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ToolClass.html">ToolClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/UnitClass.html">UnitClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/WorldClass.html">WorldClass</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:namespace">
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Static-Functions/Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.ai.html">sm.ai</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.areaTrigger.html">sm.areaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.audio.html">sm.audio</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.body.html">sm.body</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.builderGuide.html">sm.builderGuide</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.camera.html">sm.camera</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.cell.html">sm.cell</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.challenge.html">sm.challenge</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.character.html">sm.character</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.clientScriptableObject.html">sm.clientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.construction.html">sm.construction</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.creation.html">sm.creation</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.cullSphereGroup.html">sm.cullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debris.html">sm.debris</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.effect.html">sm.effect</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.event.html">sm.event</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.game.html">sm.game</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.garage.html">sm.garage</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.gui.html">sm.gui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.gui.widget.html">sm.gui.widget</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.harvestable.html">sm.harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.item.html">sm.item</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.joint.html">sm.joint</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.jsonGui.html">sm.jsonGui</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.lift.html">sm.lift</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.localPlayer.html">sm.localPlayer</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.melee.html">sm.melee</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.menuCreation.html">sm.menuCreation</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.message.html">sm.message</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.particle.html">sm.particle</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pathfinder.html">sm.pathfinder</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pathNode.html">sm.pathNode</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.physics.html">sm.physics</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.pipeGraph.html">sm.pipeGraph</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.player.html">sm.player</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.portal.html">sm.portal</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.projectile.html">sm.projectile</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.render.html">sm.render</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.shape.html">sm.shape</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.storage.html">sm.storage</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.tool.html">sm.tool</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.unit.html">sm.unit</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.visualization.html">sm.visualization</a></li>
+<li class="sidebar-page"><a class="" href="../Static-Functions/sm.world.html">sm.world</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:userdata" open>
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="AiState.html">AiState</a></li>
+<li class="sidebar-page"><a class="" href="AreaTrigger.html">AreaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="BlueprintVisualization.html">BlueprintVisualization</a></li>
+<li class="sidebar-page"><a class="" href="Body.html">Body</a></li>
+<li class="sidebar-page"><a class="" href="BuilderGuide.html">BuilderGuide</a></li>
+<li class="sidebar-page"><a class="" href="Character.html">Character</a></li>
+<li class="sidebar-page"><a class="" href="ClientScriptableObject.html">ClientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="CullSphereGroup.html">CullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="Effect.html">Effect</a></li>
+<li class="sidebar-page"><a class="" href="Garage.html">Garage</a></li>
+<li class="sidebar-page"><a class="" href="GuiInterface.html">GuiInterface</a></li>
+<li class="sidebar-page"><a class="active" href="Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="Joint.html">Joint</a></li>
+<li class="sidebar-page"><a class="" href="JsonGui.html">JsonGui</a></li>
+<li class="sidebar-page"><a class="" href="JsonWidget.html">JsonWidget</a></li>
+<li class="sidebar-page"><a class="" href="Lift.html">Lift</a></li>
+<li class="sidebar-page"><a class="" href="LoadCellHandle.html">LoadCellHandle</a></li>
+<li class="sidebar-page"><a class="" href="Network.html">Network</a></li>
+<li class="sidebar-page"><a class="" href="PathNode.html">PathNode</a></li>
+<li class="sidebar-page"><a class="" href="Player.html">Player</a></li>
+<li class="sidebar-page"><a class="" href="Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="RaycastResult.html">RaycastResult</a></li>
+<li class="sidebar-page"><a class="" href="ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="Shape.html">Shape</a></li>
+<li class="sidebar-page"><a class="" href="Storage.html">Storage</a></li>
+<li class="sidebar-page"><a class="" href="Tool.html">Tool</a></li>
+<li class="sidebar-page"><a class="" href="Unit.html">Unit</a></li>
+<li class="sidebar-page"><a class="" href="Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="Widget.html">Widget</a></li>
+<li class="sidebar-page"><a class="" href="World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details>
+<details class="sidebar-group" data-sidebar-key="environment:Terrain">
+<summary>Terrain Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:namespace">
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainData.html">sm.terrainData</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainGeneration.html">sm.terrainGeneration</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainHarvestable.html">sm.terrainHarvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainTile.html">sm.terrainTile</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.tunnelGenerator.html">sm.tunnelGenerator</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.voxelTerrainCell.html">sm.voxelTerrainCell</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:userdata">
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details></nav></aside>
+    <div class="content-layout">
+      <main class="doc">
+        <div class="breadcrumbs"><a href="../../index.html">Docs</a><span class="breadcrumb-separator">›</span><a href="../index.html">Game</a><span class="breadcrumb-separator">›</span><a href="index.html">Userdata</a><span class="breadcrumb-separator">›</span><span>Harvestable</span></div>
+        <h1 id="harvestable">Harvestable</h1>
+<p><strong>Associated namespace:</strong> <a href="../Static-Functions/sm.harvestable.html">sm.harvestable</a></p>
+<p><strong>Usage:</strong> Server And Client</p>
+<p><strong>Serializable:</strong> Yes</p>
+<p>Represents a harvestable object in the game.</p>
+<p><strong>Values:</strong></p>
+<ul>
+<li>
+<p><a id="angularvelocity"></a><code>angularVelocity</code> [ <strong><a href="Vec3.html">Vec3</a></strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the angular velocity of the harvestable.</li>
+</ul>
+</li>
+<li>
+<p><a id="clientpublicdata"></a><code>clientPublicData</code> [ <strong>table</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: (Client-Only) Returns client public data from a harvestable.</li>
+<li><code>Set</code>: (Client-Only) Sets client public data on a harvestable.</li>
+</ul>
+</li>
+<li>
+<p><a id="id"></a><code>id</code> [ <strong>integer</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the id of a harvestable.</li>
+</ul>
+</li>
+<li>
+<p><a id="initialhash"></a><code>initialHash</code> [ <strong>number</strong> ] <br></p>
+<ul>
+<li>
+<p><code>Get</code>: Gets the initial hash of a kinematic. The initial hash identifies the kinematic by its initial world position, uuid and world id.</p>
+<p>This can be used to match kinematics spawned from the same entity in a tile even though each loaded kinematic is technically a different object.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><a id="initialposition"></a><code>initialPosition</code> [ <strong><a href="Vec3.html">Vec3</a></strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the initial world coordinates of a kinematic.</li>
+</ul>
+</li>
+<li>
+<p><a id="initialrotation"></a><code>initialRotation</code> [ <strong><a href="Quat.html">Quat</a></strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the initial quaternion rotation of a harvestable.</li>
+</ul>
+</li>
+<li>
+<p><a id="mass"></a><code>mass</code> [ <strong>number</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the mass of a harvestable. The mass scales with the harvestable's scale.</li>
+</ul>
+</li>
+<li>
+<p><a id="material"></a><code>material</code> [ <strong>string</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the material name of a harvestable.</li>
+</ul>
+</li>
+<li>
+<p><a id="materialid"></a><code>materialId</code> [ <strong>integer</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the material id of a harvestable.</li>
+</ul>
+</li>
+<li>
+<p><a id="name"></a><code>name</code> [ <strong>string</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the name of a harvestable.</li>
+</ul>
+</li>
+<li>
+<p><a id="publicdata"></a><code>publicData</code> [ <strong>table</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: (Server-Only) Returns (server) public data from a harvestable.</li>
+<li><code>Set</code>: (Server-Only) Sets (server) public data on a harvestable.</li>
+</ul>
+</li>
+<li>
+<p><a id="type"></a><code>type</code> [ <strong>string</strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the type of a harvestable.</li>
+</ul>
+</li>
+<li>
+<p><a id="uuid"></a><code>uuid</code> [ <strong><a href="Uuid.html">Uuid</a></strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the <a href="Uuid.html">Uuid</a> of the harvestable.</li>
+</ul>
+</li>
+<li>
+<p><a id="velocity"></a><code>velocity</code> [ <strong><a href="Vec3.html">Vec3</a></strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the velocity of the harvestable.</li>
+</ul>
+</li>
+<li>
+<p><a id="worldposition"></a><code>worldPosition</code> [ <strong><a href="Vec3.html">Vec3</a></strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the world coordinates of a harvestable.</li>
+</ul>
+</li>
+<li>
+<p><a id="worldrotation"></a><code>worldRotation</code> [ <strong><a href="Quat.html">Quat</a></strong> ] <br></p>
+<ul>
+<li><code>Get</code>: Returns the quaternion rotation of a harvestable.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Operations:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a id="__eq"></a><code>Harvestable == Harvestable</code></td>
+<td>boolean</td>
+<td>Checks if two instances of <a href="Harvestable.html">Harvestable</a> refer to the same Harvestable.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="server-client">Server + Client</h2>
+<h3 id="getaabb">getAabb</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getAabb</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the axis aligned world space bounds of the harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a>,<a href="Vec3.html">Vec3</a></td>
+<td>The min and max bounds.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getangularvelocity">getAngularVelocity</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getAngularVelocity</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the angular velocity of the harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The angular velocity.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getcolor">getColor</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getColor</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the color of the harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Color.html">Color</a></td>
+<td>The color.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getdata">getData</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getData</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Get the script data from a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>data          The script data.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getid">getId</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getId</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the id of a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>integer</td>
+<td>The harvestable id.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getinitialhash">getInitialHash</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getInitialHash</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Gets the initial hash of a kinematic. The initial hash identifies the kinematic by its initial world position, uuid and world id.</p>
+<p>This can be used to match kinematics spawned from the same entity in a tile even though each loaded kinematic is technically a different object.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The kinematic to get the initial hash from.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number</td>
+<td>The initial hash. Returns 0 if the harvestable is not kinematic.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getlocalaabb">getLocalAabb</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getLocalAabb</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the axis aligned local space bounds of the harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a>,<a href="Vec3.html">Vec3</a></td>
+<td>The min and max bounds.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getmass">getMass</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getMass</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the mass of a harvestable. The mass scales with the harvestable's scale.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number</td>
+<td>The mass.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getmaterial">getMaterial</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getMaterial</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the material name of a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>The name of the material.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getmaterialid">getMaterialId</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getMaterialId</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the material id of a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>integer</td>
+<td>The id of the material.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getname">getName</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getName</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the name of a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>The harvestable name.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getposition">getPosition</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getPosition</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the world coordinates of a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The position.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getrotation">getRotation</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getRotation</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the quaternion rotation of a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Quat.html">Quat</a></td>
+<td>The rotation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getscale">getScale</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getScale</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the scale of the harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The scale.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getseatcharacter">getSeatCharacter</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getSeatCharacter</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the <a href="Character.html">Character</a> that is seated in the kinematic.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kinematic</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The kinematic.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Character.html">Character</a></td>
+<td>The character.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gettype">getType</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getType</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the type of a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>The harvestable's type.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getuuid">getUuid</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getUuid</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the <a href="Uuid.html">Uuid</a> of the harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Uuid.html">Uuid</a></td>
+<td>The uuid.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getvelocity">getVelocity</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getVelocity</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the velocity of the harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The velocity.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getworld">getWorld</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getWorld</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the world a harvestable exists in.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="World.html">World</a></td>
+<td>The world the harvestable exists in.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hasseat">hasSeat</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">hasSeat</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns true if kinematic has a seat component.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kinematic</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The kinematic.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>The result.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="iscellkinematic">isCellKinematic</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">isCellKinematic</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a kinematic comes from a cell or is created from a script.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable to check.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>True if it is a kinematic from a cell, false if it is not. Nil if it is not a kinematic.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="iskinematic">isKinematic</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">isKinematic</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check if a harvestable is kinematic</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Return true if the harvestable is kinematic.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setposition">setPosition</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">setPosition</span><span class="p">(</span><span class="w"> </span><span class="nv">position</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Set the world coordinates of a harvestable. Can only be used on kinematic harvestables.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The position.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setrotation">setRotation</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">setRotation</span><span class="p">(</span><span class="w"> </span><span class="nv">rotation</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Set the quaternion rotation of a harvestable. Can only be used on kinematic harvestables.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>rotation</code></td>
+<td><a href="Quat.html">Quat</a></td>
+<td>The rotation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setseatcharacter">setSeatCharacter</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">setSeatCharacter</span><span class="p">(</span><span class="w"> </span><span class="nv">character</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Requests to seat a <a href="Character.html">Character</a> in the kinematic.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kinematic</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The kinematic.</td>
+</tr>
+<tr>
+<td><code>character</code></td>
+<td><a href="Character.html">Character</a></td>
+<td>The character.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="transformdirection">transformDirection</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">transformDirection</span><span class="p">(</span><span class="w"> </span><span class="nv">direction</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Transforms a direction in the world into a local direction of the harvestable</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>direction</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The world direction.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The local direction.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="transformlocalpoint">transformLocalPoint</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">transformLocalPoint</span><span class="p">(</span><span class="w"> </span><span class="nv">vector</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Transform a local point to world space.</p>
+<div class="codehilite"><pre><span></span><code><span class="kd">local</span><span class="w"> </span><span class="nv">worldPos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">harvestable</span><span class="p">:</span><span class="nf">transformLocalPoint</span><span class="p">(</span><span class="w"> </span><span class="nv">localPos</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvetable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>vector</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The local point.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The world point.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="transformpoint">transformPoint</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">transformPoint</span><span class="p">(</span><span class="w"> </span><span class="nv">vector</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Transform a world point to the local harvestable transform.</p>
+<div class="codehilite"><pre><span></span><code><span class="kd">local</span><span class="w"> </span><span class="nv">localPos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">harvestable</span><span class="p">:</span><span class="nf">transformPoint</span><span class="p">(</span><span class="w"> </span><span class="nv">worldPos</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>vector</code></td>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The world point.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Vec3.html">Vec3</a></td>
+<td>The local point.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="server-only">Server-only</h2>
+<h3 id="destroy">destroy</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">destroy</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Destroys a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getpublicdata">getPublicData</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getPublicData</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns (server) public data from a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The public data.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setparams">setParams</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">setParams</span><span class="p">(</span><span class="w"> </span><span class="nv">data</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets param data for a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>any</td>
+<td>The param data.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setpublicdata">setPublicData</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">setPublicData</span><span class="p">(</span><span class="w"> </span><span class="nv">data</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets (server) public data on a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>table</td>
+<td>The public data.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="client-only">Client-only</h2>
+<h3 id="applyshakeimpulse">applyShakeImpulse</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">applyShakeImpulse</span><span class="p">(</span><span class="w"> </span><span class="nv">shake</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Applies a shake impulse to the harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>shake</code></td>
+<td>number</td>
+<td>The shake impulse value.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getclientpublicdata">getClientPublicData</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getClientPublicData</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns client public data from a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td>The client public data.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getposeweight">getPoseWeight</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getPoseWeight</span><span class="p">(</span><span class="w"> </span><span class="nv">index</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the pose weight of the pose in the given index.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>index</code></td>
+<td>integer</td>
+<td>The index.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number</td>
+<td>The pose weight.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getuvframeindex">getUvFrameIndex</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">getUvFrameIndex</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the index of the current UV animation frame</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>integer</td>
+<td>The uv frame.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setallsubmeshvisible">setAllSubMeshVisible</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">setAllSubMeshVisible</span><span class="p">(</span><span class="w"> </span><span class="nv">visible</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Set the visibility of all submeshes</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>visible</code></td>
+<td>boolean</td>
+<td>True if the submeshes should be visible.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setclientpublicdata">setClientPublicData</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">setClientPublicData</span><span class="p">(</span><span class="w"> </span><span class="nv">data</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets client public data on a harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>table</td>
+<td>The client public data.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setcolor">setColor</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">setColor</span><span class="p">(</span><span class="w"> </span><span class="nv">color</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the color of the harvestable.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td><a href="Color.html">Color</a></td>
+<td>The color.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setposeweight">setPoseWeight</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">setPoseWeight</span><span class="p">(</span><span class="w"> </span><span class="nv">index</span><span class="p">,</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Set the pose weight of the pose in the given index.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>index</code></td>
+<td>integer</td>
+<td>The index.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>number</td>
+<td>The pose weight.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setsubmeshvisible">setSubMeshVisible</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">setSubMeshVisible</span><span class="p">(</span><span class="w"> </span><span class="nv">name</span><span class="p">,</span><span class="w"> </span><span class="nv">visible</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Set the visibility of a submesh</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Name of the submesh.</td>
+</tr>
+<tr>
+<td><code>visible</code></td>
+<td>boolean</td>
+<td>True if the submesh should be visible.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setuvframeindex">setUvFrameIndex</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">harvestable</span><span class="p">:</span><span class="nf">setUvFrameIndex</span><span class="p">(</span><span class="w"> </span><span class="nv">index</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the UV animation frame with the given index.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harvestable</code></td>
+<td><a href="Harvestable.html">Harvestable</a></td>
+<td>The harvestable.</td>
+</tr>
+<tr>
+<td><code>index</code></td>
+<td>integer</td>
+<td>The index.</td>
+</tr>
+</tbody>
+</table>
+      </main>
+      <aside class="table-of-contents"><ul><li class="toc-level-2"><a href="#server-client">Server + Client</a></li><li class="toc-level-3"><a href="#getaabb">getAabb</a></li><li class="toc-level-3"><a href="#getangularvelocity">getAngularVelocity</a></li><li class="toc-level-3"><a href="#getcolor">getColor</a></li><li class="toc-level-3"><a href="#getdata">getData</a></li><li class="toc-level-3"><a href="#getid">getId</a></li><li class="toc-level-3"><a href="#getinitialhash">getInitialHash</a></li><li class="toc-level-3"><a href="#getlocalaabb">getLocalAabb</a></li><li class="toc-level-3"><a href="#getmass">getMass</a></li><li class="toc-level-3"><a href="#getmaterial">getMaterial</a></li><li class="toc-level-3"><a href="#getmaterialid">getMaterialId</a></li><li class="toc-level-3"><a href="#getname">getName</a></li><li class="toc-level-3"><a href="#getposition">getPosition</a></li><li class="toc-level-3"><a href="#getrotation">getRotation</a></li><li class="toc-level-3"><a href="#getscale">getScale</a></li><li class="toc-level-3"><a href="#getseatcharacter">getSeatCharacter</a></li><li class="toc-level-3"><a href="#gettype">getType</a></li><li class="toc-level-3"><a href="#getuuid">getUuid</a></li><li class="toc-level-3"><a href="#getvelocity">getVelocity</a></li><li class="toc-level-3"><a href="#getworld">getWorld</a></li><li class="toc-level-3"><a href="#hasseat">hasSeat</a></li><li class="toc-level-3"><a href="#iscellkinematic">isCellKinematic</a></li><li class="toc-level-3"><a href="#iskinematic">isKinematic</a></li><li class="toc-level-3"><a href="#setposition">setPosition</a></li><li class="toc-level-3"><a href="#setrotation">setRotation</a></li><li class="toc-level-3"><a href="#setseatcharacter">setSeatCharacter</a></li><li class="toc-level-3"><a href="#transformdirection">transformDirection</a></li><li class="toc-level-3"><a href="#transformlocalpoint">transformLocalPoint</a></li><li class="toc-level-3"><a href="#transformpoint">transformPoint</a></li><li class="toc-level-2"><a href="#server-only">Server-only</a></li><li class="toc-level-3"><a href="#destroy">destroy</a></li><li class="toc-level-3"><a href="#getpublicdata">getPublicData</a></li><li class="toc-level-3"><a href="#setparams">setParams</a></li><li class="toc-level-3"><a href="#setpublicdata">setPublicData</a></li><li class="toc-level-2"><a href="#client-only">Client-only</a></li><li class="toc-level-3"><a href="#applyshakeimpulse">applyShakeImpulse</a></li><li class="toc-level-3"><a href="#getclientpublicdata">getClientPublicData</a></li><li class="toc-level-3"><a href="#getposeweight">getPoseWeight</a></li><li class="toc-level-3"><a href="#getuvframeindex">getUvFrameIndex</a></li><li class="toc-level-3"><a href="#setallsubmeshvisible">setAllSubMeshVisible</a></li><li class="toc-level-3"><a href="#setclientpublicdata">setClientPublicData</a></li><li class="toc-level-3"><a href="#setcolor">setColor</a></li><li class="toc-level-3"><a href="#setposeweight">setPoseWeight</a></li><li class="toc-level-3"><a href="#setsubmeshvisible">setSubMeshVisible</a></li><li class="toc-level-3"><a href="#setuvframeindex">setUvFrameIndex</a></li></ul></aside>
+    </div>
+  </div>
+  <script>const themeButton = document.getElementById('theme-button');
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+const updateThemeButton = () => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  const nextTheme = dark ? 'light' : 'dark';
+  themeButton.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
+  themeButton.title = `Switch to ${nextTheme} mode`;
+};
+const applyTheme = (theme) => {
+  document.documentElement.dataset.theme = theme;
+  updateThemeButton();
+};
+const savedTheme = () => {
+  try {
+    const theme = localStorage.getItem('sm-docs-theme');
+    return theme === 'light' || theme === 'dark' ? theme : null;
+  } catch (_) {
+    return null;
+  }
+};
+updateThemeButton();
+themeButton.addEventListener('click', () => {
+  const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(theme);
+  try {
+    localStorage.setItem('sm-docs-theme', theme);
+  } catch (_) {}
+});
+if ('addEventListener' in systemTheme) {
+  systemTheme.addEventListener('change', (event) => {
+    if (!savedTheme()) applyTheme(event.matches ? 'dark' : 'light');
+  });
+}
+
+const menu = document.getElementById('menu-button');
+const sidebar = document.getElementById('sidebar');
+menu.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+const statePrefix = 'sm-docs-sidebar:';
+const groups = sidebar.querySelectorAll('details[data-sidebar-key]');
+groups.forEach((group) => {
+  const key = statePrefix + group.dataset.sidebarKey;
+  try {
+    const saved = sessionStorage.getItem(key);
+    if (saved !== null) {
+      group.open = saved === 'open';
+    } else {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    }
+  } catch (_) {}
+  group.addEventListener('toggle', () => {
+    try {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    } catch (_) {}
+  });
+});
+const activeLink = sidebar.querySelector('a.active');
+if (activeLink) {
+  let parent = activeLink.parentElement;
+  while (parent) {
+    if (parent.tagName === 'DETAILS') parent.open = true;
+    parent = parent.parentElement;
+  }
+  const sidebarRect = sidebar.getBoundingClientRect();
+  const activeRect = activeLink.getBoundingClientRect();
+  sidebar.scrollTop += activeRect.top - sidebarRect.top - sidebarRect.height / 2;
+}
+const search = document.getElementById('doc-search');
+search.addEventListener('input', () => {
+  const query = search.value.trim().toLowerCase();
+  document.querySelectorAll('.sidebar-page').forEach((item) => {
+    const matches = !query || item.textContent.toLowerCase().includes(query);
+    item.hidden = !matches;
+    if (query && matches) {
+      let parent = item.parentElement;
+      while (parent) {
+        if (parent.tagName === 'DETAILS') parent.open = true;
+        parent = parent.parentElement;
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

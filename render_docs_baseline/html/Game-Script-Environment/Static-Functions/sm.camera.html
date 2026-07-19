@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>sm.camera | SM Docs</title>
+  <script>(() => {
+  let theme;
+  try {
+    theme = localStorage.getItem('sm-docs-theme');
+  } catch (_) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.dataset.theme = theme;
+})();</script>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <header class="navbar">
+    <button class="menu-button" id="menu-button" aria-label="Toggle navigation">☰</button>
+    <a class="brand" href="../../index.html"><span class="brand-mark">SM</span><span>SM Docs</span></a>
+    <div class="navbar-spacer"></div>
+    <button class="theme-button" id="theme-button" type="button" aria-label="Toggle color theme"><svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg><svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path></svg></button>
+    <label class="search"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg><input id="doc-search" type="search" placeholder="Filter pages"></label>
+  </header>
+  <div class="page-layout">
+    <aside class="sidebar" id="sidebar"><nav><a class="sidebar-overview" href="../../index.html">Introduction</a>
+<details class="sidebar-group" data-sidebar-key="environment:Game" open>
+<summary>Game Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:class">
+<summary>Classes</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Classes/CharacterClass.html">CharacterClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ClientScriptableObjectClass.html">ClientScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/GameClass.html">GameClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/HarvestableClass.html">HarvestableClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/PlayerClass.html">PlayerClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ScriptableObjectClass.html">ScriptableObjectClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ShapeClass.html">ShapeClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/ToolClass.html">ToolClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/UnitClass.html">UnitClass</a></li>
+<li class="sidebar-page"><a class="" href="../Classes/WorldClass.html">WorldClass</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:namespace" open>
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="sm.ai.html">sm.ai</a></li>
+<li class="sidebar-page"><a class="" href="sm.areaTrigger.html">sm.areaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="sm.audio.html">sm.audio</a></li>
+<li class="sidebar-page"><a class="" href="sm.body.html">sm.body</a></li>
+<li class="sidebar-page"><a class="" href="sm.builderGuide.html">sm.builderGuide</a></li>
+<li class="sidebar-page"><a class="active" href="sm.camera.html">sm.camera</a></li>
+<li class="sidebar-page"><a class="" href="sm.cell.html">sm.cell</a></li>
+<li class="sidebar-page"><a class="" href="sm.challenge.html">sm.challenge</a></li>
+<li class="sidebar-page"><a class="" href="sm.character.html">sm.character</a></li>
+<li class="sidebar-page"><a class="" href="sm.clientScriptableObject.html">sm.clientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="sm.construction.html">sm.construction</a></li>
+<li class="sidebar-page"><a class="" href="sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="sm.creation.html">sm.creation</a></li>
+<li class="sidebar-page"><a class="" href="sm.cullSphereGroup.html">sm.cullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="sm.debris.html">sm.debris</a></li>
+<li class="sidebar-page"><a class="" href="sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="sm.effect.html">sm.effect</a></li>
+<li class="sidebar-page"><a class="" href="sm.event.html">sm.event</a></li>
+<li class="sidebar-page"><a class="" href="sm.game.html">sm.game</a></li>
+<li class="sidebar-page"><a class="" href="sm.garage.html">sm.garage</a></li>
+<li class="sidebar-page"><a class="" href="sm.gui.html">sm.gui</a></li>
+<li class="sidebar-page"><a class="" href="sm.gui.widget.html">sm.gui.widget</a></li>
+<li class="sidebar-page"><a class="" href="sm.harvestable.html">sm.harvestable</a></li>
+<li class="sidebar-page"><a class="" href="sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="sm.item.html">sm.item</a></li>
+<li class="sidebar-page"><a class="" href="sm.joint.html">sm.joint</a></li>
+<li class="sidebar-page"><a class="" href="sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="sm.jsonGui.html">sm.jsonGui</a></li>
+<li class="sidebar-page"><a class="" href="sm.lift.html">sm.lift</a></li>
+<li class="sidebar-page"><a class="" href="sm.localPlayer.html">sm.localPlayer</a></li>
+<li class="sidebar-page"><a class="" href="sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="sm.melee.html">sm.melee</a></li>
+<li class="sidebar-page"><a class="" href="sm.menuCreation.html">sm.menuCreation</a></li>
+<li class="sidebar-page"><a class="" href="sm.message.html">sm.message</a></li>
+<li class="sidebar-page"><a class="" href="sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="sm.particle.html">sm.particle</a></li>
+<li class="sidebar-page"><a class="" href="sm.pathfinder.html">sm.pathfinder</a></li>
+<li class="sidebar-page"><a class="" href="sm.pathNode.html">sm.pathNode</a></li>
+<li class="sidebar-page"><a class="" href="sm.physics.html">sm.physics</a></li>
+<li class="sidebar-page"><a class="" href="sm.pipeGraph.html">sm.pipeGraph</a></li>
+<li class="sidebar-page"><a class="" href="sm.player.html">sm.player</a></li>
+<li class="sidebar-page"><a class="" href="sm.portal.html">sm.portal</a></li>
+<li class="sidebar-page"><a class="" href="sm.projectile.html">sm.projectile</a></li>
+<li class="sidebar-page"><a class="" href="sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="" href="sm.render.html">sm.render</a></li>
+<li class="sidebar-page"><a class="" href="sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="sm.shape.html">sm.shape</a></li>
+<li class="sidebar-page"><a class="" href="sm.storage.html">sm.storage</a></li>
+<li class="sidebar-page"><a class="" href="sm.tool.html">sm.tool</a></li>
+<li class="sidebar-page"><a class="" href="sm.unit.html">sm.unit</a></li>
+<li class="sidebar-page"><a class="" href="sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="sm.visualization.html">sm.visualization</a></li>
+<li class="sidebar-page"><a class="" href="sm.world.html">sm.world</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Game:category:userdata">
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../Userdata/AiState.html">AiState</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/AreaTrigger.html">AreaTrigger</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/BlueprintVisualization.html">BlueprintVisualization</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Body.html">Body</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/BuilderGuide.html">BuilderGuide</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Character.html">Character</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/ClientScriptableObject.html">ClientScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/CullSphereGroup.html">CullSphereGroup</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Effect.html">Effect</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Garage.html">Garage</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/GuiInterface.html">GuiInterface</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Joint.html">Joint</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/JsonGui.html">JsonGui</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/JsonWidget.html">JsonWidget</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Lift.html">Lift</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/LoadCellHandle.html">LoadCellHandle</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Network.html">Network</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/PathNode.html">PathNode</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Player.html">Player</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/RaycastResult.html">RaycastResult</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Shape.html">Shape</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Storage.html">Storage</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Tool.html">Tool</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Unit.html">Unit</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/Widget.html">Widget</a></li>
+<li class="sidebar-page"><a class="" href="../Userdata/World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details>
+<details class="sidebar-group" data-sidebar-key="environment:Terrain">
+<summary>Terrain Script Environment</summary>
+<div class="sidebar-group-content">
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:namespace">
+<summary>Static Functions</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/Global.html">Global</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.html">sm</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.color.html">sm.color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.container.html">sm.container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugDraw.html">sm.debugDraw</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.debugGui.html">sm.debugGui</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.interactable.html">sm.interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.json.html">sm.json</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.log.html">sm.log</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.noise.html">sm.noise</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.quat.html">sm.quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.scriptableObject.html">sm.scriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainData.html">sm.terrainData</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainGeneration.html">sm.terrainGeneration</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainHarvestable.html">sm.terrainHarvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.terrainTile.html">sm.terrainTile</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.tunnelGenerator.html">sm.tunnelGenerator</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.util.html">sm.util</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.uuid.html">sm.uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.vec3.html">sm.vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Static-Functions/sm.voxelTerrainCell.html">sm.voxelTerrainCell</a></li>
+</ul>
+</details>
+<details class="sidebar-category" data-sidebar-key="environment:Terrain:category:userdata">
+<summary>Userdata</summary>
+<ul>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Color.html">Color</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Container.html">Container</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Harvestable.html">Harvestable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Interactable.html">Interactable</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Portal.html">Portal</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Quat.html">Quat</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/ScriptableObject.html">ScriptableObject</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Uuid.html">Uuid</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/Vec3.html">Vec3</a></li>
+<li class="sidebar-page"><a class="" href="../../Terrain-Script-Environment/Userdata/World.html">World</a></li>
+</ul>
+</details>
+</div>
+</details></nav></aside>
+    <div class="content-layout">
+      <main class="doc">
+        <div class="breadcrumbs"><a href="../../index.html">Docs</a><span class="breadcrumb-separator">›</span><a href="../index.html">Game</a><span class="breadcrumb-separator">›</span><a href="index.html">Static Functions</a><span class="breadcrumb-separator">›</span><span>sm.camera</span></div>
+        <h1 id="smcamera">sm.camera</h1>
+<p>The <strong>camera</strong> library contains methods related to the <a href="sm.localPlayer.html">localPlayer</a>'s camera view.</p>
+<p>In first-person view the camera is located inside the player's head, whereas in third-person view it floats behind them.</p>
+<p>This library can only be used on the client.</p>
+<h2 id="constants">Constants</h2>
+<h3 id="state">state</h3>
+<p>Camera states are used to specify how the camera will view the world. The default state is meant for normal gameplay and the scripted states are meant to be used in cutscenes or interactables.</p>
+<p>The states are:</p>
+<ul>
+<li><strong>default</strong> &ndash; The camera is controlled by the player.</li>
+<li><strong>cutsceneFP</strong> &ndash; Scripted first-person camera; position, rotation, and FOV are set by script.</li>
+<li><strong>cutsceneTP</strong> &ndash; Scripted third-person camera; position, rotation, and FOV are set by script.</li>
+<li><strong>forcedTP</strong> &ndash; Forces a third-person view regardless of the player's zoom step. Used during tumbling.</li>
+<li><strong>gyroSeatFP</strong> &ndash; First-person camera whose direction is driven by the gyro seat's rotation.</li>
+<li><strong>gyroSeatTP</strong> &ndash; Third-person camera for the gyro seat.</li>
+<li><strong>scriptedTP</strong> &ndash; Third-person camera with position, rotation, and FOV fully overridden by script. Used for interactable cutscenes.</li>
+<li><strong>seatLockedCamera</strong> &ndash; The camera direction and position are locked to the seat's local space. The view is first-person unless a pullback is set, which produces a third-person view.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>default</td>
+<td>1</td>
+</tr>
+<tr>
+<td>cutsceneFP</td>
+<td>2</td>
+</tr>
+<tr>
+<td>cutsceneTP</td>
+<td>3</td>
+</tr>
+<tr>
+<td>forcedTP</td>
+<td>4</td>
+</tr>
+<tr>
+<td>gyroSeatFP</td>
+<td>5</td>
+</tr>
+<tr>
+<td>gyroSeatTP</td>
+<td>6</td>
+</tr>
+<tr>
+<td>scriptedTP</td>
+<td>7</td>
+</tr>
+<tr>
+<td>seatLockedCamera</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>table</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="client-only">Client-only</h2>
+<h3 id="cameraspherecast">cameraSphereCast</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">cameraSphereCast</span><span class="p">(</span><span class="w"> </span><span class="nv">radius</span><span class="p">,</span><span class="w"> </span><span class="nv">start</span><span class="p">,</span><span class="w"> </span><span class="nv">direction</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Performs a distance convex sweep with the shape of a sphere, from a position with a given direction.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>radius</code></td>
+<td>number</td>
+<td>The radius of the cast sphere</td>
+</tr>
+<tr>
+<td><code>start</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The start position.</td>
+</tr>
+<tr>
+<td><code>direction</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The cast direction and range.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number</td>
+<td>The fraction of the distance reached until collision.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getcamerapullback">getCameraPullback</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">getCameraPullback</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the camera's zoom step.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number</td>
+<td>step     How far away the camera is from the player while standing</td>
+</tr>
+<tr>
+<td>number</td>
+<td>seatedStep   How far away the camera is from the player while seated</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getcamerastate">getCameraState</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">getCameraState</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Gets the camera's control state.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>integer</td>
+<td>state   How the camera is moved. (See <a href="#state">sm.camera.state</a>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getdefaultfov">getDefaultFov</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">getDefaultFov</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the camera's default field of view angle.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number</td>
+<td>The field of view.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getdefaultposition">getDefaultPosition</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">getDefaultPosition</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the world position where the camera should be by default.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The camera's world position.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getdefaultrotation">getDefaultRotation</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">getDefaultRotation</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the world rotation where the camera should be by default.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../Userdata/Quat.html">Quat</a></td>
+<td>The camera's default world rotation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getdirection">getDirection</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">getDirection</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the direction the camera is aiming.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The direction of the camera's aim.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getfov">getFov</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">getFov</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the camera's field of view angle.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number</td>
+<td>The field of view.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getposition">getPosition</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">getPosition</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the world position of the camera.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The camera's world position.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getright">getRight</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">getRight</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the right-vector perpendicular to the camera's aim.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The right-vector of the camera's aim.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getrotation">getRotation</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">getRotation</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the world rotation of the camera.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../Userdata/Quat.html">Quat</a></td>
+<td>The camera's world rotation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getup">getUp</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">getUp</span><span class="p">(</span><span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Returns the up-vector perpendicular to the camera's aim.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The up-vector of the camera's aim.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setcamerapullback">setCameraPullback</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">setCameraPullback</span><span class="p">(</span><span class="w"> </span><span class="nv">step</span><span class="p">,</span><span class="w"> </span><span class="nv">seatedStep</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the camera's zoom step.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>step</code></td>
+<td>integer</td>
+<td>How far away the camera is from the player while standing</td>
+</tr>
+<tr>
+<td><code>seatedStep</code></td>
+<td>integer</td>
+<td>How far away the camera is from the player while seated</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setcamerastate">setCameraState</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">setCameraState</span><span class="p">(</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the camera's control state.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td>integer</td>
+<td>How the camera is moved. (See <a href="#state">sm.camera.state</a>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setdirection">setDirection</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">setDirection</span><span class="p">(</span><span class="w"> </span><span class="nv">direction</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the direction the camera is aiming.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>direction</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The direction of the camera's aim.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setfov">setFov</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">setFov</span><span class="p">(</span><span class="w"> </span><span class="nv">FOV</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the camera's field of view angle.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FOV</code></td>
+<td>number</td>
+<td>The field of view.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setposition">setPosition</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">setPosition</span><span class="p">(</span><span class="w"> </span><span class="nv">position</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the world position of the camera.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>position</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The camera's world position.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setrotation">setRotation</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">setRotation</span><span class="p">(</span><span class="w"> </span><span class="nv">rotation</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the rotation of the camera.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rotation</code></td>
+<td><a href="../Userdata/Quat.html">Quat</a></td>
+<td>The rotation of the camera.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setseatlockedcamerapullback">setSeatLockedCameraPullback</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">setSeatLockedCameraPullback</span><span class="p">(</span><span class="w"> </span><span class="nv">pullback</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the camera pullback distance for the seatLockedCamera camera state.</p>
+<p>When greater than zero the camera is pulled back from the seat origin along the camera direction.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pullback</code></td>
+<td>number</td>
+<td>The pullback distance.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setseatlockedcameraupoffset">setSeatLockedCameraUpOffset</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">setSeatLockedCameraUpOffset</span><span class="p">(</span><span class="w"> </span><span class="nv">upOffset</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the camera up offset for the seatLockedCamera camera state.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>upOffset</code></td>
+<td>number</td>
+<td>The up offset in local space.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setseatlockedlocaldirection">setSeatLockedLocalDirection</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">setSeatLockedLocalDirection</span><span class="p">(</span><span class="w"> </span><span class="nv">localDirection</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the local direction for the camera when using the seatLockedCamera camera state.</p>
+<p>The direction is in the seat's local space and will be transformed by the interpolated seat rotation.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>localDirection</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The local direction to face.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setseatlockedlocalup">setSeatLockedLocalUp</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">setSeatLockedLocalUp</span><span class="p">(</span><span class="w"> </span><span class="nv">localUp</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the local up vector for the camera when using the seatLockedCamera camera state.</p>
+<p>The up vector is in the seat's local space.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>localUp</code></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The local up direction.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setshake">setShake</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">setShake</span><span class="p">(</span><span class="w"> </span><span class="nv">strength</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the camera's level of camera shake.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>strength</code></td>
+<td>number</td>
+<td>The camera shake strength.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setunseatdirection">setUnseatDirection</h3>
+<div class="api-signature codehilite"><pre><span></span><code><span class="nv">sm</span><span class="p">.</span><span class="py">camera</span><span class="p">.</span><span class="nf">setUnseatDirection</span><span class="p">(</span><span class="w"> </span><span class="nv">worldDirection</span><span class="p optional-marker" aria-hidden="true"></span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sets the world-space direction for the local player character to face when the player unseats. Cleared automatically when used or when entering a seat.</p>
+<p>Passing nil clears any previously set unseat direction.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>worldDirection</code> <em>(optional)</em></td>
+<td><a href="../Userdata/Vec3.html">Vec3</a></td>
+<td>The world-space direction to face on unseat. (optional)</td>
+</tr>
+</tbody>
+</table>
+      </main>
+      <aside class="table-of-contents"><ul><li class="toc-level-2"><a href="#client-only">Client-only</a></li><li class="toc-level-3"><a href="#cameraspherecast">cameraSphereCast</a></li><li class="toc-level-3"><a href="#getcamerapullback">getCameraPullback</a></li><li class="toc-level-3"><a href="#getcamerastate">getCameraState</a></li><li class="toc-level-3"><a href="#getdefaultfov">getDefaultFov</a></li><li class="toc-level-3"><a href="#getdefaultposition">getDefaultPosition</a></li><li class="toc-level-3"><a href="#getdefaultrotation">getDefaultRotation</a></li><li class="toc-level-3"><a href="#getdirection">getDirection</a></li><li class="toc-level-3"><a href="#getfov">getFov</a></li><li class="toc-level-3"><a href="#getposition">getPosition</a></li><li class="toc-level-3"><a href="#getright">getRight</a></li><li class="toc-level-3"><a href="#getrotation">getRotation</a></li><li class="toc-level-3"><a href="#getup">getUp</a></li><li class="toc-level-3"><a href="#setcamerapullback">setCameraPullback</a></li><li class="toc-level-3"><a href="#setcamerastate">setCameraState</a></li><li class="toc-level-3"><a href="#setdirection">setDirection</a></li><li class="toc-level-3"><a href="#setfov">setFov</a></li><li class="toc-level-3"><a href="#setposition">setPosition</a></li><li class="toc-level-3"><a href="#setrotation">setRotation</a></li><li class="toc-level-3"><a href="#setseatlockedcamerapullback">setSeatLockedCameraPullback</a></li><li class="toc-level-3"><a href="#setseatlockedcameraupoffset">setSeatLockedCameraUpOffset</a></li><li class="toc-level-3"><a href="#setseatlockedlocaldirection">setSeatLockedLocalDirection</a></li><li class="toc-level-3"><a href="#setseatlockedlocalup">setSeatLockedLocalUp</a></li><li class="toc-level-3"><a href="#setshake">setShake</a></li><li class="toc-level-3"><a href="#setunseatdirection">setUnseatDirection</a></li></ul></aside>
+    </div>
+  </div>
+  <script>const themeButton = document.getElementById('theme-button');
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+const updateThemeButton = () => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  const nextTheme = dark ? 'light' : 'dark';
+  themeButton.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
+  themeButton.title = `Switch to ${nextTheme} mode`;
+};
+const applyTheme = (theme) => {
+  document.documentElement.dataset.theme = theme;
+  updateThemeButton();
+};
+const savedTheme = () => {
+  try {
+    const theme = localStorage.getItem('sm-docs-theme');
+    return theme === 'light' || theme === 'dark' ? theme : null;
+  } catch (_) {
+    return null;
+  }
+};
+updateThemeButton();
+themeButton.addEventListener('click', () => {
+  const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(theme);
+  try {
+    localStorage.setItem('sm-docs-theme', theme);
+  } catch (_) {}
+});
+if ('addEventListener' in systemTheme) {
+  systemTheme.addEventListener('change', (event) => {
+    if (!savedTheme()) applyTheme(event.matches ? 'dark' : 'light');
+  });
+}
+
+const menu = document.getElementById('menu-button');
+const sidebar = document.getElementById('sidebar');
+menu.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+const statePrefix = 'sm-docs-sidebar:';
+const groups = sidebar.querySelectorAll('details[data-sidebar-key]');
+groups.forEach((group) => {
+  const key = statePrefix + group.dataset.sidebarKey;
+  try {
+    const saved = sessionStorage.getItem(key);
+    if (saved !== null) {
+      group.open = saved === 'open';
+    } else {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    }
+  } catch (_) {}
+  group.addEventListener('toggle', () => {
+    try {
+      sessionStorage.setItem(key, group.open ? 'open' : 'closed');
+    } catch (_) {}
+  });
+});
+const activeLink = sidebar.querySelector('a.active');
+if (activeLink) {
+  let parent = activeLink.parentElement;
+  while (parent) {
+    if (parent.tagName === 'DETAILS') parent.open = true;
+    parent = parent.parentElement;
+  }
+  const sidebarRect = sidebar.getBoundingClientRect();
+  const activeRect = activeLink.getBoundingClientRect();
+  sidebar.scrollTop += activeRect.top - sidebarRect.top - sidebarRect.height / 2;
+}
+const search = document.getElementById('doc-search');
+search.addEventListener('input', () => {
+  const query = search.value.trim().toLowerCase();
+  document.querySelectorAll('.sidebar-page').forEach((item) => {
+    const matches = !query || item.textContent.toLowerCase().includes(query);
+    item.hidden = !matches;
+    if (query && matches) {
+      let parent = item.parentElement;
+      while (parent) {
+        if (parent.tagName === 'DETAILS') parent.open = true;
+        parent = parent.parentElement;
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>
