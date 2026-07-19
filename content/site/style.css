@@ -203,7 +203,7 @@ a:hover { text-decoration: underline; }
 .doc h3 { font-size: 1.35rem; margin-top: 2.2rem; }
 .doc h4 { font-size: 1.05rem; margin-bottom: 0.5rem; }
 .breadcrumbs { color: var(--muted); font-size: 0.88rem; }
-.doc, .breadcrumbs, .sidebar a, .sidebar summary { overflow-wrap: anywhere; }
+.doc, .breadcrumbs, .sidebar a, .sidebar summary { overflow-wrap: break-word; }
 .breadcrumb-separator { margin: 0 0.5rem; }
 .table-of-contents {
   align-self: start;
@@ -285,5 +285,6 @@ blockquote p { margin: 0.4rem 0; }
   .brand span:last-child, .navbar-spacer { display: none; }
   .search { flex: 1 1 auto; }
   .content-layout { padding: 0 1rem; }
+  .doc { overflow-wrap: anywhere; }
   .doc h1 { font-size: 2rem; }
 }
