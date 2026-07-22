@@ -31,14 +31,14 @@
   </header>
   <div class="page-layout">
     <aside class="sidebar" id="sidebar"><nav>{sidebar}</nav></aside>
-    <div class="content-layout">
+    <div class="content-layout{toc_class}">
       <main class="doc">
         <div class="breadcrumbs">{breadcrumbs}</div>
         <article class="doc-content{article_class}"{pagefind_attributes}>
           {body}
         </article>
       </main>
-      <aside class="table-of-contents">{toc}</aside>
+      {toc}
     </div>
   </div>
   <script src="{minisearch_script}"></script>

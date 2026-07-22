@@ -2,14 +2,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from make_ir import (
-    Doc,
-    Documentation,
-    Environment,
-    Page,
-    _normalize_description,
-    parse_inline,
-)
+from make_ir import Doc, Documentation, Environment, Page, _normalize_description, parse_inline
+from render_html import HtmlRenderer
 from render_markdown import MarkdownRenderer
 
 
@@ -23,28 +17,11 @@ class OutputImprovementTests(unittest.TestCase):
             "The type of destruction. (See [sm.shape.destructionType]).",
         )
 
-    def test_writes_usage_in_sentence_case(self) -> None:
+    def test_writes_descriptive_indexes_and_sentence_case_usage(self) -> None:
         page = Page(
             name="sm.test",
             source="test.json",
             usage="server and client",
-        )
-        environment = Environment(name="Game", namespaces=[page])
-        docs = Documentation(version=1, environments=[environment])
-
-        with tempfile.TemporaryDirectory() as directory:
-            renderer = MarkdownRenderer(
-                docs, Path(directory) / "markdown", Path(directory) / "html"
-            )
-            renderer._write_page(environment, "namespace", page)
-            page_markdown = renderer.page_paths[id(page)].read_text()
-
-        self.assertIn("**Usage:** Server and client", page_markdown)
-
-    def test_writes_descriptive_indexes(self) -> None:
-        page = Page(
-            name="sm.test",
-            source="test.json",
             doc=Doc(
                 content=[
                     {
@@ -64,6 +41,7 @@ class OutputImprovementTests(unittest.TestCase):
             )
             renderer._write_environment_index(environment)
             renderer._write_category_index(environment, "namespace", [page])
+            renderer._write_page(environment, "namespace", page)
 
             environment_index = (
                 markdown_root / "Game-Script-Environment" / "index.md"
@@ -74,11 +52,35 @@ class OutputImprovementTests(unittest.TestCase):
                 / "Static-Functions"
                 / "index.md"
             ).read_text()
+            page_markdown = renderer.page_paths[id(page)].read_text()
 
         self.assertIn("Browse **1 API page**", environment_index)
         self.assertIn("| Section | Description | Pages |", environment_index)
         self.assertIn("| Page | Description |", category_index)
         self.assertIn("Test helper functions.", category_index)
+        self.assertIn("**Usage:** Server and client", page_markdown)
+
+    def test_omits_empty_table_of_contents_and_expands_layout(self) -> None:
+        docs = Documentation(version=1, environments=[])
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            markdown_root = root / "markdown"
+            markdown_root.mkdir()
+            (markdown_root / "plain.md").write_text("# Plain\n")
+            (markdown_root / "sections.md").write_text(
+                "# Sections\n\n## Details\n"
+            )
+
+            renderer = HtmlRenderer(docs, markdown_root, root / "html")
+            renderer._write_html_tree()
+            plain_html = (root / "html" / "plain.html").read_text()
+            sections_html = (root / "html" / "sections.html").read_text()
+
+        self.assertIn('class="content-layout without-toc"', plain_html)
+        self.assertNotIn('class="table-of-contents"', plain_html)
+        self.assertIn('class="content-layout"', sections_html)
+        self.assertIn('class="table-of-contents"', sections_html)
 
 
 if __name__ == "__main__":

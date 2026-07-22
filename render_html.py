@@ -372,6 +372,11 @@ class HtmlRenderer(RenderContext):
             body = self._render_optional_signature_markers(body)
             body = self._render_api_tables(body)
             body = re.sub(r'href="([^"]+)\.md(#[^"]*)?"', r'href="\1.html\2"', body)
+            toc = self._table_of_contents(body)
+            toc_html = (
+                f'<aside class="table-of-contents">{toc}</aside>' if toc else ""
+            )
+            toc_class = "" if toc else " without-toc"
             article_class = (
                 " index-page"
                 if relative.name == "index.md" and relative != Path("index.md")
@@ -393,7 +398,8 @@ class HtmlRenderer(RenderContext):
                     sidebar=self._sidebar(markdown_path, html_path),
                     breadcrumbs=self._breadcrumbs(markdown_path, html_path),
                     body=body,
-                    toc=self._table_of_contents(body),
+                    toc=toc_html,
+                    toc_class=toc_class,
                     article_class=article_class,
                     theme_script=THEME_SCRIPT,
                     pagefind_meta=pagefind_meta,
