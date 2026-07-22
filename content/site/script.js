@@ -34,7 +34,70 @@ if ('addEventListener' in systemTheme) {
 
 const menu = document.getElementById('menu-button');
 const sidebar = document.getElementById('sidebar');
-menu.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+const mobileNavigation = window.matchMedia('(max-width: 996px)');
+const mobileSearch = window.matchMedia('(max-width: 600px)');
+const mobileSearchButton = document.getElementById('mobile-search-button');
+const mobileSearchClose = document.getElementById('mobile-search-close');
+const searchInput = document.getElementById('site-search-input');
+
+const setSidebarOpen = (open) => {
+  const shouldOpen = Boolean(open && mobileNavigation.matches);
+  if (shouldOpen) setMobileSearchOpen(false);
+  document.body.classList.toggle('sidebar-open', shouldOpen);
+  menu.setAttribute('aria-expanded', String(shouldOpen));
+  menu.setAttribute('aria-label', shouldOpen ? 'Close navigation' : 'Open navigation');
+  if (mobileNavigation.matches && !shouldOpen) {
+    sidebar.setAttribute('inert', '');
+    sidebar.setAttribute('aria-hidden', 'true');
+  } else {
+    sidebar.removeAttribute('inert');
+    sidebar.removeAttribute('aria-hidden');
+  }
+};
+
+const setMobileSearchOpen = (open) => {
+  const shouldOpen = Boolean(open && mobileSearch.matches);
+  if (shouldOpen) setSidebarOpen(false);
+  document.body.classList.toggle('mobile-search-open', shouldOpen);
+  mobileSearchButton.setAttribute('aria-expanded', String(shouldOpen));
+  if (shouldOpen) {
+    requestAnimationFrame(() => searchInput.focus({ preventScroll: true }));
+  } else {
+    searchInput.blur();
+  }
+};
+
+menu.addEventListener('click', () => {
+  setSidebarOpen(!document.body.classList.contains('sidebar-open'));
+});
+mobileSearchButton.addEventListener('click', () => setMobileSearchOpen(true));
+mobileSearchClose.addEventListener('click', () => {
+  setMobileSearchOpen(false);
+  mobileSearchButton.focus();
+});
+setSidebarOpen(false);
+document.addEventListener('sm-docs:open-mobile-search', () => {
+  setMobileSearchOpen(true);
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key !== 'Escape') return;
+  if (document.body.classList.contains('mobile-search-open')) {
+    setMobileSearchOpen(false);
+    mobileSearchButton.focus();
+  } else if (document.body.classList.contains('sidebar-open')) {
+    setSidebarOpen(false);
+    menu.focus();
+  }
+});
+if ('addEventListener' in mobileNavigation) {
+  mobileNavigation.addEventListener('change', (event) => {
+    if (!event.matches) setSidebarOpen(false);
+  });
+  mobileSearch.addEventListener('change', (event) => {
+    if (!event.matches) setMobileSearchOpen(false);
+  });
+}
+
 const statePrefix = 'sm-docs-sidebar:';
 const groups = sidebar.querySelectorAll('details[data-sidebar-key]');
 groups.forEach((group) => {
@@ -65,6 +128,7 @@ sidebar.addEventListener('click', (event) => {
       top: linkRect.top - sidebarRect.top,
     }));
   } catch (_) {}
+  setSidebarOpen(false);
 });
 
 const activeLink = sidebar.querySelector('a.active');

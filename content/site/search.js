@@ -628,7 +628,8 @@
     const slash = event.key === '/' && !event.ctrlKey && !event.metaKey && !event.altKey;
     if (command || (slash && !editable)) {
       event.preventDefault();
-      input.focus();
+      document.dispatchEvent(new CustomEvent('sm-docs:open-mobile-search'));
+      input.focus({ preventScroll: true });
       input.select();
     }
   });
