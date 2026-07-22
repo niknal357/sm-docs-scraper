@@ -55,6 +55,7 @@ HTML_TEMPLATE = (SITE_ASSETS_PATH / "page.html").read_text(encoding="utf-8")
 THEME_SCRIPT = (SITE_ASSETS_PATH / "theme.js").read_text(encoding="utf-8")
 STYLE = (SITE_ASSETS_PATH / "style.css").read_text(encoding="utf-8")
 SITE_FILES = {
+    "logo.png": SITE_ASSETS_PATH / "logo.png",
     "site.js": SITE_ASSETS_PATH / "script.js",
     "link-preview.js": SITE_ASSETS_PATH / "link-preview.js",
     "search-core.js": SITE_ASSETS_PATH / "search-core.js",
@@ -92,7 +93,7 @@ class _HtmlLinks(HTMLParser):
         href = None
         if tag in {"a", "link"}:
             href = attributes.get("href")
-        elif tag == "script":
+        elif tag in {"img", "script"}:
             href = attributes.get("src")
 
         for attribute in (
@@ -475,6 +476,7 @@ class HtmlRenderer(RenderContext):
                 HTML_TEMPLATE.format(
                     title=escape(title or "Scrap Mechanic API"),
                     stylesheet=self._asset_href(assets / "style.css", html_path),
+                    logo=self._asset_href(assets / "logo.png", html_path),
                     home=home,
                     sidebar=self._sidebar(markdown_path, html_path),
                     breadcrumbs=self._breadcrumbs(markdown_path, html_path),

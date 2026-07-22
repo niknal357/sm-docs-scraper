@@ -263,9 +263,13 @@ class OutputImprovementTests(unittest.TestCase):
             renderer._write_html_tree()
             plain_html = (root / "html" / "plain.html").read_text()
             sections_html = (root / "html" / "sections.html").read_text()
+            logo_exists = (root / "html" / "assets" / "logo.png").is_file()
 
         self.assertIn('class="content-layout without-toc"', plain_html)
         self.assertNotIn('class="table-of-contents"', plain_html)
+        self.assertIn('src="assets/logo.png"', plain_html)
+        self.assertIn('rel="icon" type="image/png" href="assets/logo.png"', plain_html)
+        self.assertTrue(logo_exists)
         self.assertIn('class="content-layout"', sections_html)
         self.assertIn('class="table-of-contents"', sections_html)
 

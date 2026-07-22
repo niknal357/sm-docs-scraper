@@ -2,7 +2,6 @@
   color-scheme: light;
   --primary: #2e8555;
   --primary-dark: #277148;
-  --brand-background: #2e8555;
   --background: #ffffff;
   --surface: #ffffff;
   --surface-muted: #f5f6f7;
@@ -24,7 +23,6 @@
   color-scheme: dark;
   --primary: #55c98d;
   --primary-dark: #72dda4;
-  --brand-background: #277148;
   --background: #181a1f;
   --surface: #202329;
   --surface-muted: #2a2e35;
@@ -75,13 +73,9 @@ a:hover { text-decoration: underline; }
 }
 .brand:hover { text-decoration: none; }
 .brand-mark {
-  align-items: center;
-  background: var(--brand-background);
-  color: #ffffff;
-  display: inline-flex;
-  font-size: 0.72rem;
+  display: block;
   height: 32px;
-  justify-content: center;
+  object-fit: contain;
   width: 32px;
 }
 .navbar-spacer { flex: 1; }
