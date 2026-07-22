@@ -4,6 +4,7 @@ from dataclasses import asdict, dataclass, field, is_dataclass
 import json
 from pathlib import Path
 import re
+import textwrap
 from typing import Any
 
 
@@ -151,6 +152,8 @@ def parse_blocks(lines: list[str]) -> list[dict[str, Any]]:
 
         contents = lines[index + 1 : end]
         if block_type == "code":
+            if contents:
+                contents = textwrap.dedent("\n".join(contents)).split("\n")
             block = {"type": "code", "language": "lua", "lines": contents}
         elif block_type == "list":
             block = {"type": "list", "items": [parse_inline(item) for item in contents]}
