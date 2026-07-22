@@ -38,6 +38,41 @@ def _counted_label(count: int, singular: str, plural: str | None = None) -> str:
     return f"{count} {singular if count == 1 else plural or singular + 's'}"
 
 
+def _escape_table_braces(value: str) -> str:
+    output: list[str] = []
+    code_delimiter = 0
+    index = 0
+
+    while index < len(value):
+        character = value[index]
+        if character == "`":
+            end = index
+            while end < len(value) and value[end] == "`":
+                end += 1
+            delimiter = end - index
+            if code_delimiter == 0:
+                code_delimiter = delimiter
+            elif code_delimiter == delimiter:
+                code_delimiter = 0
+            output.append(value[index:end])
+            index = end
+            continue
+
+        if code_delimiter == 0 and character in "{}":
+            backslashes = 0
+            before = index - 1
+            while before >= 0 and value[before] == "\\":
+                backslashes += 1
+                before -= 1
+            if backslashes % 2 == 0:
+                output.append("\\")
+
+        output.append(character)
+        index += 1
+
+    return "".join(output)
+
+
 class MarkdownRenderer(RenderContext):
     def _inline(
         self,
@@ -174,7 +209,9 @@ class MarkdownRenderer(RenderContext):
         ]
         for row in rows:
             cells = [
-                self._inline(environment, current_path, cell).replace("|", "\\|")
+                _escape_table_braces(
+                    self._inline(environment, current_path, cell)
+                ).replace("|", "\\|")
                 for cell in row
             ]
             cells.extend([""] * (width - len(cells)))
@@ -332,7 +369,7 @@ class MarkdownRenderer(RenderContext):
         ]
         for row in rows:
             cells = [
-                (cell or "&mdash;").replace("|", "\\|")
+                _escape_table_braces(cell or "&mdash;").replace("|", "\\|")
                 for cell in row
             ]
             output.append("| " + " | ".join(cells) + " |")

@@ -2,7 +2,17 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from make_ir import Doc, Documentation, Environment, Page, _normalize_description, parse_inline
+from make_ir import (
+    Doc,
+    Documentation,
+    Entry,
+    Environment,
+    Page,
+    Parameter,
+    ReturnValue,
+    _normalize_description,
+    parse_inline,
+)
 from render_html import HtmlRenderer
 from render_markdown import MarkdownRenderer
 
@@ -59,6 +69,60 @@ class OutputImprovementTests(unittest.TestCase):
         self.assertIn("| Page | Description |", category_index)
         self.assertIn("Test helper functions.", category_index)
         self.assertIn("**Usage:** Server and client", page_markdown)
+
+    def test_preserves_braced_schemas_in_html_tables(self) -> None:
+        page = Page(
+            name="sm.test",
+            source="test.json",
+            functions=[
+                Entry(
+                    name="inspect",
+                    doc=Doc(
+                        parameters=[
+                            Parameter(
+                                name="schema",
+                                type=["table"],
+                                description=parse_inline(
+                                    "Grid data {type=string, count=integer}"
+                                ),
+                            )
+                        ],
+                        returns=[
+                            ReturnValue(
+                                type=["table"],
+                                description=parse_inline(
+                                    "The table of { min, max }"
+                                ),
+                            )
+                        ],
+                    ),
+                )
+            ],
+        )
+        environment = Environment(name="Game", namespaces=[page])
+        docs = Documentation(version=1, environments=[environment])
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            markdown_root = root / "markdown"
+            html_root = root / "html"
+            markdown_renderer = MarkdownRenderer(docs, markdown_root, html_root)
+            markdown_renderer._write_page(environment, "namespace", page)
+            HtmlRenderer(docs, markdown_root, html_root)._write_html_tree()
+
+            markdown_path = markdown_renderer.page_paths[id(page)]
+            markdown_output = markdown_path.read_text()
+            html_path = html_root / markdown_path.relative_to(
+                markdown_root
+            ).with_suffix(".html")
+            html_output = html_path.read_text()
+
+        self.assertIn(r"Grid data \{type=string, count=integer\}", markdown_output)
+        self.assertIn(r"The table of \{ min, max \}", markdown_output)
+        self.assertIn("Grid data {type=string, count=integer}", html_output)
+        self.assertIn("The table of { min, max }", html_output)
+        self.assertNotIn('<td count="integer"', html_output)
+        self.assertNotIn('<td max="max"', html_output)
 
     def test_omits_empty_table_of_contents_and_expands_layout(self) -> None:
         docs = Documentation(version=1, environments=[])
