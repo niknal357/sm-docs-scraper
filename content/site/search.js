@@ -224,19 +224,12 @@
     }
     row.append(link);
 
-    if (!options.compact && record.signature && navigator.clipboard) {
-      const copy = document.createElement('button');
-      copy.className = 'search-copy';
-      copy.type = 'button';
-      copy.textContent = 'Copy signature';
-      copy.setAttribute('aria-label', `Copy signature for ${record.qualifiedName}`);
-      copy.addEventListener('click', async () => {
-        await navigator.clipboard.writeText(record.signature);
-        if (searchPageStatus) {
-          searchPageStatus.textContent = `Copied the signature for ${record.qualifiedName}.`;
-        }
-      });
-      row.append(copy);
+    if (!options.compact && record.signature && window.SmDocsCopy) {
+      row.append(window.SmDocsCopy.createButton(
+        record.signature,
+        `Copy signature for ${record.qualifiedName}`,
+        'search-copy',
+      ));
     }
     return row;
   };

@@ -156,3 +156,84 @@ if (activeLink) {
   }
   if (!restoredPosition) activeLink.scrollIntoView({ block: 'nearest' });
 }
+
+const copyStatus = document.getElementById('copy-status');
+const createSvgElement = (name, attributes = {}) => {
+  const element = document.createElementNS('http://www.w3.org/2000/svg', name);
+  Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+  return element;
+};
+const setCopyIcon = (button, copied) => {
+  const svg = createSvgElement('svg', {
+    'aria-hidden': 'true',
+    viewBox: '0 0 24 24',
+  });
+  if (copied) {
+    svg.append(createSvgElement('path', { d: 'm4 12 5 5L20 6' }));
+  } else {
+    svg.append(
+      createSvgElement('rect', { x: '9', y: '9', width: '11', height: '11' }),
+      createSvgElement('path', { d: 'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1' }),
+    );
+  }
+  button.replaceChildren(svg);
+};
+const writeClipboard = async (text) => {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return;
+    } catch (_) {}
+  }
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.append(textarea);
+  textarea.select();
+  const copied = document.execCommand('copy');
+  textarea.remove();
+  if (!copied) throw new Error('Clipboard access failed');
+};
+const createCopyButton = (text, label, className = '') => {
+  const button = document.createElement('button');
+  button.className = `copy-button${className ? ` ${className}` : ''}`;
+  button.type = 'button';
+  button.setAttribute('aria-label', label);
+  button.title = label;
+  setCopyIcon(button, false);
+
+  let resetTimer;
+  button.addEventListener('click', async () => {
+    try {
+      await writeClipboard(text);
+      clearTimeout(resetTimer);
+      setCopyIcon(button, true);
+      const copiedLabel = label.replace(/^Copy/, 'Copied');
+      button.setAttribute('aria-label', copiedLabel);
+      copyStatus.textContent = `${copiedLabel}.`;
+      resetTimer = setTimeout(() => {
+        setCopyIcon(button, false);
+        button.setAttribute('aria-label', label);
+        copyStatus.textContent = '';
+      }, 1500);
+    } catch (error) {
+      console.error(error);
+      copyStatus.textContent = 'Could not copy to the clipboard.';
+    }
+  });
+  return button;
+};
+window.SmDocsCopy = { createButton: createCopyButton };
+
+document.querySelectorAll('.api-signature').forEach((signature) => {
+  const code = signature.querySelector('code');
+  if (!code) return;
+  const copy = code.cloneNode(true);
+  copy.querySelectorAll('.optional-marker').forEach((marker) => {
+    marker.textContent = '?';
+  });
+  const text = copy.textContent.trim();
+  if (!text) return;
+  signature.append(createCopyButton(text, 'Copy signature', 'signature-copy'));
+});
