@@ -313,6 +313,52 @@ blockquote {
   padding: 0.55rem 1rem;
 }
 blockquote p { margin: 0.4rem 0; }
+.link-preview {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 35px rgb(0 0 0 / 22%);
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  max-height: calc(100vh - 24px);
+  overflow: hidden;
+  padding: 0.85rem 0.95rem;
+  position: fixed;
+  width: min(380px, calc(100vw - 24px));
+  z-index: 40;
+}
+.link-preview[hidden] { display: none; }
+.link-preview-title {
+  color: var(--primary-dark);
+  display: block;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+.link-preview-hierarchy {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin-top: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.link-preview-signature {
+  display: block;
+  margin-top: 0.65rem;
+  max-height: 7.5em;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  padding: 0.45rem 0.55rem;
+  white-space: pre-wrap;
+}
+.link-preview-summary {
+  color: var(--muted);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  margin: 0.65rem 0 0;
+  overflow: hidden;
+}
 .visually-hidden {
   clip: rect(0 0 0 0);
   clip-path: inset(50%);

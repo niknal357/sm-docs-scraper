@@ -15,6 +15,7 @@ from symbol_catalog import Symbol, SymbolCatalog
 
 
 SYMBOL_INDEX_NAME = "search-symbols.json"
+LINK_PREVIEW_INDEX_NAME = "link-previews.json"
 PAGEFIND_DIRECTORY = "pagefind"
 PAGE_KIND_LABELS = {
     "namespace": "Static Functions",
@@ -81,6 +82,26 @@ def write_symbol_index(catalog: SymbolCatalog, html_root: Path) -> Path:
     return output_path
 
 
+def write_link_preview_index(catalog: SymbolCatalog, html_root: Path) -> Path:
+    output_path = html_root / "assets" / LINK_PREVIEW_INDEX_NAME
+    records = [
+        {
+            "url": symbol.url,
+            "title": symbol.qualified_name,
+            "hierarchy": _hierarchy(symbol),
+            "signature": "\n".join(symbol.signatures),
+            "summary": _plain_text(symbol.summary),
+        }
+        for symbol in catalog.symbols
+    ]
+    payload = {"version": 1, "records": records}
+    output_path.write_text(
+        json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    return output_path
+
+
 def validate_symbol_urls(catalog: SymbolCatalog, html_root: Path) -> None:
     ids_by_path: dict[Path, set[str]] = {}
     record_ids: set[str] = set()
@@ -136,6 +157,7 @@ def build_search_indexes(
 ) -> tuple[Path, Path]:
     html_root = Path(html_root)
     symbol_path = write_symbol_index(catalog, html_root)
+    write_link_preview_index(catalog, html_root)
     validate_symbol_urls(catalog, html_root)
     pagefind_path = asyncio.run(_write_pagefind_index(html_root))
     return symbol_path, pagefind_path

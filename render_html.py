@@ -17,7 +17,11 @@ from render_context import (
     CATEGORY_TITLES,
     RenderContext,
 )
-from search_index import PAGEFIND_DIRECTORY, SYMBOL_INDEX_NAME
+from search_index import (
+    LINK_PREVIEW_INDEX_NAME,
+    PAGEFIND_DIRECTORY,
+    SYMBOL_INDEX_NAME,
+)
 
 
 TOC_EXCLUDED_SECTIONS = {"constants", "fields", "members", "operations"}
@@ -52,6 +56,7 @@ THEME_SCRIPT = (SITE_ASSETS_PATH / "theme.js").read_text(encoding="utf-8")
 STYLE = (SITE_ASSETS_PATH / "style.css").read_text(encoding="utf-8")
 SITE_FILES = {
     "site.js": SITE_ASSETS_PATH / "script.js",
+    "link-preview.js": SITE_ASSETS_PATH / "link-preview.js",
     "search-core.js": SITE_ASSETS_PATH / "search-core.js",
     "search.js": SITE_ASSETS_PATH / "search.js",
     "minisearch.js": SITE_ASSETS_PATH / "vendor" / "minisearch.js",
@@ -90,7 +95,11 @@ class _HtmlLinks(HTMLParser):
         elif tag == "script":
             href = attributes.get("src")
 
-        for attribute in ("data-symbol-index", "data-pagefind-module"):
+        for attribute in (
+            "data-symbol-index",
+            "data-pagefind-module",
+            "data-link-preview-index",
+        ):
             resource = attributes.get(attribute)
             if resource:
                 self.hrefs.append(resource)
@@ -408,6 +417,9 @@ class HtmlRenderer(RenderContext):
                     symbol_index=self._asset_href(
                         assets / SYMBOL_INDEX_NAME, html_path
                     ),
+                    link_preview_index=self._asset_href(
+                        assets / LINK_PREVIEW_INDEX_NAME, html_path
+                    ),
                     pagefind_module=self._asset_href(
                         assets / PAGEFIND_DIRECTORY / "pagefind.js", html_path
                     ),
@@ -418,6 +430,9 @@ class HtmlRenderer(RenderContext):
                         assets / "search-core.js", html_path
                     ),
                     site_script=self._asset_href(assets / "site.js", html_path),
+                    link_preview_script=self._asset_href(
+                        assets / "link-preview.js", html_path
+                    ),
                     search_script=self._asset_href(assets / "search.js", html_path),
                 ),
                 encoding="utf-8",
