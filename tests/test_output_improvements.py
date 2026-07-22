@@ -225,6 +225,28 @@ class OutputImprovementTests(unittest.TestCase):
         self.assertNotIn("**Result:** The fraction", output)
         self.assertNotIn("**Returns:** [ **table** ]", output)
 
+    def test_adds_api_page_presentation_hooks(self) -> None:
+        body = """<h1 id="sample">Sample</h1>
+<p><strong>Associated namespace:</strong> <a href="sm.sample.md">sm.sample</a></p>
+<p><strong>Usage:</strong> Server and client</p>
+<p><strong>Serializable:</strong> Yes</p>
+<p>Sample description.</p>
+<p><strong>Values:</strong></p>
+<ul><li><code>value</code><ul><li><code>Get</code>: A value.</li></ul></li></ul>
+<h2 id="methods">Methods</h2>
+<h3 id="inspect">inspect</h3>
+<div class="api-signature codehilite"><pre><code>sample:inspect()</code></pre></div>"""
+
+        body = HtmlRenderer._render_api_metadata(body)
+        body = HtmlRenderer._render_member_values(body)
+
+        self.assertIn('<dl class="api-metadata">', body)
+        self.assertLess(body.index("Availability"), body.index("Serializable"))
+        self.assertLess(body.index("Serializable"), body.index("Associated namespace"))
+        self.assertIn("<dd>Server + Client</dd>", body)
+        self.assertIn('class="api-members-heading"', body)
+        self.assertIn('href="#inspect"', HtmlRenderer._table_of_contents(body))
+
     def test_omits_empty_table_of_contents_and_expands_layout(self) -> None:
         docs = Documentation(version=1, environments=[])
 

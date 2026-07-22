@@ -217,7 +217,9 @@ class HtmlRenderer(RenderContext):
         items = []
         include_children = True
         for level, anchor, label in re.findall(
-            r'<h([23]) id="([^"]+)">(.*?)</h\1>', body, flags=re.DOTALL
+            r'<h([23])\s+[^>]*id="([^"]+)"[^>]*>(.*?)</h\1>',
+            body,
+            flags=re.DOTALL,
         ):
             if level == "2":
                 include_children = anchor not in TOC_EXCLUDED_SECTIONS
@@ -250,6 +252,74 @@ class HtmlRenderer(RenderContext):
             replace_marker,
             body,
             flags=re.DOTALL,
+        )
+
+    @staticmethod
+    def _render_api_metadata(body: str) -> str:
+        labels = {
+            "Associated type": "Associated type",
+            "Associated namespace": "Associated namespace",
+            "Usage": "Availability",
+            "Serializable": "Serializable",
+        }
+        priorities = {
+            "Usage": 0,
+            "Serializable": 1,
+            "Associated type": 2,
+            "Associated namespace": 2,
+        }
+        pattern = re.compile(
+            r"<p><strong>(Associated type|Associated namespace|Usage|Serializable):"
+            r"</strong>\s*(.*?)</p>",
+            flags=re.DOTALL,
+        )
+        heading_end = body.find("</h1>")
+        if heading_end < 0:
+            return body
+        section_start = body.find("<h2", heading_end)
+        if section_start < 0:
+            section_start = len(body)
+        region = body[heading_end:section_start]
+        matches = list(pattern.finditer(region))
+        if not matches:
+            return body
+
+        output = []
+        cursor = 0
+        index = 0
+        while index < len(matches):
+            group = [matches[index]]
+            while index + 1 < len(matches):
+                between = region[group[-1].end() : matches[index + 1].start()]
+                if between.strip():
+                    break
+                index += 1
+                group.append(matches[index])
+
+            output.append(region[cursor : group[0].start()])
+            items = []
+            for match in sorted(group, key=lambda item: priorities[item.group(1)]):
+                source_label, value = match.groups()
+                if source_label == "Usage" and value.strip().casefold() == "server and client":
+                    value = "Server + Client"
+                css_label = source_label.casefold().replace(" ", "-")
+                items.append(
+                    f'<div class="api-metadata-item api-metadata-{css_label}">'
+                    f"<dt>{labels[source_label]}</dt><dd>{value}</dd></div>"
+                )
+            output.append('<dl class="api-metadata">' + "".join(items) + "</dl>")
+            cursor = group[-1].end()
+            index += 1
+
+        output.append(region[cursor:])
+        return body[:heading_end] + "".join(output) + body[section_start:]
+
+    @staticmethod
+    def _render_member_values(body: str) -> str:
+        return body.replace(
+            "<p><strong>Values:</strong></p>",
+            '<p class="api-members-heading"><strong>Values:</strong></p>',
+            1,
         )
 
     @staticmethod
@@ -380,6 +450,8 @@ class HtmlRenderer(RenderContext):
             )
             body = self._render_optional_signature_markers(body)
             body = self._render_api_tables(body)
+            body = self._render_api_metadata(body)
+            body = self._render_member_values(body)
             body = re.sub(r'href="([^"]+)\.md(#[^"]*)?"', r'href="\1.html\2"', body)
             toc = self._table_of_contents(body)
             toc_html = (
