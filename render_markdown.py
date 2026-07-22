@@ -26,15 +26,40 @@ LUA_LITERAL = re.compile(
 
 class MarkdownRenderer(RenderContext):
     def _inline(
-        self, environment: Environment, current_path: Path, content: Inline
+        self,
+        environment: Environment,
+        current_path: Path,
+        content: Inline,
+        *,
+        type_context: bool = False,
     ) -> str:
+        source_parts = [
+            part if isinstance(part, str) else part.get("label", part["reference"])
+            for part in content
+        ]
         rendered = []
-        for part in content:
+        for index, part in enumerate(content):
             if isinstance(part, str):
                 rendered.append(LEGACY_EMPTY_LINK.sub(r"\1", part))
                 continue
-            target = part["reference"]
-            label = part.get("label", target)
+            source_target = part["reference"]
+            explicit_label = "label" in part
+            label = part.get("label", source_target)
+            target = self._resolve_reference_target(
+                environment,
+                source_target,
+                label,
+                "".join(source_parts[:index]),
+                "".join(source_parts[index + 1 :]),
+                explicit_label=explicit_label,
+                type_context=type_context,
+            )
+            if target != source_target:
+                label = self._associated_type_link_label(
+                    target,
+                    label,
+                    explicit_label=explicit_label,
+                )
             rendered.append(self._link(environment, current_path, target, label))
         return "".join(rendered)
 
@@ -186,7 +211,12 @@ class MarkdownRenderer(RenderContext):
                 rows.append(
                     [
                         f"`{item.name}`",
-                        self._inline(environment, current_path, item.type),
+                        self._inline(
+                            environment,
+                            current_path,
+                            item.type,
+                            type_context=True,
+                        ),
                         self._inline(environment, current_path, item.description),
                     ]
                 )
@@ -213,7 +243,12 @@ class MarkdownRenderer(RenderContext):
                 rows.append(
                     [
                         name,
-                        self._inline(environment, current_path, parameter.type),
+                        self._inline(
+                            environment,
+                            current_path,
+                            parameter.type,
+                            type_context=True,
+                        ),
                         self._inline(environment, current_path, parameter.description),
                     ]
                 )
@@ -225,7 +260,12 @@ class MarkdownRenderer(RenderContext):
             rows = []
             for item in doc.returns:
                 type_names = [
-                    self._inline(environment, current_path, type_name)
+                    self._inline(
+                        environment,
+                        current_path,
+                        type_name,
+                        type_context=True,
+                    )
                     for type_name in self.symbol_catalog.split_inline(item.type)
                 ]
                 description = self._inline(
@@ -310,7 +350,12 @@ class MarkdownRenderer(RenderContext):
                 rows.append(
                     [
                         f"{anchor}`{expression}`",
-                        self._inline(environment, current_path, result),
+                        self._inline(
+                            environment,
+                            current_path,
+                            result,
+                            type_context=True,
+                        ),
                         self._inline(environment, current_path, operation.description),
                     ]
                 )
@@ -527,7 +572,12 @@ class MarkdownRenderer(RenderContext):
         if entry.doc is None or not entry.doc.returns:
             return "&mdash;"
         return "<br>".join(
-            self._inline(environment, current_path, type_name)
+            self._inline(
+                environment,
+                current_path,
+                type_name,
+                type_context=True,
+            )
             for value in entry.doc.returns
             for type_name in self.symbol_catalog.split_inline(value.type)
         )
@@ -842,6 +892,7 @@ class MarkdownRenderer(RenderContext):
                 environment,
                 current_path,
                 self.symbol_catalog.member_type(page, member),
+                type_context=True,
             )
             output.append(
                 f'- <a id="{self.symbol_catalog.slug(member.name)}"></a>'
