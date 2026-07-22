@@ -411,21 +411,6 @@ blockquote p { margin: 0.4rem 0; }
 }
 .search-result-primary { display: block; }
 .search-result.compact .search-result-signature { margin-top: 0; }
-.search-result-metadata {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  margin-top: 0.25rem;
-}
-.search-badge {
-  background: var(--surface-muted);
-  border: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 0.68rem;
-  line-height: 1.4;
-  padding: 0.06rem 0.3rem;
-}
-.search-badge.environment { color: var(--primary-dark); }
 .search-result-signature {
   display: block;
   margin-top: 0.3rem;
@@ -439,8 +424,12 @@ blockquote p { margin: 0.4rem 0; }
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.search-result-details { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.45rem; }
 .search-result-hierarchy { color: var(--muted); font-size: 0.78rem; margin-top: 0.25rem; }
+.search-result.compact .search-result-hierarchy {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .search-copy { flex-shrink: 0; font-size: 0.75rem; margin: 0.65rem 0.5rem 0 0; }
 .search-empty { color: var(--muted); margin: 0; padding: 1rem 0.5rem; }
 .search-suggestions { align-items: center; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.8rem 0.25rem; }

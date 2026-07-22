@@ -23,6 +23,7 @@
     'environment',
     'kind',
     'pageKind',
+    'hierarchy',
     'availability',
     'url',
   ];

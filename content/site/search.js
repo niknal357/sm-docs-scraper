@@ -90,26 +90,13 @@
     } catch (_) {}
   };
 
-  const badge = (text, className = '') => {
-    const element = document.createElement('span');
-    element.className = `search-badge ${className}`.trim();
-    element.textContent = text;
-    return element;
+  const appendHierarchy = (element, value) => {
+    if (!value) return;
+    const hierarchy = document.createElement('div');
+    hierarchy.className = 'search-result-hierarchy';
+    hierarchy.textContent = value;
+    element.append(hierarchy);
   };
-
-  const kindLabel = (kind) => ({
-    callback: 'Callback',
-    constant: 'Constant',
-    function: 'Function',
-    member: 'Member',
-    operation: 'Operation',
-    page: 'Page',
-  }[kind] || kind);
-
-  const availabilityLabel = (value) => value
-    .replace('server and client', 'Server + Client')
-    .replace(/\bserver\b/g, 'Server')
-    .replace(/\bclient\b/g, 'Client');
 
   const appendHighlighted = (element, text, query) => {
     if (!text) return;
@@ -212,21 +199,15 @@
       );
       link.append(primary);
 
-      const metadata = document.createElement('div');
-      metadata.className = 'search-result-metadata';
-      if (record.kind !== 'function') metadata.append(badge(kindLabel(record.kind)));
-      if (record.overloadCount > 1) metadata.append(badge(`${record.overloadCount} overloads`));
-      metadata.append(badge(record.environment, 'environment'));
-      link.append(metadata);
+      appendHierarchy(link, record.hierarchy);
     } else {
       const heading = document.createElement('div');
       heading.className = 'search-result-heading';
       const name = document.createElement('strong');
       appendHighlighted(name, record.qualifiedName, query);
-      heading.append(name, badge(kindLabel(record.kind)));
-      if (record.overloadCount > 1) heading.append(badge(`${record.overloadCount} overloads`));
-      heading.append(badge(record.environment, 'environment'));
+      heading.append(name);
       link.append(heading);
+      appendHierarchy(link, record.hierarchy);
 
       if (record.signature) {
         const signature = document.createElement('code');
@@ -240,12 +221,6 @@
         link.append(summary);
       }
 
-      const details = document.createElement('div');
-      details.className = 'search-result-details';
-      if (record.availability) details.append(badge(availabilityLabel(record.availability)));
-      if (record.parameterTypes) details.append(badge(`Parameters: ${record.parameterTypes}`));
-      if (record.returnTypes) details.append(badge(`Returns: ${record.returnTypes}`));
-      if (details.childElementCount) link.append(details);
     }
     row.append(link);
 
@@ -277,11 +252,8 @@
     heading.append(title);
     link.append(heading);
 
-    if (!options.compact && record.hierarchy && record.hierarchy !== record.title) {
-      const hierarchy = document.createElement('div');
-      hierarchy.className = 'search-result-hierarchy';
-      hierarchy.textContent = record.hierarchy;
-      link.append(hierarchy);
+    if (record.hierarchy && record.hierarchy !== record.title) {
+      appendHierarchy(link, record.hierarchy);
     }
     if (record.excerpt) {
       const excerpt = document.createElement('p');

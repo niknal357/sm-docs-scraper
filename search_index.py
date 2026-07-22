@@ -16,6 +16,11 @@ from symbol_catalog import Symbol, SymbolCatalog
 
 SYMBOL_INDEX_NAME = "search-symbols.json"
 PAGEFIND_DIRECTORY = "pagefind"
+PAGE_KIND_LABELS = {
+    "namespace": "Static Functions",
+    "userdata": "Userdata",
+    "class": "Classes",
+}
 
 
 class _ElementIds(HTMLParser):
@@ -36,6 +41,13 @@ def _plain_text(value: str) -> str:
     return " ".join(unescape(value).split())
 
 
+def _hierarchy(symbol: Symbol) -> str:
+    page_name = "Global" if symbol.page_name == "GLOBAL" else symbol.page_name
+    return " › ".join(
+        (symbol.environment, PAGE_KIND_LABELS[symbol.page_kind], page_name)
+    )
+
+
 def _record(symbol: Symbol) -> dict[str, str]:
     page_name = "Global" if symbol.page_name == "GLOBAL" else symbol.page_name
     return {
@@ -52,6 +64,7 @@ def _record(symbol: Symbol) -> dict[str, str]:
         "environment": symbol.environment,
         "kind": symbol.kind,
         "pageKind": symbol.page_kind,
+        "hierarchy": _hierarchy(symbol),
         "availability": ", ".join(symbol.availability),
         "url": symbol.url,
     }
