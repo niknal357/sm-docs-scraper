@@ -73,6 +73,112 @@ def _escape_table_braces(value: str) -> str:
     return "".join(output)
 
 
+_MEMBER_DESCRIPTION_STOP_WORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "be",
+    "check",
+    "checks",
+    "controls",
+    "for",
+    "from",
+    "get",
+    "gets",
+    "if",
+    "in",
+    "is",
+    "new",
+    "of",
+    "on",
+    "or",
+    "return",
+    "returns",
+    "set",
+    "sets",
+    "that",
+    "the",
+    "this",
+    "to",
+    "true",
+    "value",
+    "values",
+    "whether",
+}
+_MEMBER_SIGNIFICANT_DETAIL_WORDS = {
+    "axis",
+    "current",
+    "deprecated",
+    "first",
+    "last",
+    "maximum",
+    "minimum",
+    "nil",
+    "none",
+    "not",
+    "only",
+    "optional",
+    "second",
+    "sm",
+}
+
+
+def _member_description_words(content: Inline) -> set[str]:
+    text = SymbolCatalog.inline_text(content)
+    text = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", text)
+    text = unescape(re.sub(r"<[^>]*>", "", text)).casefold()
+    text = re.sub(r"['’]s\b", "", text)
+    words = []
+    for word in re.findall(r"[a-z0-9]+", text):
+        if word.endswith("ional") and len(word) > 6:
+            word = word[:-2]
+        elif word.endswith("ating") and len(word) > 6:
+            word = word[:-3] + "e"
+        elif word.endswith("ing") and len(word) > 5 and word != "string":
+            word = word[:-3]
+        elif word.endswith("ible") and len(word) > 6:
+            word = word[:-4]
+        elif word.endswith("ed") and len(word) > 5:
+            word = word[:-2]
+        elif word.endswith("ies") and len(word) > 4:
+            word = word[:-3] + "y"
+        elif word.endswith("s") and not word.endswith("ss") and len(word) > 4:
+            word = word[:-1]
+        if word not in _MEMBER_DESCRIPTION_STOP_WORDS:
+            words.append(word)
+    return set(words)
+
+
+def _member_description_relation(summary: Inline, detail: Inline) -> str:
+    summary_words = _member_description_words(summary)
+    detail_words = _member_description_words(detail)
+    additional_words = detail_words - summary_words
+    for word in tuple(additional_words):
+        if any(
+            word == first + second or word == second + first
+            for first in summary_words
+            for second in summary_words
+            if first != second
+        ):
+            additional_words.discard(word)
+    for first in tuple(additional_words):
+        for second in tuple(additional_words - {first}):
+            if first + second in summary_words or second + first in summary_words:
+                additional_words.discard(first)
+                additional_words.discard(second)
+
+    adds_detail = len(additional_words) > 1 or any(
+        word.isdigit() or word in _MEMBER_SIGNIFICANT_DETAIL_WORDS
+        for word in additional_words
+    )
+    if not detail_words or detail_words <= summary_words or not adds_detail:
+        return "duplicate"
+    if summary_words and summary_words < detail_words:
+        return "replacement"
+    return "additional"
+
+
 class MarkdownRenderer(RenderContext):
     def _inline(
         self,
@@ -908,11 +1014,83 @@ class MarkdownRenderer(RenderContext):
         while content and content[-1] == "":
             content.pop()
 
-        output = [f"    - `{label}`:{availability}"]
+        summary_source: Inline = []
+        summary = ""
         if content and not content[0].startswith(("```", "- ", "| ", ">")):
-            output[0] += f" {content.pop(0)}"
+            summary = content.pop(0)
+            if doc.content and doc.content[0]["type"] == "paragraph":
+                summary_source = doc.content[0]["content"]
             if content and content[0] == "":
                 content.pop(0)
+
+        parameters = doc.parameters[1:] if doc.parameters else []
+        simple_parameter = label == "Set" and len(parameters) == 1
+        simple_return = label == "Get" and len(doc.returns) == 1
+        detail_label = ""
+        detail_content: Inline = []
+        if simple_parameter and parameters[0].description:
+            detail_label = "Value"
+            detail_content = parameters[0].description
+        elif simple_return and doc.returns[0].description:
+            detail_label = "Result"
+            detail_content = doc.returns[0].description
+
+        additional_detail = ""
+        if detail_content:
+            relation = _member_description_relation(
+                summary_source, detail_content
+            )
+            rendered_detail = self._inline(
+                environment, current_path, detail_content
+            )
+            if not summary or relation == "replacement":
+                summary = rendered_detail
+            elif relation == "additional":
+                additional_detail = rendered_detail
+
+        output = [f"    - `{label}`:{availability}"]
+        if summary:
+            output[0] += f" {summary}"
+        if additional_detail:
+            output[0] += (
+                f" <br> **{detail_label}:** {additional_detail}"
+            )
+
+        if not simple_parameter:
+            for parameter in parameters:
+                name = f"`{parameter.name}`"
+                if parameter.optional:
+                    name += " *(optional)*"
+                type_name = self._inline(
+                    environment,
+                    current_path,
+                    parameter.type,
+                    type_context=True,
+                )
+                line = f"        - **Parameter:** {name} [ **{type_name}** ]"
+                description = self._inline(
+                    environment, current_path, parameter.description
+                )
+                if description:
+                    line += f" &mdash; {description}"
+                output.append(line)
+
+        if not simple_return:
+            for return_value in doc.returns:
+                type_name = self._inline(
+                    environment,
+                    current_path,
+                    return_value.type,
+                    type_context=True,
+                )
+                name = f" `{return_value.name}`" if return_value.name else ""
+                line = f"        - **Returns:**{name} [ **{type_name}** ]"
+                description = self._inline(
+                    environment, current_path, return_value.description
+                )
+                if description:
+                    line += f" &mdash; {description}"
+                output.append(line)
 
         if content:
             output.append("")

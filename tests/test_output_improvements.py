@@ -124,6 +124,107 @@ class OutputImprovementTests(unittest.TestCase):
         self.assertNotIn('<td count="integer"', html_output)
         self.assertNotIn('<td max="max"', html_output)
 
+    def test_merges_member_parameter_and_return_details(self) -> None:
+        page = Page(
+            name="Sample",
+            source="sample.json",
+            members=[
+                Entry(
+                    name="payload",
+                    get=Doc(
+                        content=[
+                            {
+                                "type": "paragraph",
+                                "content": parse_inline("Returns the payload."),
+                            }
+                        ],
+                        parameters=[
+                            Parameter(
+                                name="sample",
+                                type=parse_inline("[Sample]"),
+                                description=parse_inline("The sample."),
+                            )
+                        ],
+                        returns=[
+                            ReturnValue(
+                                type=["table"],
+                                description=parse_inline(
+                                    "Includes the complete payload metadata."
+                                ),
+                            )
+                        ],
+                    ),
+                    set=Doc(
+                        content=[
+                            {
+                                "type": "paragraph",
+                                "content": parse_inline(
+                                    "Sets the cached payload."
+                                ),
+                            }
+                        ],
+                        parameters=[
+                            Parameter(
+                                name="sample",
+                                type=parse_inline("[Sample]"),
+                                description=parse_inline("The sample."),
+                            ),
+                            Parameter(
+                                name="value",
+                                type=["table"],
+                                description=parse_inline(
+                                    "Must include the payload metadata."
+                                ),
+                            ),
+                        ],
+                    ),
+                ),
+                Entry(
+                    name="fraction",
+                    get=Doc(
+                        content=[
+                            {
+                                "type": "paragraph",
+                                "content": parse_inline(
+                                    "Returns the fraction of the distance."
+                                ),
+                            }
+                        ],
+                        returns=[
+                            ReturnValue(
+                                type=["number"],
+                                description=parse_inline(
+                                    "The fraction of the distance."
+                                ),
+                            )
+                        ],
+                    ),
+                ),
+            ],
+        )
+        environment = Environment(name="Game", userdata=[page])
+        docs = Documentation(version=1, environments=[environment])
+
+        with tempfile.TemporaryDirectory() as directory:
+            markdown_root = Path(directory) / "markdown"
+            renderer = MarkdownRenderer(
+                docs, markdown_root, Path(directory) / "html"
+            )
+            renderer._write_page(environment, "userdata", page)
+            output = renderer.page_paths[id(page)].read_text()
+
+        self.assertIn(
+            "`Get`: Includes the complete payload metadata.", output
+        )
+        self.assertIn(
+            "`Set`: Sets the cached payload. <br> "
+            "**Value:** Must include the payload metadata.",
+            output,
+        )
+        self.assertEqual(output.count("fraction of the distance"), 1)
+        self.assertNotIn("**Result:** The fraction", output)
+        self.assertNotIn("**Returns:** [ **table** ]", output)
+
     def test_omits_empty_table_of_contents_and_expands_layout(self) -> None:
         docs = Documentation(version=1, environments=[])
 
