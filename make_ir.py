@@ -9,6 +9,9 @@ from typing import Any
 
 _REFERENCE = re.compile(r"\[([^\[\]]+)]")
 _REFERENCE_TARGET = re.compile(r"^[A-Za-z_][A-Za-z0-9_.]*$")
+_SOURCE_TEXT_CORRECTIONS = {
+    "(See[sm.shape.destructionType)": "(See [sm.shape.destructionType])",
+}
 _BLOCK_MARKERS = {
     "@code": "code",
     "@list": "list",
@@ -195,7 +198,10 @@ def _normalize_description(description: str) -> str:
     columns = _text_columns(description)
     if not columns:
         return ""
-    return re.sub(r"\s+", " ", columns[-1]).strip()
+    normalized = re.sub(r"\s+", " ", columns[-1]).strip()
+    for source, replacement in _SOURCE_TEXT_CORRECTIONS.items():
+        normalized = normalized.replace(source, replacement)
+    return normalized
 
 
 def _is_return_name(value: str) -> bool:

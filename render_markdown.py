@@ -892,7 +892,7 @@ class MarkdownRenderer(RenderContext):
             )
             output.extend([f"**Associated namespace:** {link}", ""])
         if page.usage:
-            output.extend([f"**Usage:** {page.usage.title()}", ""])
+            output.extend([f"**Usage:** {page.usage.capitalize()}", ""])
         if page.serializable is not None:
             output.extend(
                 [f"**Serializable:** {'Yes' if page.serializable else 'No'}", ""]
