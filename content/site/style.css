@@ -288,6 +288,16 @@ table {
   white-space: normal;
   word-break: normal;
 }
+.index-page .api-table .index-name {
+  vertical-align: top;
+  white-space: nowrap;
+  width: 28%;
+}
+.index-page .api-table .index-count {
+  text-align: right;
+  white-space: nowrap;
+  width: 1%;
+}
 th, td {
   border: 1px solid var(--border);
   padding: 0.5rem 0.75rem;

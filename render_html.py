@@ -39,6 +39,12 @@ API_TABLE_COLUMNS = {
         "api-returns",
         "api-description",
     ),
+    ("Section", "Description", "Pages"): (
+        "index-name",
+        "api-description",
+        "index-count",
+    ),
+    ("Page", "Description"): ("index-name", "api-description"),
 }
 SITE_ASSETS_PATH = Path(__file__).parent / "content" / "site"
 HTML_TEMPLATE = (SITE_ASSETS_PATH / "page.html").read_text(encoding="utf-8")
@@ -366,6 +372,11 @@ class HtmlRenderer(RenderContext):
             body = self._render_optional_signature_markers(body)
             body = self._render_api_tables(body)
             body = re.sub(r'href="([^"]+)\.md(#[^"]*)?"', r'href="\1.html\2"', body)
+            article_class = (
+                " index-page"
+                if relative.name == "index.md" and relative != Path("index.md")
+                else ""
+            )
             home = self._asset_href(self.html_root / "index.html", html_path)
             current_environment, pagefind_attributes, pagefind_meta = (
                 self._search_page_data(markdown_path)
@@ -383,6 +394,7 @@ class HtmlRenderer(RenderContext):
                     breadcrumbs=self._breadcrumbs(markdown_path, html_path),
                     body=body,
                     toc=self._table_of_contents(body),
+                    article_class=article_class,
                     theme_script=THEME_SCRIPT,
                     pagefind_meta=pagefind_meta,
                     pagefind_attributes=pagefind_attributes,

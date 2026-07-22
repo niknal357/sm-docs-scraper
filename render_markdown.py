@@ -14,6 +14,16 @@ from symbol_catalog import CallbackGroup, SIGNATURE_LINE_LENGTH, SymbolCatalog
 SIGNATURE_FENCE = "``` { .lua .api-signature }"
 INTRODUCTION_PATH = Path(__file__).parent / "content" / "introduction.md"
 SEARCH_PATH = Path(__file__).parent / "content" / "search.md"
+CATEGORY_DESCRIPTIONS = {
+    "namespace": "Namespaces that group related functions and constants.",
+    "userdata": "Runtime object types, their properties, and methods.",
+    "class": "Base classes, callbacks, and starter script templates.",
+}
+CATEGORY_PAGE_NAMES = {
+    "namespace": ("namespace", "namespaces"),
+    "userdata": ("userdata type", "userdata types"),
+    "class": ("class", "classes"),
+}
 LEGACY_EMPTY_LINK = re.compile(
     r'<a href="index\.html#(?:server|client|console)">(.*?)</a>',
     flags=re.IGNORECASE,
@@ -22,6 +32,10 @@ LUA_LITERAL = re.compile(
     r"(?:-?(?:\d+(?:\.\d*)?|\.\d+)|true|false|nil|"
     r'"(?:[^"\\]|\\.)*"|\'(?:[^\'\\]|\\.)*\')'
 )
+
+
+def _counted_label(count: int, singular: str, plural: str | None = None) -> str:
+    return f"{count} {singular if count == 1 else plural or singular + 's'}"
 
 
 class MarkdownRenderer(RenderContext):
@@ -977,13 +991,54 @@ class MarkdownRenderer(RenderContext):
     def _write_environment_index(self, environment: Environment) -> None:
         directory = self.markdown_root / self._environment_directory(environment)
         directory.mkdir(parents=True, exist_ok=True)
-        output = [f"# {environment.name} script environment", ""]
-        for kind, pages in self._navigation_groups(environment):
-            if pages:
-                category = CATEGORY_DIRECTORIES[kind]
-                output.append(f"- [{CATEGORY_TITLES[kind]}]({category}/index.md)")
+        groups = [
+            (kind, pages)
+            for kind, pages in self._navigation_groups(environment)
+            if pages
+        ]
+        page_count = sum(len(pages) for _, pages in groups)
+        output = [
+            f"# {environment.name} script environment",
+            "",
+            f"Browse **{_counted_label(page_count, 'API page')}** across "
+            f"**{_counted_label(len(groups), 'reference section')}**.",
+            "",
+            "| Section | Description | Pages |",
+            "| --- | --- | ---: |",
+        ]
+        for kind, pages in groups:
+            category = CATEGORY_DIRECTORIES[kind]
+            output.append(
+                f"| [{CATEGORY_TITLES[kind]}]({category}/index.md) | "
+                f"{CATEGORY_DESCRIPTIONS[kind]} | {len(pages)} |"
+            )
         output.append("")
         (directory / "index.md").write_text("\n".join(output), encoding="utf-8")
+
+    def _page_summary(
+        self,
+        environment: Environment,
+        kind: str,
+        page: Page,
+        index_path: Path,
+    ) -> str:
+        if page.doc:
+            for block in page.doc.content:
+                if block["type"] != "paragraph":
+                    continue
+                summary = self._inline(
+                    environment, index_path, block["content"]
+                ).strip()
+                if summary:
+                    return re.sub(r"\s+", " ", summary).replace("|", r"\|")
+
+        display_name = self._page_display_name(page)
+        fallbacks = {
+            "namespace": f"Functions and constants provided by `{display_name}`.",
+            "userdata": f"Properties and methods for `{display_name}` values.",
+            "class": f"Callbacks and APIs for `{display_name}` scripts.",
+        }
+        return fallbacks[kind]
 
     def _write_category_index(
         self, environment: Environment, kind: str, pages: list[Page]
@@ -996,10 +1051,23 @@ class MarkdownRenderer(RenderContext):
             / CATEGORY_DIRECTORIES[kind]
         )
         directory.mkdir(parents=True, exist_ok=True)
-        output = [f"# {CATEGORY_TITLES[kind]}", ""]
+        index_path = directory / "index.md"
+        singular_page_name, plural_page_name = CATEGORY_PAGE_NAMES[kind]
+        output = [
+            f"# {CATEGORY_TITLES[kind]}",
+            "",
+            CATEGORY_DESCRIPTIONS[kind],
+            "",
+            "This section contains "
+            f"**{_counted_label(len(pages), singular_page_name, plural_page_name)}**.",
+            "",
+            "| Page | Description |",
+            "| --- | --- |",
+        ]
         for page in sorted(pages, key=self._page_sort_key):
             path = self.page_paths[id(page)]
             display_name = self._page_display_name(page)
-            output.append(f"- [`{display_name}`]({path.name})")
+            summary = self._page_summary(environment, kind, page, index_path)
+            output.append(f"| [`{display_name}`]({path.name}) | {summary} |")
         output.append("")
-        (directory / "index.md").write_text("\n".join(output), encoding="utf-8")
+        index_path.write_text("\n".join(output), encoding="utf-8")
