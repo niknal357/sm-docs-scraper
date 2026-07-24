@@ -30,7 +30,9 @@ For GitHub Pages deployments, configure the custom domain in the repository's Pa
 
 The build date is always the current UTC date. The published API files do not identify a target game version.
 
-The HTML output also includes `404.html`, `.nojekyll`, `robots.txt`, and `sitemap.xml` for static hosting.
+The Pages workflow periodically checks the official JSON documentation. Scheduled runs deploy only when its extracted contents differ from the last successful deployment. Pushes and manual runs always deploy. A failed check or build leaves the existing site online.
+
+The HTML output also includes `404.html`, `.nojekyll`, `robots.txt`, `sitemap.xml`, and the deployed API source digest for static hosting.
 
 ## Preview the HTML site
 
