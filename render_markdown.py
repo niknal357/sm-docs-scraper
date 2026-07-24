@@ -1168,16 +1168,16 @@ class MarkdownRenderer(RenderContext):
         path.parent.mkdir(parents=True, exist_ok=True)
         output = [f"# {self._page_display_name(page)}", ""]
 
-        if kind == "class":
-            template_path = self._class_template_path(page)
-            template_link = os.path.relpath(template_path, path.parent)
-            output.extend(
-                [
-                    "**Script template:** "
-                    f"[View starter script]({Path(template_link).as_posix()})",
-                    "",
-                ]
-            )
+        # if kind == "class":
+        #     template_path = self._class_template_path(page)
+        #     template_link = os.path.relpath(template_path, path.parent)
+        #     output.extend(
+        #         [
+        #             "**Script template:** "
+        #             f"[View starter script]({Path(template_link).as_posix()})",
+        #             "",
+        #         ]
+        #     )
 
         if page.associated_type:
             link = self._link(
