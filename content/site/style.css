@@ -368,6 +368,7 @@ pre {
   padding: 1rem 1.2rem;
 }
 pre code { background: none; padding: 0; }
+.doc-content .codehilite .err { border: 0; }
 .optional-marker::after {
   content: "?";
   -webkit-user-select: none;
