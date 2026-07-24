@@ -1,6 +1,9 @@
+import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
+from urllib.parse import urljoin
 
 from make_ir import (
     Doc,
@@ -272,6 +275,224 @@ class OutputImprovementTests(unittest.TestCase):
         self.assertTrue(logo_exists)
         self.assertIn('class="content-layout"', sections_html)
         self.assertIn('class="table-of-contents"', sections_html)
+
+    def test_marks_pages_without_published_api_content(self) -> None:
+        page = Page(name="sm.empty", source="empty.json", doc=Doc())
+        environment = Environment(name="Game", namespaces=[page])
+        docs = Documentation(version=1, environments=[environment])
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            renderer = MarkdownRenderer(docs, root / "markdown", root / "html")
+            renderer._write_page(environment, "namespace", page)
+            renderer._write_category_index(environment, "namespace", [page])
+            page_output = renderer.page_paths[id(page)].read_text()
+            index_output = (
+                root
+                / "markdown"
+                / "Game-Script-Environment"
+                / "Static-Functions"
+                / "index.md"
+            ).read_text()
+
+        self.assertIn("This is intentional, not a rendering error", page_output)
+        self.assertIn("published Scrap Mechanic API data", page_output)
+        self.assertIn(
+            "No description or API members are present in the published source.",
+            index_output,
+        )
+
+    def test_separates_deprecated_member_accessors(self) -> None:
+        deprecation = [
+            {"type": "paragraph", "content": parse_inline("Use [Sample].")}
+        ]
+        member = Entry(
+            name="value",
+            get=Doc(
+                content=[
+                    {"type": "paragraph", "content": parse_inline("Removed!")}
+                ],
+                deprecated=deprecation,
+            ),
+            set=Doc(
+                content=[
+                    {"type": "paragraph", "content": parse_inline("Removed!")}
+                ],
+                deprecated=deprecation,
+            ),
+        )
+        page = Page(name="Sample", source="sample.json", members=[member])
+        environment = Environment(name="Game", userdata=[page])
+        docs = Documentation(version=1, environments=[environment])
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            markdown_root = root / "markdown"
+            MarkdownRenderer(docs, markdown_root, root / "html")._write_page(
+                environment, "userdata", page
+            )
+            HtmlRenderer(docs, markdown_root, root / "html")._write_html_tree()
+            output = (
+                root
+                / "html"
+                / "Game-Script-Environment"
+                / "Userdata"
+                / "Sample.html"
+            ).read_text()
+
+        self.assertEqual(output.count("<code>Set</code>: Removed!"), 1)
+        self.assertNotIn("    - <code>Set</code>", output)
+
+    def test_writes_seo_and_static_host_files(self) -> None:
+        docs = Documentation(version=1, environments=[])
+        configuration = {
+            "SM_DOCS_SITE_URL": "https://docs.example.test/",
+        }
+
+        with (
+            patch.dict(os.environ, configuration, clear=True),
+            tempfile.TemporaryDirectory() as directory,
+        ):
+            root = Path(directory)
+            markdown_root = root / "markdown"
+            markdown_root.mkdir()
+            with patch("render_context.datetime") as clock:
+                clock.now.return_value.date.return_value.isoformat.return_value = (
+                    "2026-07-24"
+                )
+                renderer = MarkdownRenderer(docs, markdown_root, root / "html")
+                renderer._write_markdown_index()
+                renderer._write_search_page()
+                renderer._write_not_found_page()
+                HtmlRenderer(docs, markdown_root, root / "html")._write_html_tree()
+
+            html_root = root / "html"
+            introduction = (markdown_root / "index.md").read_text()
+            index_html = (html_root / "index.html").read_text()
+            search_html = (html_root / "search.html").read_text()
+            not_found_html = (html_root / "404.html").read_text()
+            sitemap = (html_root / "sitemap.xml").read_text()
+            robots = (html_root / "robots.txt").read_text()
+
+            self.assertFalse((html_root / "CNAME").exists())
+            self.assertTrue((html_root / ".nojekyll").is_file())
+
+        self.assertIn("Site build date:** 2026-07-24 UTC", introduction)
+        self.assertNotIn("Target game version", introduction)
+        self.assertIn('<meta name="description"', index_html)
+        self.assertIn(
+            '<link rel="canonical" href="https://docs.example.test/">',
+            index_html,
+        )
+        self.assertIn('<meta property="og:title"', index_html)
+        self.assertIn('href="#main-content">Skip to main content</a>', index_html)
+        self.assertIn('<meta name="robots" content="noindex,follow">', search_html)
+        self.assertNotIn("<base ", not_found_html)
+        self.assertIn('href="#main-content">Skip to main content</a>', not_found_html)
+        self.assertIn('href="/index.html"', not_found_html)
+        self.assertIn('data-symbol-index="/assets/search-symbols.json"', not_found_html)
+        self.assertNotIn('rel="canonical"', not_found_html)
+        self.assertIn("https://docs.example.test/", sitemap)
+        self.assertNotIn("search.html", sitemap)
+        self.assertNotIn("404.html", sitemap)
+        self.assertIn(
+            "Sitemap: https://docs.example.test/sitemap.xml", robots
+        )
+
+    def test_writes_portable_not_found_urls(self) -> None:
+        docs = Documentation(version=1, environments=[])
+        configuration = {
+            "SM_DOCS_SITE_URL": "https://owner.github.io/repo",
+        }
+
+        with (
+            patch.dict(os.environ, configuration, clear=True),
+            tempfile.TemporaryDirectory() as directory,
+        ):
+            root = Path(directory)
+            markdown_root = root / "markdown"
+            markdown_root.mkdir()
+            renderer = MarkdownRenderer(docs, markdown_root, root / "html")
+            renderer._write_markdown_index()
+            renderer._write_search_page()
+            renderer._write_not_found_page()
+            HtmlRenderer(docs, markdown_root, root / "html")._write_html_tree()
+
+            html_root = root / "html"
+            index_html = (html_root / "index.html").read_text()
+            not_found_html = (html_root / "404.html").read_text()
+            cname_exists = (html_root / "CNAME").exists()
+
+        self.assertFalse(cname_exists)
+        self.assertIn(
+            '<link rel="canonical" href="https://owner.github.io/repo/">',
+            index_html,
+        )
+        self.assertNotIn("<base ", not_found_html)
+        self.assertIn('href="#main-content">Skip to main content</a>', not_found_html)
+        self.assertIn('href="/repo/index.html"', not_found_html)
+        self.assertIn(
+            'data-symbol-index="/repo/assets/search-symbols.json"',
+            not_found_html,
+        )
+        self.assertEqual(
+            urljoin(
+                "https://owner.github.io/repo/old/nested/page",
+                "/repo/assets/search-symbols.json",
+            ),
+            "https://owner.github.io/repo/assets/search-symbols.json",
+        )
+
+    def test_rejects_invalid_public_build_configuration(self) -> None:
+        docs = Documentation(version=1, environments=[])
+        invalid_site_urls = (
+            "https://example.test/docs?preview=1",
+            "https://example.test/docs#preview",
+            "https://user:password@example.test/docs",
+        )
+        for site_url in invalid_site_urls:
+            with (
+                self.subTest(site_url=site_url),
+                patch.dict(
+                    os.environ,
+                    {"SM_DOCS_SITE_URL": site_url},
+                    clear=True,
+                ),
+                self.assertRaisesRegex(ValueError, "SM_DOCS_SITE_URL"),
+            ):
+                MarkdownRenderer(docs, Path("markdown"), Path("html"))
+
+    def test_distinguishes_environment_titles(self) -> None:
+        game_page = Page(name="Color", source="game.json", doc=Doc())
+        terrain_page = Page(name="Color", source="terrain.json", doc=Doc())
+        game = Environment(name="Game", userdata=[game_page])
+        terrain = Environment(name="Terrain", userdata=[terrain_page])
+        docs = Documentation(version=1, environments=[game, terrain])
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            markdown_root = root / "markdown"
+            renderer = MarkdownRenderer(docs, markdown_root, root / "html")
+            renderer._write_page(game, "userdata", game_page)
+            renderer._write_page(terrain, "userdata", terrain_page)
+            HtmlRenderer(docs, markdown_root, root / "html")._write_html_tree()
+            game_html = (
+                root
+                / "html"
+                / "Game-Script-Environment"
+                / "Userdata"
+                / "Color.html"
+            ).read_text()
+            terrain_html = (
+                root
+                / "html"
+                / "Terrain-Script-Environment"
+                / "Userdata"
+                / "Color.html"
+            ).read_text()
+
+        self.assertIn("<title>Color — Game API | SM Docs</title>", game_html)
+        self.assertIn("<title>Color — Terrain API | SM Docs</title>", terrain_html)
 
 
 if __name__ == "__main__":

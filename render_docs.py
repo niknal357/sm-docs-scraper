@@ -17,6 +17,7 @@ class DocumentationRenderer(MarkdownRenderer, HtmlRenderer):
 
         self._write_markdown_index()
         self._write_search_page()
+        self._write_not_found_page()
         for environment in self.docs.environments:
             self._write_environment_index(environment)
             for kind, pages in self._page_groups(environment):

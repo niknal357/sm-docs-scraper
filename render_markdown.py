@@ -7,13 +7,20 @@ from pathlib import Path
 import re
 
 from make_ir import Doc, Entry, Environment, Inline, Page
-from render_context import CATEGORY_DIRECTORIES, CATEGORY_TITLES, RenderContext
-from symbol_catalog import CallbackGroup, SIGNATURE_LINE_LENGTH, SymbolCatalog
+from render_context import CATEGORY_TITLES, RenderContext
+from symbol_catalog import (
+    CATEGORY_DIRECTORIES,
+    CallbackGroup,
+    SIGNATURE_LINE_LENGTH,
+    SymbolCatalog,
+)
 
 
 SIGNATURE_FENCE = "``` { .lua .api-signature }"
 INTRODUCTION_PATH = Path(__file__).parent / "content" / "introduction.md"
 SEARCH_PATH = Path(__file__).parent / "content" / "search.md"
+NOT_FOUND_PATH = Path(__file__).parent / "content" / "not-found.md"
+SOURCE_DATA_URL = "https://scrapmechanic.com/api/json.zip"
 CATEGORY_DESCRIPTIONS = {
     "namespace": "Namespaces that group related functions and constants.",
     "userdata": "Runtime object types, their properties, and methods.",
@@ -1103,6 +1110,7 @@ class MarkdownRenderer(RenderContext):
             output.append("")
             output.append("        **Deprecated:**")
             output.extend(f"        {line}" if line else "" for line in deprecated)
+            output.append("")
 
         return output
 
@@ -1142,6 +1150,19 @@ class MarkdownRenderer(RenderContext):
             output.append("")
         return output
 
+    def _source_content_notice(self, page: Page) -> list[str]:
+        if self._page_has_source_content(page):
+            return []
+        display_name = self._page_display_name(page)
+        return [
+            "> **No additional API content is published for this page.**",
+            ">",
+            "> This is intentional, not a rendering error. Aside from the name and ",
+            f"> any metadata shown above, `{display_name}` has no description or API ",
+            f"> members in the [published Scrap Mechanic API data]({SOURCE_DATA_URL}).",
+            "",
+        ]
+
     def _write_page(self, environment: Environment, kind: str, page: Page) -> None:
         path = self.page_paths[id(page)]
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -1180,6 +1201,7 @@ class MarkdownRenderer(RenderContext):
         if page.doc:
             output.extend(self._doc(environment, path, page.doc, 2))
 
+        output.extend(self._source_content_notice(page))
         output.extend(self._constants(environment, path, page))
 
         output.extend(self._members(environment, path, page))
@@ -1193,6 +1215,7 @@ class MarkdownRenderer(RenderContext):
 
     def _write_markdown_index(self) -> None:
         introduction = INTRODUCTION_PATH.read_text(encoding="utf-8").rstrip()
+        introduction = introduction.replace("{{BUILD_DATE}}", self.build_date)
         (self.markdown_root / "index.md").write_text(
             introduction + "\n", encoding="utf-8"
         )
@@ -1200,6 +1223,12 @@ class MarkdownRenderer(RenderContext):
     def _write_search_page(self) -> None:
         (self.markdown_root / "search.md").write_text(
             SEARCH_PATH.read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
+
+    def _write_not_found_page(self) -> None:
+        (self.markdown_root / "404.md").write_text(
+            NOT_FOUND_PATH.read_text(encoding="utf-8"),
             encoding="utf-8",
         )
 
@@ -1248,6 +1277,10 @@ class MarkdownRenderer(RenderContext):
                     return re.sub(r"\s+", " ", summary).replace("|", r"\|")
 
         display_name = self._page_display_name(page)
+        if not self._page_has_source_content(page):
+            return (
+                "No description or API members are present in the published source."
+            )
         fallbacks = {
             "namespace": f"Functions and constants provided by `{display_name}`.",
             "userdata": f"Properties and methods for `{display_name}` values.",

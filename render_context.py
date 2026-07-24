@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import os
-from pathlib import Path
 import re
-from typing import Iterable
+from collections.abc import Iterable
+from datetime import UTC, datetime
+from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
-from make_ir import Documentation, Environment, Page
-from symbol_catalog import CATEGORY_DIRECTORIES, SymbolCatalog
-
+from make_ir import Doc, Documentation, Environment, Page
+from symbol_catalog import SymbolCatalog
 
 CATEGORY_TITLES = {
     "namespace": "Static Functions",
@@ -26,6 +27,7 @@ NAMESPACE_CONTEXT_AFTER = re.compile(
     r"^\s*(?:api|namespace|module|library|functions?)\b",
     flags=re.IGNORECASE,
 )
+DEFAULT_SITE_URL = "https://scrapmechanicdocs.com/"
 
 
 class RenderContext:
@@ -33,6 +35,47 @@ class RenderContext:
         self.docs = docs
         self.markdown_root = markdown_root
         self.html_root = html_root
+
+        site_url = (
+            os.environ.get("SM_DOCS_SITE_URL", "").strip() or DEFAULT_SITE_URL
+        )
+        try:
+            parsed_site_url = urlsplit(site_url)
+            hostname = parsed_site_url.hostname
+            _ = parsed_site_url.port
+        except ValueError as error:
+            raise ValueError(
+                "SM_DOCS_SITE_URL must be an absolute HTTP(S) base URL"
+            ) from error
+        if (
+            parsed_site_url.scheme not in {"http", "https"}
+            or not parsed_site_url.netloc
+            or not hostname
+            or parsed_site_url.username is not None
+            or parsed_site_url.password is not None
+            or parsed_site_url.query
+            or parsed_site_url.fragment
+            or any(character.isspace() for character in site_url)
+        ):
+            raise ValueError(
+                "SM_DOCS_SITE_URL must be an absolute HTTP(S) base URL "
+                "without credentials, a query, or a fragment"
+            )
+        site_path = parsed_site_url.path or "/"
+        if not site_path.endswith("/"):
+            site_path += "/"
+        self.site_url = urlunsplit(
+            (
+                parsed_site_url.scheme,
+                parsed_site_url.netloc,
+                site_path,
+                "",
+                "",
+            )
+        )
+
+        self.build_date = datetime.now(UTC).date().isoformat()
+
         self.symbol_catalog = SymbolCatalog(docs)
         self.page_paths: dict[int, Path] = {}
         self.page_details: dict[Path, tuple[Environment, str, Page]] = {}
@@ -116,6 +159,35 @@ class RenderContext:
     @staticmethod
     def _page_display_name(page: Page) -> str:
         return "Global" if page.name == "GLOBAL" else page.name
+
+    @staticmethod
+    def _doc_has_source_content(doc: Doc | None) -> bool:
+        return bool(
+            doc
+            and any(
+                getattr(doc, attribute)
+                for attribute in (
+                    "content",
+                    "parameters",
+                    "returns",
+                    "fields",
+                    "operations",
+                    "deprecated",
+                )
+            )
+        )
+
+    @classmethod
+    def _page_has_source_content(cls, page: Page) -> bool:
+        entries = (
+            page.constants
+            + page.functions
+            + page.members
+            + page.metamethods
+            + page.common_callbacks
+            + page.callbacks
+        )
+        return cls._doc_has_source_content(page.doc) or bool(entries)
 
     @staticmethod
     def _normalized_reference_label(label: str) -> str:

@@ -1,24 +1,22 @@
-# Introduction
+# Scrap Mechanic Lua API
 
-Welcome to the Scrap Mechanic Lua API reference. This site presents the [official Scrap Mechanic API documentation](https://scrapmechanic.com/api/index.html) in a searchable, navigable format.
+SM Docs is an unofficial, searchable interface for the Lua API reference published at [scrapmechanic.com/api](https://scrapmechanic.com/api/index.html).
 
-## Start here
+> **Scope:** This site only aims to make the published reference easier to browse, search, and link to. It does not maintain a separate API specification or silently fill gaps in the source. Descriptions, signatures, availability labels, and omissions come from the published Scrap Mechanic API files.
 
-- [Game script environment](Game-Script-Environment/index.md) covers scripts used by games, worlds, parts, tools, characters, and other gameplay systems.
-- [Terrain script environment](Terrain-Script-Environment/index.md) covers terrain generation and terrain-related APIs.
+## Source and freshness
 
-Most mod scripts use the Game environment. APIs available only in a specific environment are listed within that environment.
+- **Original reference:** [scrapmechanic.com/api](https://scrapmechanic.com/api/index.html)
+- **JSON source archive:** [json.zip](https://scrapmechanic.com/api/json.zip)
+- **Lua annotation archive:** [lua.zip](https://scrapmechanic.com/api/lua.zip)
+- **Site build date:** {{BUILD_DATE}} UTC
 
-## How the API is organized
+The published source may contain incomplete entries. When an entry has no description or API members, its page includes a source-content notice so that the empty page is not mistaken for a site error.
 
-- **Static Functions** are functions called directly, such as `sm.shape.createPart(...)`.
-- **Userdata** represents game objects and utility values, such as `Shape`, `Player`, `Vec3`, and `Uuid`.
-- **Classes** define callbacks that the game invokes on scripts, such as `server_onCreate` and `client_onUpdate`.
+## Lua
 
-Function pages show parameters, return values, and whether an API is available on the server, client, or both.
+Scrap Mechanic uses LuaJIT which is covered by the [Lua 5.1 reference manual](https://www.lua.org/manual/5.1/). This site covers only the APIs exposed by Scrap Mechanic.
 
-## Lua and multiplayer
+## Reporting a discrepancy
 
-Scrap Mechanic uses Lua 5.1. The [Lua 5.1 reference manual](https://www.lua.org/manual/5.1/) covers the language itself, while this site documents the APIs provided by the game.
-
-Scrap Mechanic separates simulation into server and client contexts. Server code controls authoritative game state. Client code handles local input, presentation, and other player-specific behavior. Check each API's availability before using it in a callback.
+Compare questionable content with the [original reference](https://scrapmechanic.com/api/index.html). If both contain the same text or omission, the issue is in the published source. If this site links, formats, or interprets the source incorrectly, it is an interface issue and can be reported on [GitHub](https://github.com/niknal357/sm-docs-scraper).

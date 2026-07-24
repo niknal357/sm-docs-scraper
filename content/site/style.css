@@ -1,7 +1,7 @@
 :root {
   color-scheme: light;
-  --primary: #2e8555;
-  --primary-dark: #277148;
+  --primary: #277148;
+  --primary-dark: #205d3b;
   --background: #ffffff;
   --surface: #ffffff;
   --surface-muted: #f5f6f7;
@@ -65,6 +65,24 @@ body {
 }
 a { color: var(--primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
+.doc-content p a, .doc-content li a, .doc-content td.api-description a {
+  text-decoration: underline;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.14em;
+}
+.skip-link {
+  background: var(--surface);
+  border: 2px solid var(--primary);
+  color: var(--text);
+  font-weight: 700;
+  left: 0.75rem;
+  padding: 0.45rem 0.7rem;
+  position: fixed;
+  top: 0.75rem;
+  transform: translateY(-200%);
+  z-index: 100;
+}
+.skip-link:focus { transform: translateY(0); }
 .navbar {
   align-items: center;
   background: var(--navbar-background);
