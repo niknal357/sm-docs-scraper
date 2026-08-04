@@ -31,10 +31,17 @@ DEFAULT_SITE_URL = "https://scrapmechanicdocs.com/"
 
 
 class RenderContext:
-    def __init__(self, docs: Documentation, markdown_root: Path, html_root: Path):
+    def __init__(
+        self,
+        docs: Documentation,
+        markdown_root: Path,
+        html_root: Path,
+        previous_page_digests: dict | None = None,
+    ):
         self.docs = docs
         self.markdown_root = markdown_root
         self.html_root = html_root
+        self.previous_page_digests = previous_page_digests
 
         site_url = (
             os.environ.get("SM_DOCS_SITE_URL", "").strip() or DEFAULT_SITE_URL

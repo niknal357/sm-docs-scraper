@@ -13,6 +13,13 @@ from urllib.parse import quote, unquote, urljoin, urlsplit
 import markdown
 from pygments.formatters import HtmlFormatter
 
+from page_digests import (
+    PAGE_DIGESTS_FILENAME,
+    empty_page_digests,
+    page_digest,
+    validate_page_digests,
+    write_page_digests,
+)
 from render_context import CATEGORY_TITLES, RenderContext
 from search_index import (
     LINK_PREVIEW_INDEX_NAME,
@@ -135,6 +142,17 @@ class HtmlRenderer(RenderContext):
             f'<a class="sidebar-overview{root_class}" '
             f'href="{self._html_href(current_html, root_index)}">Introduction</a>'
         )
+        symbols_index = self.markdown_root / "symbols" / "index.md"
+        if symbols_index.is_file():
+            symbols_class = (
+                " active"
+                if current_markdown.is_relative_to(symbols_index.parent)
+                else ""
+            )
+            output.append(
+                f'<a class="sidebar-overview{symbols_class}" '
+                f'href="{self._html_href(current_html, symbols_index)}">Symbols</a>'
+            )
 
         for environment in sorted(
             self.docs.environments, key=lambda item: item.name.casefold()
@@ -193,6 +211,7 @@ class HtmlRenderer(RenderContext):
             "Game-Script-Environment": "Game",
             "Terrain-Script-Environment": "Terrain",
             "Static-Functions": "Static Functions",
+            "symbols": "Symbols",
         }
 
         directories = relative.parts[:-1]
@@ -610,7 +629,65 @@ class HtmlRenderer(RenderContext):
         )
         return "\n  ".join(lines)
 
+    def _public_file_url(self, relative: Path) -> str:
+        return urljoin(self.site_url, quote(relative.as_posix(), safe="/.-"))
+
+    def _write_llms_file(self) -> None:
+        lines = [
+            "# SM Docs",
+            "",
+            "> Unofficial Scrap Mechanic Lua API reference generated from the published API files.",
+            "",
+            (
+                "Use the Game and Terrain references as separate script environments. "
+                "Availability, signatures, descriptions, and omissions reflect the "
+                "published source."
+            ),
+            "",
+            "## Documentation",
+            "",
+            f"- [Introduction]({self._public_file_url(Path('index.md'))})",
+        ]
+        for environment in self.docs.environments:
+            environment_path = Path(self._environment_directory(environment))
+            lines.append(
+                f"- [{environment.name} script environment]"
+                f"({self._public_file_url(environment_path / 'index.md')})"
+            )
+            for kind, pages in self._navigation_groups(environment):
+                if not pages:
+                    continue
+                path = environment_path / CATEGORY_DIRECTORIES[kind] / "index.md"
+                lines.append(
+                    f"  - [{CATEGORY_TITLES[kind]}]"
+                    f"({self._public_file_url(path)})"
+                )
+        lines.extend(
+            [
+                "",
+                "## Symbols",
+                "",
+                f"- [Symbol index]({self._public_file_url(Path('symbols/index.md'))})",
+                "",
+                "## Source",
+                "",
+                "- [Official API reference](https://scrapmechanic.com/api/index.html)",
+                "- [Official JSON archive](https://scrapmechanic.com/api/json.zip)",
+                "- [Official Lua annotations](https://scrapmechanic.com/api/lua.zip)",
+                "",
+            ]
+        )
+        (self.html_root / "llms.txt").write_text(
+            "\n".join(lines), encoding="utf-8"
+        )
+
     def _write_public_site_files(self) -> None:
+        previous = validate_page_digests(
+            self.previous_page_digests
+            if self.previous_page_digests is not None
+            else empty_page_digests()
+        )
+        current = empty_page_digests()
         sitemap = ET.Element(
             "urlset", {"xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
         )
@@ -619,11 +696,24 @@ class HtmlRenderer(RenderContext):
             relative = html_path.relative_to(self.html_root)
             if relative in excluded:
                 continue
+            markdown_path = self.markdown_root / relative.with_suffix(".md")
+            digest = page_digest(markdown_path)
+            previous_record = previous["pages"].get(relative.as_posix())
+            lastmod = (
+                previous_record["lastmod"]
+                if previous_record and previous_record["digest"] == digest
+                else self.build_date
+            )
+            current["pages"][relative.as_posix()] = {
+                "digest": digest,
+                "lastmod": lastmod,
+            }
+
             entry = ET.SubElement(sitemap, "url")
             ET.SubElement(entry, "loc").text = self._canonical_url(
                 relative.with_suffix(".md")
             )
-            ET.SubElement(entry, "lastmod").text = self.build_date
+            ET.SubElement(entry, "lastmod").text = lastmod
         ET.indent(sitemap, space="  ")
         ET.ElementTree(sitemap).write(
             self.html_root / "sitemap.xml",
@@ -636,6 +726,8 @@ class HtmlRenderer(RenderContext):
             f"User-agent: *\nAllow: /\n\nSitemap: {sitemap_url}\n",
             encoding="utf-8",
         )
+        write_page_digests(self.html_root / PAGE_DIGESTS_FILENAME, current)
+        self._write_llms_file()
         (self.html_root / ".nojekyll").write_text("", encoding="utf-8")
 
     def _write_html_tree(self) -> None:
@@ -699,9 +791,17 @@ class HtmlRenderer(RenderContext):
             title = self._document_title(markdown_path, relative, body)
             full_title = f"{title} | SM Docs"
             description = self._document_description(markdown_path, relative, body)
+            alternate_link = ""
+            if relative not in {Path("404.md"), Path("search.md")}:
+                markdown_output = self.html_root / relative
+                alternate_link = (
+                    '<link rel="alternate" type="text/markdown" href="'
+                    f'{escape(self._asset_href(markdown_output, html_path), quote=True)}">'
+                )
             document = HTML_TEMPLATE.format(
                 full_title=escape(full_title),
                 seo_meta=self._seo_meta(relative, full_title, description),
+                alternate_link=alternate_link,
                 stylesheet=self._asset_href(assets / "style.css", html_path),
                 logo=self._asset_href(assets / "logo.png", html_path),
                 home=home,
@@ -739,6 +839,12 @@ class HtmlRenderer(RenderContext):
             if relative == Path("404.md"):
                 document = self._rewrite_not_found_urls(document)
             html_path.write_text(document, encoding="utf-8")
+
+        for markdown_path in self.markdown_root.rglob("*.md"):
+            relative = markdown_path.relative_to(self.markdown_root)
+            output_path = self.html_root / relative
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(markdown_path, output_path)
 
         self._write_public_site_files()
 

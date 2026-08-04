@@ -1,15 +1,14 @@
 from __future__ import annotations
 
+import re
 from collections import Counter
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from hashlib import sha1
 from itertools import combinations
 from pathlib import Path
-import re
-from typing import Iterable
 
 from make_ir import Doc, Documentation, Entry, Environment, Inline, Page, Parameter
-
 
 SIGNATURE_LINE_LENGTH = 80
 ENVIRONMENT_DIRECTORIES = {
@@ -62,6 +61,18 @@ class MethodAnchor:
 
 
 @dataclass(frozen=True)
+class SymbolPageVariant:
+    name: str
+    environment: str
+    kind: str
+    source_url: str
+    signatures: tuple[str, ...]
+    summary: Inline
+    page: Page = field(repr=False, compare=False)
+    entries: tuple[Entry, ...] = field(repr=False, compare=False)
+
+
+@dataclass(frozen=True)
 class Symbol:
     id: str
     environment: str
@@ -97,6 +108,7 @@ class SymbolCatalog:
             )
 
         self.symbols = tuple(self._build_symbols())
+        self.symbol_page_groups = self._build_symbol_page_groups()
 
     @staticmethod
     def page_groups(
@@ -602,6 +614,70 @@ class SymbolCatalog:
                     ),
                 )
 
+    def _build_symbol_page_groups(
+        self,
+    ) -> dict[str, tuple[SymbolPageVariant, ...]]:
+        groups: dict[str, list[SymbolPageVariant]] = {}
+        casefolded_names: dict[str, str] = {}
+
+        for symbol in self.symbols:
+            if symbol.kind == "callback":
+                variants = (
+                    SymbolPageVariant(
+                        name=f"{symbol.page.name}.{entry.name}",
+                        environment=symbol.environment,
+                        kind=symbol.kind,
+                        source_url=symbol.url.partition("#")[0]
+                        + f"#{self.slug(entry.name)}",
+                        signatures=(self.signature(symbol.page, entry),),
+                        summary=self._summary_inline(
+                            tuple(self._entry_docs((entry,)))
+                        ),
+                        page=symbol.page,
+                        entries=(entry,),
+                    )
+                    for entry in symbol.entries
+                )
+            else:
+                variants = (
+                    SymbolPageVariant(
+                        name=symbol.qualified_name.replace(":", "."),
+                        environment=symbol.environment,
+                        kind=symbol.kind,
+                        source_url=symbol.url,
+                        signatures=symbol.signatures,
+                        summary=self._symbol_summary_inline(symbol),
+                        page=symbol.page,
+                        entries=symbol.entries,
+                    ),
+                )
+
+            for variant in variants:
+                if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.]*", variant.name) is None:
+                    raise ValueError(f"Unsafe symbol page name: {variant.name!r}")
+                folded = variant.name.casefold()
+                existing = casefolded_names.setdefault(folded, variant.name)
+                if existing != variant.name:
+                    raise ValueError(
+                        "Case-insensitive symbol page collision: "
+                        f"{existing!r} and {variant.name!r}"
+                    )
+                groups.setdefault(variant.name, []).append(variant)
+
+        return {
+            name: tuple(variants)
+            for name, variants in sorted(
+                groups.items(), key=lambda item: item[0].casefold()
+            )
+        }
+
+    def _symbol_summary_inline(self, symbol: Symbol) -> Inline:
+        if symbol.kind == "page" and symbol.page.doc:
+            docs = (symbol.page.doc,)
+        else:
+            docs = tuple(self._entry_docs(symbol.entries))
+        return self._summary_inline(docs)
+
     def _symbol(
         self,
         environment: Environment,
@@ -700,12 +776,16 @@ class SymbolCatalog:
                 if doc:
                     yield doc
 
-    def _summary(self, docs: tuple[Doc, ...]) -> str:
+    @staticmethod
+    def _summary_inline(docs: tuple[Doc, ...]) -> Inline:
         for doc in docs:
             for block in doc.content:
                 if block["type"] == "paragraph":
-                    return self.inline_text(block["content"]).strip()
-        return ""
+                    return block["content"]
+        return []
+
+    def _summary(self, docs: tuple[Doc, ...]) -> str:
+        return self.inline_text(self._summary_inline(docs)).strip()
 
     @staticmethod
     def _availability(docs: tuple[Doc, ...]) -> tuple[str, ...]:

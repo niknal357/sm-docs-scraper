@@ -34,6 +34,7 @@ if ('addEventListener' in systemTheme) {
 
 const menu = document.getElementById('menu-button');
 const sidebar = document.getElementById('sidebar');
+const contentLayout = document.querySelector('.content-layout');
 const mobileNavigation = window.matchMedia('(max-width: 996px)');
 const mobileSearch = window.matchMedia('(max-width: 600px)');
 const mobileSearchButton = document.getElementById('mobile-search-button');
@@ -46,12 +47,17 @@ const setSidebarOpen = (open) => {
   document.body.classList.toggle('sidebar-open', shouldOpen);
   menu.setAttribute('aria-expanded', String(shouldOpen));
   menu.setAttribute('aria-label', shouldOpen ? 'Close navigation' : 'Open navigation');
+  contentLayout.toggleAttribute('inert', shouldOpen);
+  contentLayout.setAttribute('aria-hidden', String(shouldOpen));
   if (mobileNavigation.matches && !shouldOpen) {
     sidebar.setAttribute('inert', '');
     sidebar.setAttribute('aria-hidden', 'true');
   } else {
     sidebar.removeAttribute('inert');
     sidebar.removeAttribute('aria-hidden');
+  }
+  if (shouldOpen) {
+    requestAnimationFrame(() => sidebar.querySelector('a, summary')?.focus());
   }
 };
 

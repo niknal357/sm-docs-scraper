@@ -65,9 +65,19 @@ jobs:
         if: steps.source_check.outputs.changed == 'true'
         run: uv run python -m unittest discover -s tests
 
+      - name: Download deployed page digests
+        if: steps.source_check.outputs.changed == 'true'
+        run: |
+          uv run python page_digests.py \
+            --site-url "${{ steps.pages.outputs.base_url }}" \
+            --output temp/previous-page-digests.json
+
       - name: Build site
         if: steps.source_check.outputs.changed == 'true'
-        run: uv run python main.py --source-root temp
+        run: |
+          uv run python main.py \
+            --source-root temp \
+            --previous-page-digests temp/previous-page-digests.json
         env:
           SM_DOCS_SITE_URL: ${{ steps.pages.outputs.base_url }}
 

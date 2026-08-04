@@ -373,9 +373,11 @@ class OutputImprovementTests(unittest.TestCase):
             not_found_html = (html_root / "404.html").read_text()
             sitemap = (html_root / "sitemap.xml").read_text()
             robots = (html_root / "robots.txt").read_text()
+            llms = (html_root / "llms.txt").read_text()
 
             self.assertFalse((html_root / "CNAME").exists())
             self.assertTrue((html_root / ".nojekyll").is_file())
+            self.assertTrue((html_root / "index.md").is_file())
 
         self.assertIn("Site build date:** 2026-07-24 UTC", introduction)
         self.assertNotIn("Target game version", introduction)
@@ -385,7 +387,15 @@ class OutputImprovementTests(unittest.TestCase):
             index_html,
         )
         self.assertIn('<meta property="og:title"', index_html)
+        self.assertIn(
+            '<link rel="alternate" type="text/markdown" href="index.md">',
+            index_html,
+        )
         self.assertIn('href="#main-content">Skip to main content</a>', index_html)
+        self.assertLess(
+            index_html.index('<main class="doc"'),
+            index_html.index('<aside class="sidebar"'),
+        )
         self.assertIn('<meta name="robots" content="noindex,follow">', search_html)
         self.assertNotIn("<base ", not_found_html)
         self.assertIn('href="#main-content">Skip to main content</a>', not_found_html)
@@ -398,6 +408,8 @@ class OutputImprovementTests(unittest.TestCase):
         self.assertIn(
             "Sitemap: https://docs.example.test/sitemap.xml", robots
         )
+        self.assertIn("https://docs.example.test/index.md", llms)
+        self.assertIn("https://docs.example.test/symbols/index.md", llms)
 
     def test_writes_portable_not_found_urls(self) -> None:
         docs = Documentation(version=1, environments=[])

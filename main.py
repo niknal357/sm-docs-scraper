@@ -4,11 +4,13 @@ from pathlib import Path
 import download_docs
 import make_ir
 import render_docs
+from page_digests import load_page_digests
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source-root", type=Path)
+    parser.add_argument("--previous-page-digests", type=Path)
     args = parser.parse_args()
 
     if args.source_root is None:
@@ -18,10 +20,16 @@ def main() -> None:
 
     ir = make_ir.make_ir(source.json_docs)
     ir_path = make_ir.write_ir(ir, source.json_docs.parent / "ir")
+    previous_page_digests = (
+        load_page_digests(args.previous_page_digests)
+        if args.previous_page_digests
+        else None
+    )
     markdown_path, html_path = render_docs.render_docs(
         ir,
         Path("dist/markdown"),
         Path("dist/html"),
+        previous_page_digests,
     )
     source_hash_path = download_docs.write_source_digest(
         html_path,

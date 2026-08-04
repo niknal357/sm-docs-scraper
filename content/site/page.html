@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{full_title}</title>
   {seo_meta}
+  {alternate_link}
   <link rel="icon" type="image/png" href="{logo}">
   {pagefind_meta}
   <script>{theme_script}</script>
@@ -34,7 +35,6 @@
     </div>
   </header>
   <div class="page-layout">
-    <aside class="sidebar" id="sidebar"><nav>{sidebar}</nav></aside>
     <div class="content-layout{toc_class}">
       <main class="doc" id="main-content">
         <div class="breadcrumbs">{breadcrumbs}</div>
@@ -44,6 +44,7 @@
       </main>
       {toc}
     </div>
+    <aside class="sidebar" id="sidebar"><nav>{sidebar}</nav></aside>
   </div>
   <p class="visually-hidden" id="copy-status" aria-live="polite"></p>
   <script src="{minisearch_script}"></script>

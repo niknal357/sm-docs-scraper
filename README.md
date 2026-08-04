@@ -13,7 +13,7 @@ Generated files:
 - `temp/json/`: downloaded source documentation
 - `temp/ir/docs.json`: normalized intermediate representation
 - `dist/markdown/`: Markdown documentation
-- `dist/html/`: static HTML site with local API and content search
+- `dist/html/`: deployable static site with HTML, Markdown, symbol pages, and local search
 
 ## Configure the public build
 
@@ -32,7 +32,9 @@ The build date is always the current UTC date. The published API files do not id
 
 The Pages workflow periodically checks the official JSON documentation. Scheduled runs deploy only when its extracted contents differ from the last successful deployment. Pushes and manual runs always deploy. A failed check or build leaves the existing site online.
 
-The HTML output also includes `404.html`, `.nojekyll`, `robots.txt`, `sitemap.xml`, and the deployed API source digest for static hosting.
+The deployed output also includes `llms.txt`, focused HTML and Markdown symbol pages, `page-digests.json`, `404.html`, `.nojekyll`, `robots.txt`, `sitemap.xml`, and the API source digest.
+
+Sitemap modification dates are retained when a page's generated Markdown has not changed. The Pages workflow reads the digest data from the previous deployment before each build.
 
 ## Preview the HTML site
 

@@ -1,20 +1,21 @@
 from __future__ import annotations
 
-from html import unescape
 import json
 import os
-from pathlib import Path
 import re
+from dataclasses import replace
+from html import unescape
+from pathlib import Path
 
 from make_ir import Doc, Entry, Environment, Inline, Page
 from render_context import CATEGORY_TITLES, RenderContext
 from symbol_catalog import (
     CATEGORY_DIRECTORIES,
-    CallbackGroup,
     SIGNATURE_LINE_LENGTH,
+    CallbackGroup,
     SymbolCatalog,
+    SymbolPageVariant,
 )
-
 
 SIGNATURE_FENCE = "``` { .lua .api-signature }"
 INTRODUCTION_PATH = Path(__file__).parent / "content" / "introduction.md"
@@ -494,6 +495,8 @@ class MarkdownRenderer(RenderContext):
         environment: Environment,
         current_path: Path,
         entries: list[Entry],
+        *,
+        include_anchors: bool = True,
     ) -> list[str]:
         if not entries:
             return []
@@ -508,7 +511,7 @@ class MarkdownRenderer(RenderContext):
                 )
                 anchor = (
                     f'<a id="{self.symbol_catalog.slug(entry.name)}"></a>'
-                    if index == 0
+                    if include_anchors and index == 0
                     else ""
                 )
                 rows.append(
@@ -1212,6 +1215,260 @@ class MarkdownRenderer(RenderContext):
             output.extend(self._callbacks(environment, path, page))
 
         path.write_text("\n".join(output).rstrip() + "\n", encoding="utf-8")
+
+    @staticmethod
+    def _symbol_kind_label(kind: str) -> str:
+        return {
+            "callback": "Callback",
+            "constant": "Constant",
+            "function": "Function",
+            "member": "Member",
+            "operation": "Operation",
+            "page": "API page",
+        }[kind]
+
+    def _symbol_source_link(
+        self,
+        symbol_path: Path,
+        variant: SymbolPageVariant,
+    ) -> str:
+        source_url, separator, fragment = variant.source_url.partition("#")
+        source_path = self.markdown_root / Path(source_url).with_suffix(".md")
+        relative = Path(os.path.relpath(source_path, symbol_path.parent)).as_posix()
+        if separator:
+            relative += f"#{fragment}"
+        return relative
+
+    @staticmethod
+    def _without_summary(doc: Doc, summary: str) -> Doc:
+        content = list(doc.content)
+        for index, block in enumerate(content):
+            if block["type"] != "paragraph":
+                continue
+            if SymbolCatalog.inline_text(block["content"]).strip() == summary:
+                content.pop(index)
+            break
+        return replace(doc, content=content)
+
+    @staticmethod
+    def _member_doc(page: Page, doc: Doc) -> Doc:
+        parameters = list(doc.parameters)
+        if parameters and (
+            parameters[0].name == "self"
+            or parameters[0].type == [{"reference": page.name}]
+        ):
+            parameters.pop(0)
+        return replace(doc, parameters=parameters)
+
+    @staticmethod
+    def _prefix_symbol_headings(lines: list[str], context: str) -> list[str]:
+        if not context:
+            return lines
+        return [
+            re.sub(
+                r"^(#{3,}) (.+)$",
+                lambda match: f"{match.group(1)} {context} {match.group(2)}",
+                line,
+            )
+            for line in lines
+        ]
+
+    def _symbol_variant_content(
+        self,
+        environment: Environment,
+        symbol_path: Path,
+        variant: SymbolPageVariant,
+        *,
+        detail_heading: int,
+        heading_context: str,
+        page_summary: str,
+    ) -> list[str]:
+        output: list[str] = []
+        if variant.kind == "callback":
+            side = variant.entries[0].name.partition("_")[0].title()
+            output.extend([f"**Callback side:** {side}", ""])
+
+        for signature in variant.signatures:
+            output.extend([SIGNATURE_FENCE, signature, "```", ""])
+
+        source_link = self._symbol_source_link(symbol_path, variant)
+        output.extend(
+            [f"[Open the full {variant.environment} reference]({source_link})", ""]
+        )
+
+        if variant.kind == "page":
+            doc = variant.page.doc
+            if doc:
+                output.extend(
+                    self._prefix_symbol_headings(
+                        self._doc(
+                            environment,
+                            symbol_path,
+                            self._without_summary(doc, page_summary),
+                            detail_heading,
+                        ),
+                        heading_context,
+                    )
+                )
+            return output
+
+        entry = variant.entries[0]
+        if variant.kind == "member":
+            for label, doc in (("Get", entry.get), ("Set", entry.set)):
+                if doc is None:
+                    continue
+                heading = f"{heading_context} {label}".strip()
+                output.extend([f"{'#' * detail_heading} {heading}", ""])
+                output.extend(
+                    self._prefix_symbol_headings(
+                        self._doc(
+                            environment,
+                            symbol_path,
+                            self._member_doc(variant.page, doc),
+                            detail_heading + 1,
+                        ),
+                        heading_context,
+                    )
+                )
+            return output
+
+        if entry.doc:
+            doc = self._without_summary(entry.doc, page_summary)
+            if variant.kind == "operation":
+                output.extend(
+                    self._prefix_symbol_headings(
+                        self._doc(
+                            environment,
+                            symbol_path,
+                            replace(doc, operations=[]),
+                            detail_heading,
+                        ),
+                        heading_context,
+                    )
+                )
+                output.extend(
+                    self._operations(
+                        environment,
+                        symbol_path,
+                        [entry],
+                        include_anchors=False,
+                    )
+                )
+            else:
+                output.extend(
+                    self._prefix_symbol_headings(
+                        self._doc(
+                            environment,
+                            symbol_path,
+                            doc,
+                            detail_heading,
+                        ),
+                        heading_context,
+                    )
+                )
+        return output
+
+    def _write_symbol_pages(self) -> None:
+        symbols_directory = self.markdown_root / "symbols"
+        symbols_directory.mkdir(parents=True, exist_ok=True)
+        environments = {
+            environment.name: environment for environment in self.docs.environments
+        }
+        index_rows = []
+
+        for name, variants in self.symbol_catalog.symbol_page_groups.items():
+            symbol_path = symbols_directory / f"{name}.md"
+            kinds = tuple(dict.fromkeys(variant.kind for variant in variants))
+            environment_names = tuple(
+                dict.fromkeys(variant.environment for variant in variants)
+            )
+            summary_variant = next(
+                (variant for variant in variants if variant.summary), None
+            )
+            summary_text = (
+                SymbolCatalog.inline_text(summary_variant.summary).strip()
+                if summary_variant
+                else ""
+            )
+            rendered_summary = (
+                self._inline(
+                    environments[summary_variant.environment],
+                    symbol_path,
+                    summary_variant.summary,
+                )
+                if summary_variant
+                else ""
+            )
+            output = [f"# {name}", ""]
+            if rendered_summary:
+                output.extend([rendered_summary, ""])
+            output.extend(
+                [
+                    "**Kind:** "
+                    + ", ".join(self._symbol_kind_label(kind) for kind in kinds),
+                    "",
+                    f"**Environments:** {', '.join(environment_names)}",
+                    "",
+                ]
+            )
+
+            variants_by_environment: dict[str, list[SymbolPageVariant]] = {}
+            for variant in variants:
+                variants_by_environment.setdefault(variant.environment, []).append(
+                    variant
+                )
+
+            multiple_environments = len(variants_by_environment) > 1
+            for environment_name, environment_variants in variants_by_environment.items():
+                output.extend([f"## {environment_name}", ""])
+                overloaded = len(environment_variants) > 1
+                for index, variant in enumerate(environment_variants, start=1):
+                    context_parts = []
+                    if multiple_environments:
+                        context_parts.append(environment_name)
+                    if overloaded:
+                        context_parts.append(f"overload {index}")
+                    heading_context = " ".join(context_parts)
+                    if overloaded:
+                        output.extend(
+                            [f"### {heading_context.capitalize()}", ""]
+                        )
+                    output.extend(
+                        self._symbol_variant_content(
+                            environments[environment_name],
+                            symbol_path,
+                            variant,
+                            detail_heading=4 if overloaded else 3,
+                            heading_context=heading_context,
+                            page_summary=summary_text,
+                        )
+                    )
+
+            symbol_path.write_text(
+                "\n".join(output).rstrip() + "\n",
+                encoding="utf-8",
+            )
+            kind_labels = ", ".join(
+                self._symbol_kind_label(kind) for kind in kinds
+            )
+            index_rows.append(
+                f"| [`{name}`]({name}.md) | {kind_labels} | "
+                f"{', '.join(environment_names)} |"
+            )
+
+        index = [
+            "# Symbols",
+            "",
+            "Focused reference pages for API symbols, overloads, and environment variants.",
+            "",
+            "| Symbol | Kind | Environments |",
+            "| --- | --- | --- |",
+            *index_rows,
+            "",
+        ]
+        (symbols_directory / "index.md").write_text(
+            "\n".join(index), encoding="utf-8"
+        )
 
     def _write_markdown_index(self) -> None:
         introduction = INTRODUCTION_PATH.read_text(encoding="utf-8").rstrip()
