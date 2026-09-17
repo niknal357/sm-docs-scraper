@@ -32,6 +32,8 @@ The build date is always the current UTC date. The published API files do not id
 
 The Pages workflow periodically checks the official JSON documentation. Scheduled runs deploy only when its extracted contents differ from the last successful deployment. Pushes and manual runs always deploy. A failed check or build leaves the existing site online.
 
+Until December 8, 2026 at 05:01:01 UTC, downloads from `https://scrapmechanic.com` can retry an expired-certificate error with certificate date checks disabled. Normal HTTPS verification is always tried first; the retry still checks the hostname and trusted certificate chain. This temporary exception does not pin documentation content, so updates remain automatic.
+
 The deployed output also includes `llms.txt`, focused HTML and Markdown symbol pages, `page-digests.json`, `404.html`, `.nojekyll`, `robots.txt`, `sitemap.xml`, and the API source digest.
 
 Sitemap modification dates are retained when a page's generated Markdown has not changed. The Pages workflow reads the digest data from the previous deployment before each build.
